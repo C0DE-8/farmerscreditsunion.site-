@@ -1,0 +1,40 @@
+/* RESET + GLOBAL DARK BACKGROUND */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+html {
+  background: #050816; /* 🔥 your base dark color */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #050816; /* prevents white flash */
+  overflow-x: hidden;
+
+  /* smooth feel */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* 🔥 THIS FIXES MOBILE DRAG / BOUNCE WHITE */
+  overscroll-behavior: none;
+}
+
+/* remove white highlight when tapping (mobile) */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* optional: nicer scroll */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
