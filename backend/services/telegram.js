@@ -2,6 +2,7 @@
 const axios = require("axios");
 const db = require("../db");
 const moment = require("moment");
+const TelegramBot = require("node-telegram-bot-api");
 
 /* -------------------------------------------------------------------------- */
 /* ADMIN CHAT IDS (optional restriction)                                      */
@@ -15,6 +16,45 @@ const TELEGRAM_ADMIN_CHAT_IDS = (process.env.TELEGRAM_ADMIN_CHAT_IDS || "")
 function isAllowedChat(chatId) {
   if (!TELEGRAM_ADMIN_CHAT_IDS.length) return true; // allow all if not set
   return TELEGRAM_ADMIN_CHAT_IDS.includes(String(chatId));
+}
+
+function getAdminTelegramBot() {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+
+  if (!token) {
+    return null;
+  }
+
+  if (globalThis.__adminTelegramBot) {
+    return globalThis.__adminTelegramBot;
+  }
+
+  const bot = new TelegramBot(token, { polling: true });
+  let conflictLogged = false;
+
+  bot.on("polling_error", (err) => {
+    const message = err?.response?.body?.description || err?.message || "";
+    const code = err?.code || err?.response?.body?.error_code;
+    const statusCode = err?.response?.statusCode || err?.response?.body?.error_code;
+    const isConflict =
+      statusCode === 409 ||
+      err?.response?.body?.error_code === 409 ||
+      (code === "ETELEGRAM" && message.includes("409 Conflict"));
+
+    if (isConflict) {
+      if (!conflictLogged) {
+        conflictLogged = true;
+        console.warn("Telegram polling already running elsewhere; this process stopped its duplicate poller.");
+      }
+      bot.stopPolling().catch(() => {});
+      return;
+    }
+
+    console.error("[polling_error]", err);
+  });
+
+  globalThis.__adminTelegramBot = bot;
+  return bot;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -92,6 +132,7 @@ async function notifyAdmins(message, replyMarkup) {
 
 module.exports = {
   isAllowedChat,
+  getAdminTelegramBot,
   buildLatestTicketsMessage,
   notifyAdmins,
 };

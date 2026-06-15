@@ -83,6 +83,15 @@
   background: rgba(127, 127, 127, 0.08);
 }
 
+.logoutLink {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.logoutLink:hover {
+  background: rgba(220, 38, 38, 0.1);
+}
+
 .activeNavItem {
   background: rgba(15, 98, 254, 0.1);
   color: var(--primary);

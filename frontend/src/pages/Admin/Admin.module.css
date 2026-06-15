@@ -19,6 +19,14 @@
   margin-bottom: 24px;
 }
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .title {
   font-size: 28px;
   margin: 0 0 6px;
@@ -36,6 +44,21 @@
   border-radius: 8px;
   background: var(--card-bg);
   font-weight: 700;
+}
+
+.logoutBtn {
+  height: 40px;
+  border: 1px solid rgba(220, 38, 38, 0.28);
+  border-radius: 8px;
+  padding: 0 14px;
+  background: rgba(220, 38, 38, 0.08);
+  color: #dc2626;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.logoutBtn:hover {
+  background: rgba(220, 38, 38, 0.14);
 }
 
 .cards {
@@ -221,6 +244,10 @@
   .header {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .headerActions {
+    justify-content: flex-start;
   }
 
   .metaGrid {

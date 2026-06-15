@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axios";
 import { useAuth } from "../../context/AuthContext";
 import styles from "./Admin.module.css";
@@ -12,7 +13,8 @@ const resolveAsset = (url) => {
 };
 
 export default function Admin() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [applications, setApplications] = useState([]);
   const [status, setStatus] = useState("pending");
   const [loading, setLoading] = useState(false);
@@ -40,6 +42,11 @@ export default function Admin() {
     const rejected = applications.filter((item) => item.status === "rejected").length;
     return { pending, approved, rejected, total: applications.length };
   }, [applications]);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/", { replace: true });
+  };
 
   const approveApplication = async (id) => {
     try {
@@ -77,7 +84,12 @@ export default function Admin() {
           <h1 className={styles.title}>Admin Panel</h1>
           <p className={styles.subtitle}>Review customer onboarding before account numbers are issued.</p>
         </div>
-        <div className={styles.adminName}>{user?.full_name || user?.username || "Admin"}</div>
+        <div className={styles.headerActions}>
+          <div className={styles.adminName}>{user?.full_name || user?.username || "Admin"}</div>
+          <button className={styles.logoutBtn} type="button" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
       </div>
 
       <div className={styles.cards}>

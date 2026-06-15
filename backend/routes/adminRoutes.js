@@ -13,10 +13,9 @@ const { authenticateToken, checkAdmin } = require('../middleware/authMiddleware'
 const { logActivity } = require('../utils/activityLogger');
 const { sendAtmCardApprovedEmail, sendWelcomeEmail, sendOnboardingRejectedEmail } = require('../utils/mailer');
 
-const { isAllowedChat, buildLatestTicketsMessage } = require('../services/telegram');
-const TelegramBot = require("node-telegram-bot-api");
+const { isAllowedChat, getAdminTelegramBot } = require('../services/telegram');
 
-const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
+const bot = getAdminTelegramBot();
 
 // small helpers for display
 const formatCardGroups = (num) => (num || '').replace(/(\d{4})(?=\d)/g, '$1 ').trim();
@@ -2426,6 +2425,7 @@ async function sendTicketsWithButtons(chatId, page = 1) {
 
 /* ──────────── BOT COMMANDS ────────────*/
 
+if (bot) {
 // /start → main menu
 bot.onText(/^\/start$/, async (msg) => {
   const chatId = msg.chat.id;
@@ -2718,8 +2718,13 @@ bot.on("message", async (msg) => {
     bot.sendMessage(chatId, "❌ Error saving reply. Try again.", { parse_mode: "HTML" });
   }
 });
+}
 /* ──────────── Bot Ping Test ────────────*/
 router.get('/telegram-test', async (req, res) => {
+  if (!bot) {
+    return res.status(503).json({ ok: false, error: 'Telegram bot is not configured' });
+  }
+
   try {
     const me = await bot.getMe();
     res.json({ ok: true, bot: me });

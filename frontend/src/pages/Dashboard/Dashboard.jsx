@@ -1,13 +1,20 @@
 import styles from "./Dashboard.module.css";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
 
   const displayName =
     user?.full_name || user?.name || user?.username || "User";
+
+  const handleLogout = () => {
+    logout();
+    navigate("/", { replace: true });
+  };
 
   const quickTransfers = [
     { name: "John", short: "J", account: "65318" },
@@ -97,12 +104,16 @@ export default function Dashboard() {
         </nav>
 
         <div className={styles.sidebarBottom}>
-          <button className={styles.bottomLink}>
+          <button className={styles.bottomLink} type="button">
             <span className={styles.navIcon}>⚙</span>
             <span>Settings</span>
           </button>
 
-          <button className={styles.bottomLink}>
+          <button
+            className={`${styles.bottomLink} ${styles.logoutLink}`}
+            type="button"
+            onClick={handleLogout}
+          >
             <span className={styles.navIcon}>↩</span>
             <span>Logout</span>
           </button>
