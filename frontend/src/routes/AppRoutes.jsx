@@ -11,6 +11,7 @@ import AdminTransfers from "../pages/Admin/pages/AdminTransfers";
 import AdminUsers from "../pages/Admin/pages/AdminUsers";
 import AdminWallets from "../pages/Admin/pages/AdminWallets";
 import VerifyLoginOTP from "../pages/VerifyLoginOTP/VerifyLoginOTP";
+import UserPage from "../pages/UserPages/UserPage";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 import PublicRoute from "../components/PublicRoute/PublicRoute";
 
@@ -41,6 +42,58 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={["user"]}>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/cards"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <UserPage
+                type="cards"
+                title="Cards"
+                description="Manage your debit card requests, approved cards, and card account options."
+              />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/transactions"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <UserPage
+                type="transactions"
+                title="Transactions"
+                description="Review local, wire, and account transfer activity from your banking profile."
+              />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <UserPage
+                type="settings"
+                title="Settings"
+                description="Update your profile, security preferences, display mode, and notification options."
+              />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/more"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <UserPage
+                type="more"
+                title="More"
+                description="Access statements, invoices, support options, loans, and other banking tools."
+              />
             </ProtectedRoute>
           }
         />

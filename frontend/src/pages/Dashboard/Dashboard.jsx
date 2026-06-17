@@ -1,4 +1,22 @@
 import styles from "./Dashboard.module.css";
+import { useEffect, useRef, useState } from "react";
+import {
+  FiCreditCard,
+  FiDownload,
+  FiEye,
+  FiEyeOff,
+  FiFileText,
+  FiPhone,
+  FiPlus,
+  FiRepeat,
+  FiSend,
+  FiSettings,
+  FiTrendingUp,
+  FiUser,
+} from "react-icons/fi";
+import axiosInstance from "../../api/axios";
+import MobileFooterNav from "../../components/Dashboard/MobileFooterNav";
+import UserSettingsDrawer from "../../components/Dashboard/UserSettingsDrawer";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
@@ -7,9 +25,137 @@ export default function Dashboard() {
   const { userUser, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [profile, setProfile] = useState(userUser);
+  const [profileLoading, setProfileLoading] = useState(!userUser);
+  const [transactionsLoading, setTransactionsLoading] = useState(true);
+  const [recentTransactions, setRecentTransactions] = useState([]);
+  const [balanceVisible, setBalanceVisible] = useState(true);
+  const [activeAccountIndex, setActiveAccountIndex] = useState(0);
+  const [touchStartX, setTouchStartX] = useState(null);
+  const [bankName, setBankName] = useState("Stercxa Bank");
+  const accountSwipeHandledRef = useRef(false);
 
   const displayName =
-    userUser?.full_name || userUser?.name || userUser?.username || "User";
+    profile?.full_name || profile?.name || profile?.username || "User";
+  const currencySign = profile?.currency_sign || "$";
+  const accountNumber = profile?.account_number || "Pending account";
+  const savingsBalance = Number(profile?.savings_balance || 0);
+  const currentBalance = Number(profile?.current_balance || 0);
+  const totalBalance = savingsBalance + currentBalance;
+
+  const formatMoney = (value) =>
+    `${currencySign}${Number(value || 0).toLocaleString(undefined, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    })}`;
+  const displayMoney = (value) => (balanceVisible ? formatMoney(value) : "******");
+  const maskAccountNumber = (value) => {
+    const digits = String(value || "").replace(/\D/g, "");
+    return digits ? `••••${digits.slice(-4)}` : "Pending";
+  };
+  const parseAmount = (value) => {
+    if (typeof value === "number") return value;
+    const amount = Number(String(value || "0").replace(/[^\d.-]/g, ""));
+    return Number.isFinite(amount) ? amount : 0;
+  };
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadProfile() {
+      try {
+        setProfileLoading(true);
+        const res = await axiosInstance.get("/user/profile");
+        if (active) setProfile(res.data?.user || userUser);
+      } catch {
+        if (active) setProfile(userUser);
+      } finally {
+        if (active) setProfileLoading(false);
+      }
+    }
+
+    loadProfile();
+    return () => {
+      active = false;
+    };
+  }, [userUser]);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadBankName() {
+      try {
+        const res = await axiosInstance.get("/user/settings/bank-name");
+        if (active) setBankName(res.data?.bank_name || "Stercxa Bank");
+      } catch {
+        if (active) setBankName("Stercxa Bank");
+      }
+    }
+
+    loadBankName();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadTransactions() {
+      try {
+        setTransactionsLoading(true);
+        const [localRes, wireRes, selfRes] = await Promise.allSettled([
+          axiosInstance.get("/user/transfer/history/local"),
+          axiosInstance.get("/user/transfer/history/wire"),
+          axiosInstance.get("/user/transfer/self/history"),
+        ]);
+
+        if (!active) return;
+
+        const localHistory =
+          localRes.status === "fulfilled" ? localRes.value.data?.history || [] : [];
+        const wireHistory =
+          wireRes.status === "fulfilled" ? wireRes.value.data?.wire_history || [] : [];
+        const selfHistory =
+          selfRes.status === "fulfilled" ? selfRes.value.data?.history || [] : [];
+
+        const normalized = [...localHistory, ...wireHistory, ...selfHistory]
+          .map((item) => {
+            const amount = parseAmount(item.amount);
+            const isCredit = item.entry_type === "credit";
+            const title =
+              item.account_name ||
+              item.bank_name ||
+              (item.to_account ? "Self transfer" : "Transfer");
+            const transferBank = item.bank_name || (item.to_account ? bankName : "");
+
+            return {
+              id: `${item.type || "self"}-${item.id}`,
+              title,
+              subtitle: transferBank || item.reason || item.from_account || "Banking transaction",
+              bank_name: transferBank,
+              date: item.date || item.created_at || "",
+              value: isCredit ? Math.abs(amount) : -Math.abs(amount),
+              status: item.status || "Completed",
+            };
+          })
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .slice(0, 5);
+
+        setRecentTransactions(normalized);
+      } catch {
+        if (active) setRecentTransactions([]);
+      } finally {
+        if (active) setTransactionsLoading(false);
+      }
+    }
+
+    loadTransactions();
+    return () => {
+      active = false;
+    };
+  }, [bankName]);
 
   const handleLogout = () => {
     logout("user");
@@ -29,7 +175,7 @@ export default function Dashboard() {
       title: "Transfer to John",
       subtitle: "Bank transfer",
       date: "25 Mar, 2026",
-      amount: "-₦25,000",
+      value: -25000,
       status: "Completed",
     },
     {
@@ -37,7 +183,7 @@ export default function Dashboard() {
       title: "Salary Credit",
       subtitle: "Monthly salary",
       date: "24 Mar, 2026",
-      amount: "+₦450,000",
+      value: 450000,
       status: "Completed",
     },
     {
@@ -45,7 +191,7 @@ export default function Dashboard() {
       title: "Airtime Purchase",
       subtitle: "MTN top-up",
       date: "23 Mar, 2026",
-      amount: "-₦2,000",
+      value: -2000,
       status: "Pending",
     },
     {
@@ -53,10 +199,54 @@ export default function Dashboard() {
       title: "Netflix Subscription",
       subtitle: "Card payment",
       date: "22 Mar, 2026",
-      amount: "-₦6,500",
+      value: -6500,
       status: "Completed",
     },
   ];
+  const shownTransactions = recentTransactions.length ? recentTransactions : transactions;
+  const mobileTransactions = recentTransactions.slice(0, 4);
+  const accountCards = [
+    {
+      type: "Savings Account",
+      label: "Savings balance",
+      balance: savingsBalance,
+      number: profile?.s_account_number || accountNumber,
+      marker: "Save",
+    },
+    {
+      type: "Current Account",
+      label: "Daily spending",
+      balance: currentBalance,
+      number: profile?.c_account_number || accountNumber,
+      marker: "Acct",
+    },
+  ];
+  const activeAccount = accountCards[activeAccountIndex] || accountCards[0];
+  const productItems = [
+    { label: "Bills & Airtime", path: "/bills-airtime", icon: <FiPhone /> },
+    { label: "Statements", path: "/statements", icon: <FiFileText /> },
+    { label: "Cards", path: "/cards", icon: <FiCreditCard /> },
+    { label: "Loans", path: "/loans", icon: <FiTrendingUp /> },
+  ];
+  const showNextAccount = () => {
+    setActiveAccountIndex((current) => (current === 0 ? 1 : 0));
+  };
+  const handleAccountTouchEnd = (event) => {
+    if (touchStartX === null) return;
+    const deltaX = touchStartX - event.changedTouches[0].clientX;
+    if (Math.abs(deltaX) > 36) {
+      accountSwipeHandledRef.current = true;
+      showNextAccount();
+    }
+    setTouchStartX(null);
+  };
+  const handleAccountClick = () => {
+    if (accountSwipeHandledRef.current) {
+      accountSwipeHandledRef.current = false;
+      return;
+    }
+    showNextAccount();
+  };
 
   return (
     <div className={styles.dashboardPage}>
@@ -73,33 +263,33 @@ export default function Dashboard() {
           <p className={styles.navLabel}>General</p>
 
           <button className={`${styles.navItem} ${styles.activeNavItem}`}>
-            <span className={styles.navIcon}>▦</span>
+            <span className={styles.navIcon}>Home</span>
             <span>Dashboard</span>
           </button>
 
           <button className={styles.navItem}>
-            <span className={styles.navIcon}>⇄</span>
+            <span className={styles.navIcon}>Pay</span>
             <span>Payments</span>
           </button>
 
           <button className={styles.navItem}>
-            <span className={styles.navIcon}>💳</span>
+            <span className={styles.navIcon}>Card</span>
             <span>Cards</span>
           </button>
 
           <button className={styles.navItem}>
-            <span className={styles.navIcon}>🧾</span>
+            <span className={styles.navIcon}>Bill</span>
             <span>Invoices</span>
           </button>
 
           <button className={styles.navItem}>
-            <span className={styles.navIcon}>📈</span>
+            <span className={styles.navIcon}>Data</span>
             <span>Insights</span>
           </button>
 
           <button className={styles.navItem}>
-            <span className={styles.navIcon}>🎁</span>
-            <span>Rewards</span>
+            <span className={styles.navIcon}>More</span>
+            <span>More</span>
           </button>
         </nav>
 
@@ -109,7 +299,7 @@ export default function Dashboard() {
             type="button"
             onClick={handleLogout}
           >
-            <span className={styles.navIcon}>↩</span>
+            <span className={styles.navIcon}>Exit</span>
             <span>Logout</span>
           </button>
 
@@ -138,6 +328,173 @@ export default function Dashboard() {
       </aside>
 
       <main className={styles.mainContent}>
+        <section className={styles.mobileDashboard}>
+          <header className={styles.mobileTopbar}>
+            <div className={styles.mobileIdentity}>
+              <div className={styles.mobileAvatar}>
+                <span><FiUser /></span>
+                {displayName.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <span>{bankName}</span>
+                <strong>{displayName}</strong>
+              </div>
+            </div>
+          </header>
+
+          <section className={styles.mobileBalanceCard}>
+            <div className={styles.balanceLabelRow}>
+              <span className={styles.balancePill}>Total Balance</span>
+            </div>
+
+            {profileLoading ? (
+              <div className={`${styles.skeleton} ${styles.balanceSkeleton}`} />
+            ) : (
+              <div className={styles.mobileBalanceLine}>
+                <h1 className={styles.mobileBalanceAmount}>
+                  {displayMoney(totalBalance)}
+                </h1>
+                <button
+                  className={styles.eyeButton}
+                  type="button"
+                  onClick={() => setBalanceVisible((current) => !current)}
+                  aria-label={balanceVisible ? "Hide balance" : "Show balance"}
+                >
+                  {balanceVisible ? <FiEyeOff /> : <FiEye />}
+                </button>
+              </div>
+            )}
+          </section>
+
+          <section className={styles.mobileQuickActions} aria-label="Quick actions">
+            {[
+              [<FiPlus />, "Add Money"],
+              [<FiSend />, "Send"],
+              [<FiRepeat />, "Convert"],
+            ].map(([icon, label]) => (
+              <button
+                className={styles.mobileQuickAction}
+                type="button"
+                key={label}
+                onClick={() => {
+                  if (label === "Send") navigate("/transactions");
+                  if (label === "Convert") navigate("/convert");
+                }}
+              >
+                <span>{icon}</span>
+                <strong>{label}</strong>
+              </button>
+            ))}
+          </section>
+
+          <section className={styles.mobileAccountsWrap}>
+            {profileLoading ? (
+              <div className={`${styles.mobileAccountCard} ${styles.mobileAccountSkeleton}`}>
+                <div className={`${styles.skeleton} ${styles.lineSkeleton}`} />
+                <div className={`${styles.skeleton} ${styles.amountSkeleton}`} />
+                <div className={`${styles.skeleton} ${styles.lineSkeletonShort}`} />
+              </div>
+            ) : (
+              <>
+                <button
+                  className={styles.mobileAccountCard}
+                  type="button"
+                  key={activeAccount.type}
+                  onClick={handleAccountClick}
+                  onTouchStart={(event) => setTouchStartX(event.touches[0].clientX)}
+                  onTouchEnd={handleAccountTouchEnd}
+                  aria-label={`Switch account. Showing ${activeAccount.type}`}
+                >
+                  <div className={styles.accountCardTop}>
+                    <div>
+                      <strong>{activeAccount.type}</strong>
+                      <span>{activeAccount.label}</span>
+                    </div>
+                    <span className={styles.accountMarker}>{activeAccount.marker}</span>
+                  </div>
+                  <h2>{displayMoney(activeAccount.balance)}</h2>
+                  <div className={styles.accountCardBottom}>
+                    <span>{bankName}</span>
+                    <strong>{maskAccountNumber(activeAccount.number)}</strong>
+                  </div>
+                </button>
+                <div className={styles.accountSwitchDots} aria-hidden="true">
+                  {accountCards.map((account, index) => (
+                    <span
+                      className={index === activeAccountIndex ? styles.activeAccountDot : ""}
+                      key={account.type}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </section>
+
+          <section className={styles.mobileSection}>
+            <div className={styles.mobileSectionHead}>
+              <h2>RECENT TRANSACTIONS</h2>
+              <button type="button" onClick={() => navigate("/transactions")}>See all</button>
+            </div>
+
+            <div className={styles.mobileTransactionsCard}>
+              {transactionsLoading ? (
+                [0, 1, 2].map((item) => (
+                  <div className={styles.mobileTransactionRow} key={item}>
+                    <div className={`${styles.skeleton} ${styles.txnAvatarSkeleton}`} />
+                    <div className={styles.mobileTxnMeta}>
+                      <div className={`${styles.skeleton} ${styles.lineSkeleton}`} />
+                      <div className={`${styles.skeleton} ${styles.lineSkeletonShort}`} />
+                    </div>
+                    <div className={`${styles.skeleton} ${styles.txnAmountSkeleton}`} />
+                  </div>
+                ))
+              ) : mobileTransactions.length === 0 ? (
+                <div className={styles.mobileEmptyState}>
+                  No recent transactions yet.
+                </div>
+              ) : (
+                mobileTransactions.map((item) => (
+                  <div className={styles.mobileTransactionRow} key={item.id}>
+                    <div className={styles.mobileTxnAvatar}>
+                      {item.value < 0 ? <FiSend /> : <FiDownload />}
+                    </div>
+                    <div className={styles.mobileTxnMeta}>
+                      <strong>{item.title}</strong>
+                      <span>{item.bank_name || item.subtitle || item.date}</span>
+                    </div>
+                    <strong
+                      className={
+                        item.value < 0 ? styles.mobileAmountOut : styles.mobileAmountIn
+                      }
+                    >
+                      {balanceVisible
+                        ? item.value < 0
+                          ? `-${formatMoney(Math.abs(item.value))}`
+                          : `+${formatMoney(item.value)}`
+                        : "******"}
+                    </strong>
+                  </div>
+                ))
+              )}
+            </div>
+          </section>
+
+          <section className={styles.mobileSection}>
+            <div className={styles.mobileSectionHead}>
+              <h2>OTHER PRODUCTS</h2>
+            </div>
+            <div className={styles.mobileProducts}>
+              {productItems.map((item) => (
+                <button type="button" key={item.label} onClick={() => navigate(item.path)}>
+                  <span>{item.icon}</span>
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </section>
+        </section>
+
+        <div className={styles.desktopDashboard}>
         <header className={styles.topbar}>
           <div className={styles.topbarIdentity}>
             <div className={styles.profileAvatar}>
@@ -150,8 +507,15 @@ export default function Dashboard() {
           </div>
 
           <div className={styles.topbarActions}>
-            <button className={styles.iconAction} type="button" aria-label="Settings" title="Settings">
-              ⚙
+            <button
+              className={styles.iconAction}
+              type="button"
+              aria-label="Settings"
+              title="Settings"
+              onClick={() => setSettingsOpen(true)}
+            >
+              <FiSettings />
+              <span>Settings</span>
             </button>
             <button
               className={styles.iconAction}
@@ -160,7 +524,8 @@ export default function Dashboard() {
               aria-label="Toggle theme"
               title="Toggle theme"
             >
-              {theme === "dark" ? "☼" : "◐"}
+              {theme === "dark" ? <FiEye /> : <FiEyeOff />}
+              <span>Theme</span>
             </button>
             <button className={styles.topActionGhost}>Request</button>
             <button className={styles.topActionGhost}>Topup</button>
@@ -170,34 +535,56 @@ export default function Dashboard() {
 
         <section className={styles.heroGrid}>
           <div className={styles.balancePanel}>
-            <p className={styles.panelLabel}>Total Balance</p>
-            <h2 className={styles.balanceAmount}>₦450,000</h2>
+            <div className={styles.desktopBalanceHeader}>
+              <div>
+                <p className={styles.panelLabel}>Total Balance</p>
+                <h2 className={styles.balanceAmount}>
+                  {displayMoney(totalBalance)}
+                </h2>
+              </div>
+              <button
+                className={styles.desktopEyeButton}
+                type="button"
+                onClick={() => setBalanceVisible((current) => !current)}
+                aria-label={balanceVisible ? "Hide balance" : "Show balance"}
+              >
+                {balanceVisible ? <FiEyeOff /> : <FiEye />}
+              </button>
+            </div>
 
             <div className={styles.balanceActions}>
-              <button className={styles.smallActionPrimary}>Send</button>
+              <button className={styles.smallActionPrimary} onClick={() => navigate("/transactions")}>Send</button>
               <button className={styles.smallAction}>Request</button>
-              <button className={styles.smallAction}>Topup</button>
+              <button className={styles.smallAction} onClick={() => navigate("/convert")}>Convert</button>
             </div>
           </div>
 
           <div className={styles.quickPanel}>
             <div className={styles.panelHead}>
-              <h3>Quick Transfer</h3>
-              <button className={styles.miniLink}>View all</button>
+              <h3>Accounts</h3>
+              <button className={styles.miniLink} onClick={showNextAccount} type="button">
+                Switch
+              </button>
             </div>
 
-            <div className={styles.quickUsers}>
-              <button className={styles.addTransferCard}>
-                <span className={styles.addCircle}>＋</span>
-                <span>Add</span>
-              </button>
-
-              {quickTransfers.map((person) => (
-                <div className={styles.quickUserCard} key={person.account}>
-                  <div className={styles.quickUserAvatar}>{person.short}</div>
-                  <strong>{person.name}</strong>
-                  <span>{person.account}</span>
-                </div>
+            <div className={styles.desktopAccountsGrid}>
+              {accountCards.map((account, index) => (
+                <button
+                  className={`${styles.desktopAccountCard} ${
+                    index === activeAccountIndex ? styles.activeDesktopAccount : ""
+                  }`}
+                  type="button"
+                  onClick={() => setActiveAccountIndex(index)}
+                  key={account.type}
+                >
+                  <span className={styles.desktopAccountIcon}>
+                    <FiCreditCard />
+                  </span>
+                  <strong>{account.type}</strong>
+                  <small>{bankName}</small>
+                  <h4>{displayMoney(account.balance)}</h4>
+                  <span>{maskAccountNumber(account.number)}</span>
+                </button>
               ))}
             </div>
           </div>
@@ -209,7 +596,7 @@ export default function Dashboard() {
               <h3>Total Income</h3>
               <span className={styles.statTag}>+23%</span>
             </div>
-            <h2>₦824,521</h2>
+            <h2>{displayMoney(824521)}</h2>
             <div className={styles.chartBars}>
               <span style={{ height: "32%" }}></span>
               <span style={{ height: "54%" }}></span>
@@ -226,7 +613,7 @@ export default function Dashboard() {
               <h3>Total Spent</h3>
               <span className={styles.statTagMuted}>-8%</span>
             </div>
-            <h2>₦117,254</h2>
+            <h2>{displayMoney(117254)}</h2>
             <div className={styles.chartBars}>
               <span style={{ height: "24%" }}></span>
               <span style={{ height: "48%" }}></span>
@@ -262,7 +649,7 @@ export default function Dashboard() {
                 <span>Status</span>
               </div>
 
-              {transactions.map((item) => (
+              {shownTransactions.map((item) => (
                 <div className={styles.tableRow} key={item.id}>
                   <span className={styles.refText}>{item.id}</span>
 
@@ -275,12 +662,16 @@ export default function Dashboard() {
 
                   <span
                     className={
-                      item.amount.startsWith("-")
+                      item.value < 0
                         ? styles.amountOut
                         : styles.amountIn
                     }
                   >
-                    {item.amount}
+                    {balanceVisible
+                      ? item.value < 0
+                        ? `-${formatMoney(Math.abs(item.value))}`
+                        : `+${formatMoney(item.value)}`
+                      : "******"}
                   </span>
 
                   <span
@@ -300,7 +691,7 @@ export default function Dashboard() {
           <div className={styles.rightPanel}>
             <div className={styles.bankCardBox}>
               <div className={styles.cardTopRow}>
-                <span>Stercxa</span>
+                <span>{bankName}</span>
                 <span>VISA</span>
               </div>
 
@@ -309,7 +700,7 @@ export default function Dashboard() {
                 <strong>{displayName}</strong>
               </div>
 
-              <div className={styles.cardDigits}>1253 5432 3521 3090</div>
+              <div className={styles.cardDigits}>{accountNumber}</div>
 
               <div className={styles.cardBottomRow}>
                 <div>
@@ -326,32 +717,16 @@ export default function Dashboard() {
 
             <div className={styles.sideWidget}>
               <div className={styles.panelHead}>
-                <h3>Conversion Rate</h3>
+                <h3>Other Products</h3>
               </div>
 
-              <div className={styles.convertBox}>
-                <label>Amount</label>
-                <div className={styles.convertInputRow}>
-                  <input type="text" value="238" readOnly />
-                  <select defaultValue="USD">
-                    <option>USD</option>
-                    <option>NGN</option>
-                    <option>EUR</option>
-                    <option>GBP</option>
-                  </select>
-                </div>
-
-                <div className={styles.convertInputRow}>
-                  <input type="text" value="222.13" readOnly />
-                  <select defaultValue="EUR">
-                    <option>EUR</option>
-                    <option>USD</option>
-                    <option>NGN</option>
-                    <option>GBP</option>
-                  </select>
-                </div>
-
-                <button className={styles.convertBtn}>Convert →</button>
+              <div className={styles.productList}>
+                {productItems.map((item) => (
+                  <button className={styles.productButton} type="button" key={item.label} onClick={() => navigate(item.path)}>
+                    <span>{item.icon}</span>
+                    {item.label}
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -365,7 +740,7 @@ export default function Dashboard() {
                   <strong>Transactions</strong>
                   <p>Auto Block</p>
                 </div>
-                <span>›</span>
+                <span>Open</span>
               </div>
 
               <div className={styles.workflowCard}>
@@ -373,35 +748,25 @@ export default function Dashboard() {
                   <strong>Create order</strong>
                   <p>Looks OK</p>
                 </div>
-                <span>›</span>
+                <span>Open</span>
               </div>
             </div>
           </div>
         </section>
+        </div>
       </main>
 
-      <nav className={styles.mobileGlassNav} aria-label="Mobile dashboard navigation">
-        <button type="button" className={styles.mobileNavActive}>
-          <span>▦</span>
-          <strong>Home</strong>
-        </button>
-        <button type="button">
-          <span>⇄</span>
-          <strong>Pay</strong>
-        </button>
-        <button type="button">
-          <span>💳</span>
-          <strong>Cards</strong>
-        </button>
-        <button type="button">
-          <span>⚙</span>
-          <strong>Settings</strong>
-        </button>
-        <button type="button" onClick={handleLogout}>
-          <span>↩</span>
-          <strong>Logout</strong>
-        </button>
-      </nav>
+      <MobileFooterNav />
+
+      <UserSettingsDrawer
+        open={settingsOpen}
+        user={profile}
+        displayName={displayName}
+        theme={theme}
+        onClose={() => setSettingsOpen(false)}
+        onToggleTheme={toggleTheme}
+        onLogout={handleLogout}
+      />
     </div>
   );
 }

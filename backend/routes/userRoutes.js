@@ -92,6 +92,21 @@ router.get('/profile', authenticateToken, (req, res) => {
     return res.json({ user: results[0] });
   });
 });
+
+// Public account display settings for authenticated users.
+router.get('/settings/bank-name', authenticateToken, (req, res) => {
+  db.query(
+    `SELECT value FROM settings WHERE key_name = 'bank_name' LIMIT 1`,
+    (err, rows) => {
+      if (err) {
+        console.error('❌ DB ERROR [/user/settings/bank-name]:', err);
+        return res.status(500).json({ error: 'Failed to load bank name' });
+      }
+
+      res.json({ bank_name: rows[0]?.value || 'Stercxa Bank' });
+    }
+  );
+});
 // 🔁 Update user profile
 router.put('/profile/update', authenticateToken, (req, res) => {
   const userId = req.user.id;
