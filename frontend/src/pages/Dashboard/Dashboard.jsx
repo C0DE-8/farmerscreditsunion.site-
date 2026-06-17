@@ -33,6 +33,7 @@ export default function Dashboard() {
   const [recentTransactions, setRecentTransactions] = useState([]);
   const [balanceVisible, setBalanceVisible] = useState(true);
   const [activeAccountIndex, setActiveAccountIndex] = useState(0);
+  const [accountSwapDirection, setAccountSwapDirection] = useState("next");
   const [touchStartX, setTouchStartX] = useState(null);
   const [bankName, setBankName] = useState("Stercxa Bank");
   const accountSwipeHandledRef = useRef(false);
@@ -231,14 +232,20 @@ export default function Dashboard() {
     { label: "Loans", path: "/loans", icon: <FiTrendingUp /> },
   ];
   const showNextAccount = () => {
+    setAccountSwapDirection("next");
     setActiveAccountIndex((current) => (current === 0 ? 1 : 0));
+  };
+  const showAccount = (index) => {
+    setAccountSwapDirection(index > activeAccountIndex ? "next" : "prev");
+    setActiveAccountIndex(index);
   };
   const handleAccountTouchEnd = (event) => {
     if (touchStartX === null) return;
     const deltaX = touchStartX - event.changedTouches[0].clientX;
     if (Math.abs(deltaX) > 36) {
       accountSwipeHandledRef.current = true;
-      showNextAccount();
+      setAccountSwapDirection(deltaX > 0 ? "next" : "prev");
+      setActiveAccountIndex((current) => (current === 0 ? 1 : 0));
     }
     setTouchStartX(null);
   };
@@ -337,9 +344,11 @@ export default function Dashboard() {
                 {profileImage ? (
                   <img src={profileImage} alt={displayName} />
                 ) : (
-                  displayName.charAt(0).toUpperCase()
+                  <>
+                    {displayName.charAt(0).toUpperCase()}
+                    <span><FiUser /></span>
+                  </>
                 )}
-                <span><FiUser /></span>
               </div>
               <div>
                 <span>{bankName}</span>
@@ -403,7 +412,11 @@ export default function Dashboard() {
             ) : (
               <>
                 <button
-                  className={styles.mobileAccountCard}
+                  className={`${styles.mobileAccountCard} ${
+                    accountSwapDirection === "next"
+                      ? styles.accountSwapNext
+                      : styles.accountSwapPrev
+                  }`}
                   type="button"
                   key={activeAccount.type}
                   onClick={handleAccountClick}
@@ -580,7 +593,7 @@ export default function Dashboard() {
                     index === activeAccountIndex ? styles.activeDesktopAccount : ""
                   }`}
                   type="button"
-                  onClick={() => setActiveAccountIndex(index)}
+                  onClick={() => showAccount(index)}
                   key={account.type}
                 >
                   <span className={styles.desktopAccountIcon}>
