@@ -12,6 +12,11 @@ import AdminUsers from "../pages/Admin/pages/AdminUsers";
 import AdminWallets from "../pages/Admin/pages/AdminWallets";
 import VerifyLoginOTP from "../pages/VerifyLoginOTP/VerifyLoginOTP";
 import UserPage from "../pages/UserPages/UserPage";
+import TransactionsPage from "../pages/UserPages/TransactionsPage";
+import TransactionHistoryPage from "../pages/UserPages/TransactionHistoryPage";
+import ConvertPage from "../pages/UserPages/ConvertPage";
+import ProfilePage from "../pages/UserPages/ProfilePage";
+import TransferDetailPage from "../pages/UserPages/TransferDetailPage";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 import PublicRoute from "../components/PublicRoute/PublicRoute";
 
@@ -63,11 +68,43 @@ export default function AppRoutes() {
           path="/transactions"
           element={
             <ProtectedRoute allowedRoles={["user"]}>
-              <UserPage
-                type="transactions"
-                title="Transactions"
-                description="Review local, wire, and account transfer activity from your banking profile."
-              />
+              <TransactionsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/transaction-history"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <TransactionHistoryPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/transfer/:id"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <TransferDetailPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/convert"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <ConvertPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <ProfilePage />
             </ProtectedRoute>
           }
         />
@@ -94,6 +131,33 @@ export default function AppRoutes() {
                 title="More"
                 description="Access statements, invoices, support options, loans, and other banking tools."
               />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/bills-airtime"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <UserPage type="more" title="Bills & Airtime" description="Pay utility bills and airtime purchases from your bank accounts." />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/statements"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <UserPage type="transactions" title="Statements" description="View and request account statements for your Savings and Current accounts." />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/loans"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <UserPage type="more" title="Loans" description="Review loan options and account lending information." />
             </ProtectedRoute>
           }
         />

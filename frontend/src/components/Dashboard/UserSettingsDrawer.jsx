@@ -1,4 +1,6 @@
 import styles from "./UserSettingsDrawer.module.css";
+import { useNavigate } from "react-router-dom";
+import { resolveAsset } from "../../utils/assets";
 
 export default function UserSettingsDrawer({
   open,
@@ -9,21 +11,25 @@ export default function UserSettingsDrawer({
   onToggleTheme,
   onLogout,
 }) {
+  const navigate = useNavigate();
   if (!open) return null;
 
   const navItems = [
-    { key: "Profile", title: "Profile", text: "Personal details and account profile" },
-    { key: "Security", title: "Security", text: "Password, PIN, and verification settings" },
-    { key: "Alerts", title: "Notifications", text: "Email and transaction alerts" },
-    { key: "Support", title: "Support", text: "Tickets, messages, and help center" },
+    { key: "Profile", title: "Profile", text: "Personal details and account profile", path: "/profile" },
+    { key: "Security", title: "Security", text: "Password, PIN, and verification settings", path: "/settings" },
+    { key: "Alerts", title: "Notifications", text: "Email and transaction alerts", path: "/settings" },
+    { key: "Support", title: "Support", text: "Tickets, messages, and help center", path: "/more" },
   ];
+  const profileImage = resolveAsset(user?.profile_image_url || "");
 
   return (
     <div className={styles.overlay} onClick={onClose}>
       <aside className={styles.drawer} onClick={(event) => event.stopPropagation()}>
         <div className={styles.header}>
           <div className={styles.user}>
-            <div className={styles.avatar}>{displayName.charAt(0).toUpperCase()}</div>
+            <div className={styles.avatar}>
+              {profileImage ? <img src={profileImage} alt={displayName} /> : displayName.charAt(0).toUpperCase()}
+            </div>
             <div>
               <strong>{displayName}</strong>
               <span>{user?.email || "Personal banking"}</span>
@@ -36,7 +42,14 @@ export default function UserSettingsDrawer({
 
         <nav className={styles.nav} aria-label="Settings navigation">
           {navItems.map((item) => (
-            <button type="button" key={item.key}>
+            <button
+              type="button"
+              key={item.key}
+              onClick={() => {
+                onClose();
+                navigate(item.path);
+              }}
+            >
               <span>{item.key}</span>
               <div>
                 <strong>{item.title}</strong>

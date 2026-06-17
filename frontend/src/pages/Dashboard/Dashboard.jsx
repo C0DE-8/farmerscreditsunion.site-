@@ -20,6 +20,7 @@ import UserSettingsDrawer from "../../components/Dashboard/UserSettingsDrawer";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
+import { resolveAsset } from "../../utils/assets";
 
 export default function Dashboard() {
   const { userUser, logout } = useAuth();
@@ -43,6 +44,7 @@ export default function Dashboard() {
   const savingsBalance = Number(profile?.savings_balance || 0);
   const currentBalance = Number(profile?.current_balance || 0);
   const totalBalance = savingsBalance + currentBalance;
+  const profileImage = resolveAsset(profile?.profile_image_url || "");
 
   const formatMoney = (value) =>
     `${currencySign}${Number(value || 0).toLocaleString(undefined, {
@@ -330,16 +332,20 @@ export default function Dashboard() {
       <main className={styles.mainContent}>
         <section className={styles.mobileDashboard}>
           <header className={styles.mobileTopbar}>
-            <div className={styles.mobileIdentity}>
+            <button className={styles.mobileIdentity} type="button" onClick={() => navigate("/profile")}>
               <div className={styles.mobileAvatar}>
+                {profileImage ? (
+                  <img src={profileImage} alt={displayName} />
+                ) : (
+                  displayName.charAt(0).toUpperCase()
+                )}
                 <span><FiUser /></span>
-                {displayName.charAt(0).toUpperCase()}
               </div>
               <div>
                 <span>{bankName}</span>
                 <strong>{displayName}</strong>
               </div>
-            </div>
+            </button>
           </header>
 
           <section className={styles.mobileBalanceCard}>
@@ -433,7 +439,7 @@ export default function Dashboard() {
           <section className={styles.mobileSection}>
             <div className={styles.mobileSectionHead}>
               <h2>RECENT TRANSACTIONS</h2>
-              <button type="button" onClick={() => navigate("/transactions")}>See all</button>
+              <button type="button" onClick={() => navigate("/transaction-history")}>See all</button>
             </div>
 
             <div className={styles.mobileTransactionsCard}>
@@ -497,9 +503,9 @@ export default function Dashboard() {
         <div className={styles.desktopDashboard}>
         <header className={styles.topbar}>
           <div className={styles.topbarIdentity}>
-            <div className={styles.profileAvatar}>
-              {displayName.charAt(0).toUpperCase()}
-            </div>
+            <button className={styles.profileAvatar} type="button" onClick={() => navigate("/profile")} aria-label="Open profile">
+              {profileImage ? <img src={profileImage} alt={displayName} /> : displayName.charAt(0).toUpperCase()}
+            </button>
             <div>
               <p className={styles.pageEyebrow}>Overview</p>
               <h1 className={styles.pageTitle}>Welcome back, {displayName}</h1>
