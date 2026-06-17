@@ -31,7 +31,7 @@ export default function AppRoutes() {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute allowedRoles={["user", "admin"]}>
+            <ProtectedRoute allowedRoles={["user"]}>
               <Dashboard />
             </ProtectedRoute>
           }

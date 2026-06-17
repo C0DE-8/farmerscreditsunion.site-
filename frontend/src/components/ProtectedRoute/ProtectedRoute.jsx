@@ -3,14 +3,16 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 export default function ProtectedRoute({ children, allowedRoles }) {
-  const { user } = useAuth();
+  const { user, getSessionUser } = useAuth();
+  const routeUser =
+    allowedRoles?.length === 1 ? getSessionUser(allowedRoles[0]) : user;
 
-  if (!user) {
+  if (!routeUser) {
     return <Navigate to="/" replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
-    if (user.role === "admin") {
+  if (allowedRoles && !allowedRoles.includes(routeUser.role)) {
+    if (routeUser.role === "admin") {
       return <Navigate to="/admin" replace />;
     }
 

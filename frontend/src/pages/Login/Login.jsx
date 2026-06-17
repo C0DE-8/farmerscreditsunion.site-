@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { registerUser } from "../../api/authApi";
+import GlassToast, { useGlassToast } from "../../components/Toast/GlassToast";
 import styles from "./Login.module.css";
 
 const ONBOARDING_DRAFT_KEY = "stercxa_onboarding_draft";
@@ -97,6 +98,7 @@ export default function Login() {
   const [mounted, setMounted] = useState(false);
   const videoRef = useRef(null);
   const streamRef = useRef(null);
+  const { toasts, notify, dismissToast } = useGlassToast();
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -288,19 +290,19 @@ export default function Login() {
   const validateRegistrationStep = () => {
     if (registrationStep === 0) {
       if (!registration.first_name || !registration.last_name || !registration.date_of_birth || !registration.email) {
-        alert("First name, last name, date of birth, and email are required.");
+        notify("First name, last name, date of birth, and email are required.", "error");
         return false;
       }
 
       const ageNumber = Number(registration.age);
       if (!Number.isInteger(ageNumber) || ageNumber < 18 || ageNumber > 120) {
-        alert("Applicant age must be between 18 and 120.");
+        notify("Applicant age must be between 18 and 120.", "error");
         return false;
       }
     }
 
     if (registrationStep === 1 && (!registration.work_id || !registration.id_type)) {
-      alert("Work ID and ID type are required.");
+      notify("Work ID and ID type are required.", "error");
       return false;
     }
 
@@ -308,18 +310,18 @@ export default function Login() {
       registrationStep === 2 &&
       (!registrationFiles.id_front || !registrationFiles.id_back || !registrationFiles.face_photo)
     ) {
-      alert("ID front, ID back, and face photo are required.");
+      notify("ID front, ID back, and face photo are required.", "error");
       return false;
     }
 
     if (registrationStep === 3) {
       if (!registration.username || !registration.password || !registration.confirm_password) {
-        alert("Username, password, and confirmation are required.");
+        notify("Username, password, and confirmation are required.", "error");
         return false;
       }
 
       if (registration.password !== registration.confirm_password) {
-        alert("Passwords do not match.");
+        notify("Passwords do not match.", "error");
         return false;
       }
     }
@@ -340,7 +342,7 @@ export default function Login() {
     e.preventDefault();
 
     if (registration.password !== registration.confirm_password) {
-      alert("Passwords do not match");
+      notify("Passwords do not match.", "error");
       return;
     }
 
@@ -358,7 +360,7 @@ export default function Login() {
     try {
       setLoading(true);
       const res = await registerUser(payload);
-      alert(res?.message || "Registration submitted for approval");
+      notify(res?.message || "Registration submitted for approval", "success", "Submitted");
       localStorage.removeItem(ONBOARDING_DRAFT_KEY);
       setMode("login");
       setRegistrationStep(0);
@@ -366,10 +368,11 @@ export default function Login() {
       setRegistrationFiles(emptyFiles);
       setFilePreviews(emptyPreviews);
     } catch (error) {
-      alert(
+      notify(
         error?.response?.data?.error ||
           error?.response?.data?.message ||
-          "Registration failed"
+          "Registration failed",
+        "error"
       );
     } finally {
       setLoading(false);
@@ -395,7 +398,7 @@ export default function Login() {
           localStorage.removeItem("pendingLoginEmail");
         }
 
-        alert(res?.message || "Login OTP sent to your email");
+        notify(res?.message || "Login OTP sent to your email", "success", "OTP sent");
         navigate("/verify-login-otp");
         return;
       }
@@ -411,12 +414,13 @@ export default function Login() {
         return;
       }
 
-      alert("Login failed");
+      notify("Login failed", "error");
     } catch (error) {
-      alert(
+      notify(
         error?.response?.data?.error ||
           error?.response?.data?.message ||
-          "Login failed"
+          "Login failed",
+        "error"
       );
     } finally {
       setLoading(false);
@@ -428,6 +432,8 @@ export default function Login() {
       <div className={styles.backgroundGlowOne}></div>
       <div className={styles.backgroundGlowTwo}></div>
       <div className={styles.backgroundGrid}></div>
+
+      <GlassToast toasts={toasts} onDismiss={dismissToast} />
 
       <div className={`${styles.loginShell} ${mode === "register" ? styles.registerShell : ""} ${mounted ? styles.showShell : ""}`}>
         <div className={styles.formPanel}>
@@ -499,7 +505,7 @@ export default function Login() {
                   <button
                     type="button"
                     className={styles.linkButton}
-                    onClick={() => alert("Forgot password flow here")}
+                    onClick={() => notify("Password recovery is not connected yet.", "info", "Coming soon")}
                   >
                     Forgot password?
                   </button>
@@ -605,51 +611,132 @@ export default function Login() {
 
                   {registrationStep === 2 && (
                     <div className={styles.uploadGrid}>
-                      <div className={styles.uploadTile}>
+                      <div className={`${styles.uploadTile} ${cameraTarget === "id_front" ? styles.activeUploadTile : ""}`}>
                         <span>ID front</span>
-                        {filePreviews.id_front ? (
+                        {cameraTarget === "id_front" ? (
+                          <>
+                            {cameraError ? (
+                              <div className={styles.cameraError}>
+                                <p>{cameraError}</p>
+                                <input
+                                  type="file"
+                                  name="id_front"
+                                  accept="image/*"
+                                  capture="environment"
+                                  onChange={handleFileChange}
+                                />
+                              </div>
+                            ) : (
+                              <video ref={videoRef} className={styles.cameraVideo} playsInline muted />
+                            )}
+                            <div className={styles.captureActions}>
+                              <button className={styles.captureBtn} type="button" onClick={captureCameraPhoto} disabled={!!cameraError}>
+                                Capture front
+                              </button>
+                              <button type="button" className={styles.clearCaptureBtn} onClick={() => setCameraTarget("")}>
+                                Close
+                              </button>
+                            </div>
+                          </>
+                        ) : filePreviews.id_front ? (
                           <img src={filePreviews.id_front} alt="ID front preview" />
                         ) : (
                           <div className={styles.cameraPlaceholder}>Live card photo</div>
                         )}
-                        <button type="button" onClick={() => setCameraTarget("id_front")}>
-                          {filePreviews.id_front ? "Retake front" : "Open camera"}
-                        </button>
-                        {filePreviews.id_front && (
+                        {cameraTarget !== "id_front" && (
+                          <button type="button" onClick={() => setCameraTarget("id_front")}>
+                            {filePreviews.id_front ? "Retake front" : "Open camera"}
+                          </button>
+                        )}
+                        {cameraTarget !== "id_front" && filePreviews.id_front && (
                           <button type="button" className={styles.clearCaptureBtn} onClick={() => clearDocument("id_front")}>
                             Clear
                           </button>
                         )}
                       </div>
 
-                      <div className={styles.uploadTile}>
+                      <div className={`${styles.uploadTile} ${cameraTarget === "id_back" ? styles.activeUploadTile : ""}`}>
                         <span>ID back</span>
-                        {filePreviews.id_back ? (
+                        {cameraTarget === "id_back" ? (
+                          <>
+                            {cameraError ? (
+                              <div className={styles.cameraError}>
+                                <p>{cameraError}</p>
+                                <input
+                                  type="file"
+                                  name="id_back"
+                                  accept="image/*"
+                                  capture="environment"
+                                  onChange={handleFileChange}
+                                />
+                              </div>
+                            ) : (
+                              <video ref={videoRef} className={styles.cameraVideo} playsInline muted />
+                            )}
+                            <div className={styles.captureActions}>
+                              <button className={styles.captureBtn} type="button" onClick={captureCameraPhoto} disabled={!!cameraError}>
+                                Capture back
+                              </button>
+                              <button type="button" className={styles.clearCaptureBtn} onClick={() => setCameraTarget("")}>
+                                Close
+                              </button>
+                            </div>
+                          </>
+                        ) : filePreviews.id_back ? (
                           <img src={filePreviews.id_back} alt="ID back preview" />
                         ) : (
                           <div className={styles.cameraPlaceholder}>Live card photo</div>
                         )}
-                        <button type="button" onClick={() => setCameraTarget("id_back")}>
-                          {filePreviews.id_back ? "Retake back" : "Open camera"}
-                        </button>
-                        {filePreviews.id_back && (
+                        {cameraTarget !== "id_back" && (
+                          <button type="button" onClick={() => setCameraTarget("id_back")}>
+                            {filePreviews.id_back ? "Retake back" : "Open camera"}
+                          </button>
+                        )}
+                        {cameraTarget !== "id_back" && filePreviews.id_back && (
                           <button type="button" className={styles.clearCaptureBtn} onClick={() => clearDocument("id_back")}>
                             Clear
                           </button>
                         )}
                       </div>
 
-                      <div className={styles.uploadTile}>
+                      <div className={`${styles.uploadTile} ${cameraTarget === "face_photo" ? styles.activeUploadTile : ""}`}>
                         <span>Face photo</span>
-                        {filePreviews.face_photo ? (
+                        {cameraTarget === "face_photo" ? (
+                          <>
+                            {cameraError ? (
+                              <div className={styles.cameraError}>
+                                <p>{cameraError}</p>
+                                <input
+                                  type="file"
+                                  name="face_photo"
+                                  accept="image/*"
+                                  capture="user"
+                                  onChange={handleFileChange}
+                                />
+                              </div>
+                            ) : (
+                              <video ref={videoRef} className={styles.cameraVideo} playsInline muted />
+                            )}
+                            <div className={styles.captureActions}>
+                              <button className={styles.captureBtn} type="button" onClick={captureCameraPhoto} disabled={!!cameraError}>
+                                Capture face
+                              </button>
+                              <button type="button" className={styles.clearCaptureBtn} onClick={() => setCameraTarget("")}>
+                                Close
+                              </button>
+                            </div>
+                          </>
+                        ) : filePreviews.face_photo ? (
                           <img src={filePreviews.face_photo} alt="Face preview" />
                         ) : (
                           <div className={styles.cameraPlaceholder}>Live face photo</div>
                         )}
-                        <button type="button" onClick={() => setCameraTarget("face_photo")}>
-                          {filePreviews.face_photo ? "Retake face" : "Open camera"}
-                        </button>
-                        {filePreviews.face_photo && (
+                        {cameraTarget !== "face_photo" && (
+                          <button type="button" onClick={() => setCameraTarget("face_photo")}>
+                            {filePreviews.face_photo ? "Retake face" : "Open camera"}
+                          </button>
+                        )}
+                        {cameraTarget !== "face_photo" && filePreviews.face_photo && (
                           <button type="button" className={styles.clearCaptureBtn} onClick={() => clearDocument("face_photo")}>
                             Clear
                           </button>
@@ -679,45 +766,6 @@ export default function Login() {
                     </div>
                   )}
                 </section>
-
-                {cameraTarget && (
-                  <div className={styles.cameraPanel}>
-                    <div className={styles.cameraHeader}>
-                      <div>
-                        <strong>
-                          {cameraTarget === "face_photo"
-                            ? "Capture face photo"
-                            : cameraTarget === "id_front"
-                              ? "Capture ID front"
-                              : "Capture ID back"}
-                        </strong>
-                        <span>Align the document or face inside the frame.</span>
-                      </div>
-                      <button type="button" onClick={() => setCameraTarget("")}>
-                        Close
-                      </button>
-                    </div>
-
-                    {cameraError ? (
-                      <div className={styles.cameraError}>
-                        <p>{cameraError}</p>
-                        <input
-                          type="file"
-                          name={cameraTarget}
-                          accept="image/*"
-                          capture={cameraTarget === "face_photo" ? "user" : "environment"}
-                          onChange={handleFileChange}
-                        />
-                      </div>
-                    ) : (
-                      <video ref={videoRef} className={styles.cameraVideo} playsInline muted />
-                    )}
-
-                    <button className={styles.primaryBtn} type="button" onClick={captureCameraPhoto} disabled={!!cameraError}>
-                      Capture photo
-                    </button>
-                  </div>
-                )}
 
                 <div className={styles.phaseActions}>
                   <button

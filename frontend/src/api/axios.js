@@ -9,7 +9,13 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const url = config.url || "";
+  const token = url.startsWith("/admin")
+    ? localStorage.getItem("adminToken")
+    : url.startsWith("/user")
+      ? localStorage.getItem("userToken")
+      : localStorage.getItem("userToken") || localStorage.getItem("adminToken");
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

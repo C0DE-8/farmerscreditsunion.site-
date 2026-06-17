@@ -4,15 +4,15 @@ import { useTheme } from "../../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
-  const { user, logout } = useAuth();
+  const { userUser, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const displayName =
-    user?.full_name || user?.name || user?.username || "User";
+    userUser?.full_name || userUser?.name || userUser?.username || "User";
 
   const handleLogout = () => {
-    logout();
+    logout("user");
     navigate("/", { replace: true });
   };
 
