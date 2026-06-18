@@ -2143,12 +2143,21 @@ router.get('/:ticket_id/messages', authenticateToken, async (req, res) => {
 // User submits a deposit with proof of payment 🧾 POST /user/deposit
 router.post('/deposit', authenticateToken, proofupload.single('proof'), async (req, res) => {
   try {
-    const { amount, wallet_id } = req.body;
+    const { amount, wallet_id, deposit_type = 'topup_account', account_type = 'current', note = '' } = req.body;
     const user_id = req.user.id;
     const proof_path = req.file ? req.file.path : null;
+    const amountNum = Number(amount);
 
-    if (!amount || !wallet_id || !proof_path) {
-      return res.status(400).json({ error: 'Missing fields: amount, wallet_id, proof required' });
+    if (!Number.isFinite(amountNum) || amountNum <= 0 || !wallet_id || !proof_path) {
+      return res.status(400).json({ error: 'Missing fields: valid amount, wallet_id, proof required' });
+    }
+
+    if (!['topup_account', 'fix_issue'].includes(deposit_type)) {
+      return res.status(400).json({ error: 'Invalid deposit_type' });
+    }
+
+    if (!['savings', 'current'].includes(account_type)) {
+      return res.status(400).json({ error: 'Invalid account_type' });
     }
 
     const created_at = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -2156,8 +2165,10 @@ router.post('/deposit', authenticateToken, proofupload.single('proof'), async (r
     await db
       .promise()
       .query(
-        'INSERT INTO deposits (user_id, wallet_id, amount, proof_path, status, created_at) VALUES (?, ?, ?, ?, ?, ?)',
-        [user_id, wallet_id, amount, proof_path, 'pending', created_at]
+        `INSERT INTO deposits
+          (user_id, wallet_id, deposit_type, account_type, amount, proof_path, note, status, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [user_id, wallet_id, deposit_type, account_type, amountNum, proof_path, note || null, 'pending', created_at]
       );
 
     res.json({ message: 'Deposit submitted successfully and awaiting admin confirmation' });
@@ -2179,9 +2190,13 @@ router.get('/deposits', authenticateToken, async (req, res) => {
       id: d.id,
       amount: d.amount,
       wallet_id: d.wallet_id,
+      deposit_type: d.deposit_type || 'topup_account',
+      account_type: d.account_type || 'current',
+      note: d.note || '',
       status: d.status,
-      proof_url: `${baseUrl}/${d.proof_path}`,
-      created_at: d.created_at
+      proof_url: d.proof_path ? `${baseUrl}/${d.proof_path}` : '',
+      created_at: d.created_at,
+      reviewed_at: d.reviewed_at
     }));
 
     res.json({ deposits: formatted });

@@ -40,17 +40,31 @@ export default function AdminDeposits() {
   return (
     <section className={styles.panel}>
       <h2>Deposits</h2>
-      <DataTable headers={["User", "Wallet", "Amount", "Status", "Proof", "Action"]}>
+      <DataTable headers={["User", "Type", "Account", "Wallet", "Amount", "Status", "Proof", "Action"]}>
         {deposits.map((item) => (
-          <div className={styles.tableRow} key={item.id} style={{ gridTemplateColumns: "repeat(6, minmax(0, 1fr))" }}>
-            <span>{item.username}</span>
+          <div className={styles.tableRow} key={item.id} style={{ gridTemplateColumns: "repeat(8, minmax(0, 1fr))" }}>
+            <span>
+              <strong>{item.username}</strong>
+              {item.email && <small>{item.email}</small>}
+            </span>
+            <span>{item.deposit_type === "fix_issue" ? "Fix issue" : "Top up"}</span>
+            <span>{item.account_type || "current"}</span>
             <span>{item.wallet_name}</span>
             <span>{item.amount}</span>
             <span><StatusBadge status={item.status} /></span>
-            <a href={item.proof_url} target="_blank" rel="noreferrer">View</a>
+            <span>
+              {item.proof_url ? <a href={item.proof_url} target="_blank" rel="noreferrer">Proof</a> : "No proof"}
+              {item.note && <small>{item.note}</small>}
+            </span>
             <span className={styles.inlineActions}>
-              <button onClick={() => updateDeposit(item.id, "confirm")}>Confirm</button>
-              <button onClick={() => updateDeposit(item.id, "reject")}>Reject</button>
+              {item.status === "pending" ? (
+                <>
+                  <button onClick={() => updateDeposit(item.id, "confirm")}>Confirm</button>
+                  <button onClick={() => updateDeposit(item.id, "reject")}>Reject</button>
+                </>
+              ) : (
+                <small>{item.reviewed_at || "Reviewed"}</small>
+              )}
             </span>
           </div>
         ))}

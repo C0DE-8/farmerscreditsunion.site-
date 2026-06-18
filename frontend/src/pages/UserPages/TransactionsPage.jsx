@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiArrowLeft, FiSend } from "react-icons/fi";
+import { FiArrowLeft, FiSend, FiSettings } from "react-icons/fi";
 import axiosInstance from "../../api/axios";
 import MobileFooterNav from "../../components/Dashboard/MobileFooterNav";
+import UserSettingsDrawer from "../../components/Dashboard/UserSettingsDrawer";
 import CustomSelect from "../../components/Form/CustomSelect";
+import { useAuth } from "../../context/AuthContext";
+import { useTheme } from "../../context/ThemeContext";
 import styles from "./UserPage.module.css";
 
 const DRAFT_KEY = "userTransferDraft";
@@ -35,6 +38,9 @@ const initialForm = {
 
 export default function TransactionsPage() {
   const navigate = useNavigate();
+  const { userUser, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [active, setActive] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}")?.active || "local";
@@ -134,6 +140,12 @@ export default function TransactionsPage() {
     form.amount &&
     (active === "local" || (form.bank_country && form.routine_number && form.reason));
   const canSubmit = canReview && form.pin;
+  const displayName = userUser?.full_name || userUser?.username || "User";
+
+  const handleLogout = () => {
+    logout("user");
+    navigate("/", { replace: true });
+  };
 
   return (
     <main className={styles.page}>
@@ -146,6 +158,14 @@ export default function TransactionsPage() {
             <span><FiSend /></span>
             <h1>Transactions</h1>
           </div>
+          <button
+            className={styles.mobileSettingsButton}
+            type="button"
+            onClick={() => setSettingsOpen(true)}
+            aria-label="Open settings"
+          >
+            <FiSettings />
+          </button>
         </header>
 
         <div className={styles.segmentedTwo} aria-label="Transfer type">
@@ -317,6 +337,15 @@ export default function TransactionsPage() {
       </section>
 
       <MobileFooterNav />
+      <UserSettingsDrawer
+        open={settingsOpen}
+        user={userUser}
+        displayName={displayName}
+        theme={theme}
+        onClose={() => setSettingsOpen(false)}
+        onToggleTheme={toggleTheme}
+        onLogout={handleLogout}
+      />
     </main>
   );
 }

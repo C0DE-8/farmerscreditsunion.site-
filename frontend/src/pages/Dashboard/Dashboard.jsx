@@ -396,6 +396,7 @@ export default function Dashboard() {
                 type="button"
                 key={label}
                 onClick={() => {
+                  if (label === "Add Money") navigate("/funding");
                   if (label === "Send") navigate("/transactions");
                   if (label === "Convert") navigate("/convert");
                 }}
@@ -577,7 +578,7 @@ export default function Dashboard() {
 
             <div className={styles.balanceActions}>
               <button className={styles.smallActionPrimary} onClick={() => navigate("/transactions")}>Send</button>
-              <button className={styles.smallAction}>Request</button>
+              <button className={styles.smallAction} onClick={() => navigate("/funding")}>Add Money</button>
               <button className={styles.smallAction} onClick={() => navigate("/convert")}>Convert</button>
             </div>
           </div>

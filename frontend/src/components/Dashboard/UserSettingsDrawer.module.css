@@ -32,6 +32,8 @@
   color: var(--drawer-text);
   animation: drawerIn 0.25s ease both;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 [data-theme="dark"] .drawer {
@@ -134,19 +136,6 @@
   transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
 }
 
-.themeRow {
-  min-height: 58px;
-  border: 1px solid var(--drawer-border);
-  border-radius: 18px;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(15, 98, 254, 0.04)),
-    var(--drawer-surface);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px;
-}
-
 .nav button {
   cursor: pointer;
 }
@@ -187,17 +176,43 @@
   margin: 0;
 }
 
-.logout {
-  border-color: rgba(248, 113, 113, 0.25) !important;
+.drawerActions {
+  margin-top: auto;
+  padding-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.logout > span {
-  background: rgba(220, 38, 38, 0.14) !important;
-  color: #ef4444 !important;
+.logoutButton {
+  min-height: 44px;
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  border-radius: 16px;
+  background: rgba(220, 38, 38, 0.1);
+  color: #dc2626;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 16px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
 }
 
-[data-theme="dark"] .logout > span {
-  color: #fca5a5 !important;
+.logoutButton svg {
+  width: 18px;
+  height: 18px;
+}
+
+.logoutButton:active {
+  transform: scale(0.97);
+}
+
+[data-theme="dark"] .logoutButton {
+  background: rgba(220, 38, 38, 0.14);
+  color: #fca5a5;
 }
 
 @keyframes drawerIn {
@@ -217,4 +232,7 @@
     padding: 18px;
   }
 
+  .drawerActions {
+    padding-bottom: 8px;
+  }
 }

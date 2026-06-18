@@ -2741,22 +2741,28 @@ router.get('/telegram-test', async (req, res) => {
 router.get('/deposits', authenticateToken, checkAdmin, async (req, res) => {
   try {
     const [rows] = await db.promise().query(
-      `SELECT d.*, u.username, w.wallet_name 
+      `SELECT d.*, u.username, u.email, w.wallet_name 
        FROM deposits d 
        JOIN users u ON d.user_id = u.id 
-       JOIN wallets w ON d.wallet_id = w.id 
+       LEFT JOIN wallets w ON d.wallet_id = w.id 
        ORDER BY d.id DESC`
     );
 
     const baseUrl = `${req.protocol}://${req.get('host')}`;
     const formatted = rows.map(d => ({
       id: d.id,
+      user_id: d.user_id,
       username: d.username,
-      wallet_name: d.wallet_name,
+      email: d.email,
+      wallet_name: d.wallet_name || 'Removed wallet',
+      deposit_type: d.deposit_type || 'topup_account',
+      account_type: d.account_type || 'current',
       amount: d.amount,
+      note: d.note || '',
       status: d.status,
-      proof_url: `${baseUrl}/${d.proof_path}`,
-      created_at: d.created_at
+      proof_url: d.proof_path ? `${baseUrl}/${d.proof_path}` : '',
+      created_at: d.created_at,
+      reviewed_at: d.reviewed_at
     }));
 
     res.json({ deposits: formatted });
@@ -2767,19 +2773,51 @@ router.get('/deposits', authenticateToken, checkAdmin, async (req, res) => {
 });
 // Admin confirms a deposit ✅ PUT /admin/deposit/:id/confirm
 router.put('/deposit/:id/confirm', authenticateToken, checkAdmin, async (req, res) => {
+  const conn = db.promise();
   try {
     const depositId = req.params.id;
+    const reviewedAt = moment().format('YYYY-MM-DD HH:mm:ss');
 
-    const [result] = await db
-      .promise()
-      .query('UPDATE deposits SET status = ? WHERE id = ?', ['confirmed', depositId]);
+    await conn.beginTransaction();
 
-    if (result.affectedRows === 0) {
+    const [[deposit]] = await conn.query(
+      'SELECT * FROM deposits WHERE id = ? FOR UPDATE',
+      [depositId]
+    );
+
+    if (!deposit) {
+      await conn.rollback();
       return res.status(404).json({ error: 'Deposit not found' });
     }
 
+    if (deposit.status !== 'pending') {
+      await conn.rollback();
+      return res.status(400).json({ error: `Deposit already ${deposit.status}` });
+    }
+
+    if ((deposit.deposit_type || 'topup_account') === 'topup_account') {
+      const accountType = deposit.account_type === 'savings' ? 'savings' : 'current';
+      const balanceColumn = accountType === 'savings' ? 'savings_balance' : 'current_balance';
+      await conn.query(
+        `UPDATE users SET ${balanceColumn} = COALESCE(${balanceColumn}, 0) + ? WHERE id = ?`,
+        [Number(deposit.amount), deposit.user_id]
+      );
+    }
+
+    const [result] = await conn.query(
+      'UPDATE deposits SET status = ?, reviewed_at = ? WHERE id = ?',
+      ['confirmed', reviewedAt, depositId]
+    );
+
+    if (result.affectedRows === 0) {
+      await conn.rollback();
+      return res.status(404).json({ error: 'Deposit not found' });
+    }
+
+    await conn.commit();
     res.json({ message: 'Deposit confirmed successfully' });
   } catch (error) {
+    try { await conn.rollback(); } catch (_) {}
     console.error('❌ Confirm deposit error:', error);
     res.status(500).json({ error: 'Failed to confirm deposit' });
   }
@@ -2788,13 +2826,14 @@ router.put('/deposit/:id/confirm', authenticateToken, checkAdmin, async (req, re
 router.put('/deposit/:id/reject', authenticateToken, checkAdmin, async (req, res) => {
   try {
     const depositId = req.params.id;
+    const reviewedAt = moment().format('YYYY-MM-DD HH:mm:ss');
 
     const [result] = await db
       .promise()
-      .query('UPDATE deposits SET status = ? WHERE id = ?', ['rejected', depositId]);
+      .query('UPDATE deposits SET status = ?, reviewed_at = ? WHERE id = ? AND status = ?', ['rejected', reviewedAt, depositId, 'pending']);
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Deposit not found' });
+      return res.status(404).json({ error: 'Pending deposit not found' });
     }
 
     res.json({ message: 'Deposit rejected successfully' });

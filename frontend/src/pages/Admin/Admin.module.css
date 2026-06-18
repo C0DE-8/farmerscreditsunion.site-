@@ -257,6 +257,19 @@
   font-size: 13px;
 }
 
+.tableRow strong,
+.tableRow small {
+  display: block;
+  min-width: 0;
+}
+
+.tableRow small {
+  margin-top: 4px;
+  color: var(--text-soft);
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
 .tableRow a {
   color: var(--primary);
   font-weight: 800;

@@ -17,6 +17,7 @@ import TransactionHistoryPage from "../pages/UserPages/TransactionHistoryPage";
 import ConvertPage from "../pages/UserPages/ConvertPage";
 import ProfilePage from "../pages/UserPages/ProfilePage";
 import TransferDetailPage from "../pages/UserPages/TransferDetailPage";
+import FundingPage from "../pages/UserPages/FundingPage";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 import PublicRoute from "../components/PublicRoute/PublicRoute";
 
@@ -96,6 +97,15 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={["user"]}>
               <ConvertPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/funding"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <FundingPage />
             </ProtectedRoute>
           }
         />
