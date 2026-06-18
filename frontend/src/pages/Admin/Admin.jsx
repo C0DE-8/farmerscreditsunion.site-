@@ -11,6 +11,7 @@ const sections = [
   { path: "/admin/users", label: "Users" },
   { path: "/admin/transfers", label: "Transfers" },
   { path: "/admin/deposits", label: "Deposits" },
+  { path: "/admin/loans", label: "Loans" },
   { path: "/admin/bill-payments", label: "Bill Payments" },
   { path: "/admin/tickets", label: "Tickets" },
   { path: "/admin/wallets", label: "Wallets" },

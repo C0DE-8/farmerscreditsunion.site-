@@ -141,6 +141,18 @@
   cursor: pointer;
 }
 
+.inlineNote {
+  width: 100%;
+  min-height: 54px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card-bg);
+  color: var(--text);
+  padding: 8px 10px;
+  resize: vertical;
+  font: inherit;
+}
+
 .refreshBtn {
   background: rgba(185, 28, 28, 0.1);
   color: var(--primary);

@@ -94,6 +94,12 @@ export default function MorePage() {
       path: "/statements",
     },
     {
+      title: "Loans",
+      subtitle: "Submit loan applications and monitor approval updates.",
+      icon: <FiCheckCircle />,
+      path: "/loans",
+    },
+    {
       title: "Bills & Airtime",
       subtitle: "Pay utilities, tax, mortgage, and airtime requests.",
       icon: <FiPhone />,

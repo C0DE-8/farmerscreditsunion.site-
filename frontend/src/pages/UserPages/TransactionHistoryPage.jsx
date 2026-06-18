@@ -49,6 +49,9 @@ export default function TransactionHistoryPage() {
   }, []);
 
   const activeItems = useMemo(() => items[active] || [], [active, items]);
+  const openTransfer = (item) => {
+    navigate(`/transfer/${item.id}?kind=${active}`);
+  };
 
   const changeTabBySwipe = (endX) => {
     if (startX === null) return;
@@ -103,7 +106,12 @@ export default function TransactionHistoryPage() {
           ) : (
             <div className={styles.transactionList}>
               {activeItems.map((item) => (
-                <article className={styles.transactionItem} key={`${active}-${item.id}`}>
+                <button
+                  type="button"
+                  className={styles.transactionItem}
+                  key={`${active}-${item.id}`}
+                  onClick={() => openTransfer(item)}
+                >
                   <span className={styles.transactionIcon}>
                     {active === "self" ? <FiDownload /> : <FiSend />}
                   </span>
@@ -112,7 +120,7 @@ export default function TransactionHistoryPage() {
                     <small>{item.bank_name || item.to_account || item.reason || item.date || item.created_at}</small>
                   </div>
                   <b>{item.amount}</b>
-                </article>
+                </button>
               ))}
             </div>
           )}

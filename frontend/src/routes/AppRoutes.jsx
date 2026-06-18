@@ -5,6 +5,7 @@ import Admin from "../pages/Admin/Admin";
 import AdminDeposits from "../pages/Admin/pages/AdminDeposits";
 import AdminOnboarding from "../pages/Admin/pages/AdminOnboarding";
 import AdminOverview from "../pages/Admin/pages/AdminOverview";
+import AdminLoans from "../pages/Admin/pages/AdminLoans";
 import AdminSettings from "../pages/Admin/pages/AdminSettings";
 import AdminTickets from "../pages/Admin/pages/AdminTickets";
 import AdminTransfers from "../pages/Admin/pages/AdminTransfers";
@@ -12,7 +13,6 @@ import AdminUsers from "../pages/Admin/pages/AdminUsers";
 import AdminWallets from "../pages/Admin/pages/AdminWallets";
 import AdminBillPayments from "../pages/Admin/pages/AdminBillPayments";
 import VerifyLoginOTP from "../pages/VerifyLoginOTP/VerifyLoginOTP";
-import UserPage from "../pages/UserPages/UserPage";
 import TransactionsPage from "../pages/UserPages/TransactionsPage";
 import TransactionHistoryPage from "../pages/UserPages/TransactionHistoryPage";
 import ConvertPage from "../pages/UserPages/ConvertPage";
@@ -23,6 +23,7 @@ import TransferDetailPage from "../pages/UserPages/TransferDetailPage";
 import FundingPage from "../pages/UserPages/FundingPage";
 import BillsAirtimePage from "../pages/UserPages/BillsAirtimePage";
 import CardsPage from "../pages/UserPages/CardsPage";
+import LoansPage from "../pages/UserPages/LoansPage";
 import StatementsPage from "../pages/UserPages/StatementsPage";
 import SupportPage from "../pages/UserPages/SupportPage";
 import {
@@ -232,7 +233,7 @@ export default function AppRoutes() {
           path="/loans"
           element={
             <ProtectedRoute allowedRoles={["user"]}>
-              <UserPage type="more" title="Loans" description="Review loan options and account lending information." />
+              <LoansPage />
             </ProtectedRoute>
           }
         />
@@ -250,6 +251,7 @@ export default function AppRoutes() {
           <Route path="users" element={<AdminUsers />} />
           <Route path="transfers" element={<AdminTransfers />} />
           <Route path="deposits" element={<AdminDeposits />} />
+          <Route path="loans" element={<AdminLoans />} />
           <Route path="bill-payments" element={<AdminBillPayments />} />
           <Route path="tickets" element={<AdminTickets />} />
           <Route path="wallets" element={<AdminWallets />} />

@@ -2954,6 +2954,78 @@ router.put('/deposit/:id/reject', authenticateToken, checkAdmin, async (req, res
   }
 });
 
+router.get('/loans', authenticateToken, checkAdmin, async (req, res) => {
+  try {
+    const [rows] = await db.promise().query(
+      `SELECT l.id, l.user_id, l.full_name, l.gender, l.marital_status, l.email, l.ssn,
+              l.mobile_number, l.residential_address, l.number_of_dependents, l.annual_income,
+              l.employment_details, l.loan_service, l.loan_amount, l.payment_tenure,
+              l.loan_purpose, l.agreed_terms, l.status, l.review_note, l.reviewed_at,
+              l.created_at, u.username
+       FROM loan_applications l
+       JOIN users u ON u.id = l.user_id
+       ORDER BY l.created_at DESC`
+    );
+
+    res.json({
+      loans: rows.map((row) => ({
+        ...row,
+        created_at: row.created_at ? moment(row.created_at).format('MMM D, YYYY h:mm A') : '',
+        reviewed_at: row.reviewed_at ? moment(row.reviewed_at).format('MMM D, YYYY h:mm A') : '',
+      })),
+    });
+  } catch (error) {
+    console.error('❌ Admin loan fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch loan applications' });
+  }
+});
+
+router.put('/loans/:id/approve', authenticateToken, checkAdmin, async (req, res) => {
+  const loanId = req.params.id;
+  const { review_note = '' } = req.body || {};
+
+  try {
+    const [result] = await db.promise().query(
+      `UPDATE loan_applications
+       SET status = 'approved', review_note = ?, reviewed_at = NOW(), reviewed_by = ?
+       WHERE id = ?`,
+      [String(review_note || '').trim(), req.user.id, loanId]
+    );
+
+    if (!result.affectedRows) {
+      return res.status(404).json({ error: 'Loan application not found' });
+    }
+
+    res.json({ message: 'Loan application approved successfully' });
+  } catch (error) {
+    console.error('❌ Admin loan approval error:', error);
+    res.status(500).json({ error: 'Failed to approve loan application' });
+  }
+});
+
+router.put('/loans/:id/reject', authenticateToken, checkAdmin, async (req, res) => {
+  const loanId = req.params.id;
+  const { review_note = '' } = req.body || {};
+
+  try {
+    const [result] = await db.promise().query(
+      `UPDATE loan_applications
+       SET status = 'rejected', review_note = ?, reviewed_at = NOW(), reviewed_by = ?
+       WHERE id = ?`,
+      [String(review_note || '').trim(), req.user.id, loanId]
+    );
+
+    if (!result.affectedRows) {
+      return res.status(404).json({ error: 'Loan application not found' });
+    }
+
+    res.json({ message: 'Loan application rejected successfully' });
+  } catch (error) {
+    console.error('❌ Admin loan rejection error:', error);
+    res.status(500).json({ error: 'Failed to reject loan application' });
+  }
+});
+
 
 // 🔐 Admin: Reset a user's transaction PIN to 000000
 router.post('/users/:id/reset-pin', authenticateToken, checkAdmin, (req, res) => {

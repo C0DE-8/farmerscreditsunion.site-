@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { registerUser } from "../../api/authApi";
 import GlassToast, { useGlassToast } from "../../components/Toast/GlassToast";
@@ -451,9 +451,9 @@ export default function Login() {
 
       <div className={`${styles.loginShell} ${mode === "register" ? styles.registerShell : ""} ${mounted ? styles.showShell : ""}`}>
         <div className={styles.formPanel}>
-          <div className={styles.logoRow}>
+          <Link className={styles.logoRow} to="/">
             <img className={styles.logoImage} src={BRAND_LOGO} alt="West Bridge Vault Reserve" />
-          </div>
+          </Link>
 
           <div className={styles.formContent}>
             <div className={styles.modeTabs}>

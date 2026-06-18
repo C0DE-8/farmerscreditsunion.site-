@@ -65,6 +65,12 @@ export default function Dashboard() {
     return Number.isFinite(amount) ? amount : 0;
   };
 
+  const openTransferDetail = (item) => {
+    if (!item?.rawId) return;
+    const kind = item.kind || item.type || "local";
+    navigate(`/transfer/${item.rawId}?kind=${kind}`);
+  };
+
   useEffect(() => {
     let active = true;
 
@@ -137,6 +143,8 @@ export default function Dashboard() {
 
             return {
               id: `${item.type || "self"}-${item.id}`,
+              rawId: item.id,
+              kind: item.type || "self",
               title,
               subtitle: transferBank || item.reason || item.from_account || "Banking transaction",
               bank_name: transferBank,
@@ -483,7 +491,12 @@ export default function Dashboard() {
                 </div>
               ) : (
                 mobileTransactions.map((item) => (
-                  <div className={styles.mobileTransactionRow} key={item.id}>
+                  <button
+                    className={styles.mobileTransactionRow}
+                    key={item.id}
+                    type="button"
+                    onClick={() => openTransferDetail(item)}
+                  >
                     <div className={styles.mobileTxnAvatar}>
                       {item.value < 0 ? <FiSend /> : <FiDownload />}
                     </div>
@@ -502,7 +515,7 @@ export default function Dashboard() {
                           : `+${formatMoney(item.value)}`
                         : "******"}
                     </strong>
-                  </div>
+                  </button>
                 ))
               )}
             </div>
@@ -679,7 +692,12 @@ export default function Dashboard() {
               </div>
 
               {shownTransactions.map((item) => (
-                <div className={styles.tableRow} key={item.id}>
+                <button
+                  className={styles.tableRow}
+                  key={item.id}
+                  type="button"
+                  onClick={() => item.rawId && openTransferDetail(item)}
+                >
                   <span className={styles.refText}>{item.id}</span>
 
                   <div className={styles.transactionMeta}>
@@ -712,7 +730,7 @@ export default function Dashboard() {
                   >
                     {item.status}
                   </span>
-                </div>
+                </button>
               ))}
             </div>
           </div>

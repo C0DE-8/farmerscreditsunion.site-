@@ -666,6 +666,9 @@
   border: 1px solid var(--border);
   background: rgba(127, 127, 127, 0.03);
   border-radius: 16px;
+  text-align: left;
+  color: var(--text);
+  cursor: pointer;
 }
 
 .refText {
@@ -1297,6 +1300,12 @@
     gap: 12px;
     padding: 10px;
     border-radius: 20px;
+    width: 100%;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    color: var(--text);
+    cursor: pointer;
   }
 
   .mobileTransactionRow + .mobileTransactionRow {

@@ -1678,6 +1678,45 @@ router.get('/transfer/history/wire', authenticateToken, async (req, res) => {
 router.get('/transfer/history/:id', authenticateToken, (req, res) => {
   const userId = req.user.id;
   const transferId = req.params.id;
+  const transferKind = String(req.query.kind || "").toLowerCase();
+
+  if (transferKind === "self") {
+    const selfQuery = `
+      SELECT id, from_account, to_account, amount, created_at
+      FROM self_transfers
+      WHERE id = ? AND user_id = ?
+      LIMIT 1
+    `;
+
+    return db.query(selfQuery, [transferId, userId], (err, results) => {
+      if (err) {
+        console.error('❌ Self transfer fetch error:', err);
+        return res.status(500).json({ error: 'Failed to fetch transfer' });
+      }
+
+      if (!results.length) {
+        return res.status(404).json({ error: 'Transfer not found' });
+      }
+
+      const t = results[0];
+      return res.json({
+        transfer: {
+          id: t.id,
+          type: 'self',
+          from_account: t.from_account,
+          to_account: t.to_account,
+          account_name: 'Own account transfer',
+          bank_name: 'West Bridge Vault Reserve',
+          account_number: `${t.from_account} -> ${t.to_account}`,
+          reason: 'Internal transfer',
+          amount: `$${parseFloat(t.amount).toFixed(2)}`,
+          fee: '$0.00',
+          status: 'completed',
+          date: moment(t.created_at).format('YYYY-MM-DD HH:mm:ss')
+        }
+      });
+    });
+  }
 
   const query = `
     SELECT 
@@ -2410,6 +2449,98 @@ router.get('/deposits', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('❌ Fetch user deposits error:', error);
     res.status(500).json({ error: 'Failed to fetch deposits' });
+  }
+});
+
+router.post('/loans', authenticateToken, async (req, res) => {
+  const userId = req.user.id;
+  const {
+    full_name,
+    gender,
+    marital_status,
+    email,
+    ssn,
+    mobile_number,
+    residential_address,
+    number_of_dependents,
+    annual_income,
+    employment_details,
+    loan_service,
+    loan_amount,
+    payment_tenure,
+    loan_purpose,
+    agreed_terms,
+  } = req.body;
+
+  if (
+    !full_name || !gender || !marital_status || !email || !ssn || !mobile_number ||
+    !residential_address || number_of_dependents === undefined || !annual_income ||
+    !employment_details || !loan_service || !loan_amount || !payment_tenure ||
+    !loan_purpose || !agreed_terms
+  ) {
+    return res.status(400).json({ error: 'All loan application fields are required' });
+  }
+
+  try {
+    await db.promise().query(
+      `INSERT INTO loan_applications
+        (user_id, full_name, gender, marital_status, email, ssn, mobile_number,
+         residential_address, number_of_dependents, annual_income, employment_details,
+         loan_service, loan_amount, payment_tenure, loan_purpose, agreed_terms)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        userId,
+        full_name,
+        gender,
+        marital_status,
+        email,
+        ssn,
+        mobile_number,
+        residential_address,
+        Number(number_of_dependents),
+        Number(annual_income),
+        employment_details,
+        loan_service,
+        Number(loan_amount),
+        payment_tenure,
+        loan_purpose,
+        agreed_terms ? 1 : 0,
+      ]
+    );
+
+    await logActivity(userId, 'loan_request', `Submitted ${loan_service} loan request`);
+    res.json({ message: 'Loan request submitted successfully and is pending admin review.' });
+  } catch (error) {
+    console.error('❌ Loan request error:', error);
+    res.status(500).json({ error: 'Failed to submit loan request' });
+  }
+});
+
+router.get('/loans', authenticateToken, async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const [rows] = await db.promise().query(
+      `SELECT id, full_name, gender, marital_status, email, ssn, mobile_number,
+              residential_address, number_of_dependents, annual_income, employment_details,
+              loan_service, loan_amount, payment_tenure, loan_purpose,
+              status, review_note, reviewed_at, created_at
+       FROM loan_applications
+       WHERE user_id = ?
+       ORDER BY created_at DESC`,
+      [userId]
+    );
+
+    res.json({
+      loans: rows.map((row) => ({
+        ...row,
+        created_at: moment(row.created_at).format('MMM D, YYYY h:mm A'),
+        reviewed_at: row.reviewed_at ? moment(row.reviewed_at).format('MMM D, YYYY h:mm A') : "",
+      })),
+    });
+  } catch (error) {
+    console.error('❌ Fetch loan applications error:', error);
+    res.status(500).json({ error: 'Failed to fetch loan applications' });
   }
 });
 

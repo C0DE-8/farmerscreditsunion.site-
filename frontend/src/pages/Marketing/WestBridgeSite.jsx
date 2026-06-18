@@ -143,7 +143,7 @@ function MarketingLayout({ children, activePath }) {
             <h4>Contact</h4>
             <p>250 Hartford Avenue, Bellingham MA 02019, USA</p>
             <p>www.westbridgevaultreserve.online</p>
-            <p>support@westbridgevaultreserve.com</p>
+            <p>support@westbridgevaultreserve.online</p>
             <p>Mon - Sat: 09:00 AM - 06:00 PM</p>
           </div>
         </div>
@@ -377,7 +377,8 @@ export function WestBridgeServicesPage() {
               <h2>Structured banking support across lending and account management</h2>
             </div>
             <p>
-              Discover service lines adapted from the source site, now routed through the React frontend.
+              Explore West Bridge banking services built for lending, account management,
+              payments, financial planning, and secure digital banking access.
             </p>
           </div>
           <div className={styles.serviceStack}>
@@ -420,7 +421,7 @@ export function WestBridgeContactPage() {
               <FiPhone />
               <h3>Let's Talk</h3>
               <p>www.westbridgevaultreserve.online</p>
-              <p>support@westbridgevaultreserve.com</p>
+              <p>support@westbridgevaultreserve.online</p>
             </article>
           </div>
           <div className={styles.contactSplit}>
@@ -428,7 +429,7 @@ export function WestBridgeContactPage() {
               <span className={styles.kicker}>Book appointment now</span>
               <h2>Have queries before the appointment?</h2>
               <p>
-                Send a message to `support@westbridgevaultreserve.com` and our team
+                Send a message to `support@westbridgevaultreserve.online` and our team
                 will reply within 24 hours.
               </p>
               <div className={styles.heroActions}>
