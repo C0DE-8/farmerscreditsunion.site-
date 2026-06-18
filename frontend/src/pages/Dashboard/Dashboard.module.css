@@ -4,19 +4,19 @@
   --text: #101828;
   --text-soft: #667085;
   --border: #e8edf4;
-  --primary: #0f62fe;
-  --accent: #14b8a6;
+  --primary: #b91c1c;
+  --accent: #ef4444;
   --shadow: 0 18px 36px rgba(16, 24, 40, 0.08);
   --surface-soft: #f4f7fb;
-  --pill-bg: #eef6ff;
+  --pill-bg: #fff1f2;
   --danger: #d92d20;
   --success: #079455;
   --page-gradient:
-    radial-gradient(circle at 12% 8%, rgba(15, 98, 254, 0.1), transparent 28%),
-    radial-gradient(circle at 92% 18%, rgba(20, 184, 166, 0.1), transparent 26%),
+    radial-gradient(circle at 12% 8%, rgba(185, 28, 28, 0.12), transparent 28%),
+    radial-gradient(circle at 92% 18%, rgba(239, 68, 68, 0.1), transparent 26%),
     linear-gradient(180deg, #fbfdff 0%, var(--bg) 44%);
-  --card-gradient: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(246, 250, 255, 0.9));
-  --bank-card-gradient: linear-gradient(135deg, #f8fbff 0%, #eef6ff 48%, #ecfdf8 100%);
+  --card-gradient: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(255, 245, 245, 0.92));
+  --bank-card-gradient: linear-gradient(135deg, #fff8f8 0%, #fff1f2 48%, #ffe4e6 100%);
   min-height: 100vh;
   display: grid;
   grid-template-columns: 270px 1fr;
@@ -31,19 +31,19 @@
   --text: #f8fafc;
   --text-soft: #94a3b8;
   --border: rgba(148, 163, 184, 0.22);
-  --primary: #60a5fa;
-  --accent: #2dd4bf;
+  --primary: #fb7185;
+  --accent: #fecdd3;
   --shadow: 0 18px 40px rgba(0, 0, 0, 0.32);
   --surface-soft: rgba(148, 163, 184, 0.1);
-  --pill-bg: rgba(59, 130, 246, 0.16);
+  --pill-bg: rgba(251, 113, 133, 0.16);
   --danger: #f87171;
   --success: #34d399;
   --page-gradient:
-    radial-gradient(circle at 10% 8%, rgba(96, 165, 250, 0.16), transparent 30%),
-    radial-gradient(circle at 92% 18%, rgba(45, 212, 191, 0.12), transparent 28%),
+    radial-gradient(circle at 10% 8%, rgba(251, 113, 133, 0.18), transparent 30%),
+    radial-gradient(circle at 92% 18%, rgba(190, 24, 93, 0.14), transparent 28%),
     linear-gradient(180deg, #07111f 0%, #081525 50%, #06101d 100%);
   --card-gradient: linear-gradient(145deg, rgba(15, 26, 43, 0.96), rgba(10, 21, 36, 0.94));
-  --bank-card-gradient: linear-gradient(135deg, rgba(19, 39, 68, 0.98), rgba(12, 33, 54, 0.96) 48%, rgba(10, 54, 50, 0.9));
+  --bank-card-gradient: linear-gradient(135deg, rgba(68, 19, 30, 0.98), rgba(54, 12, 24, 0.96) 48%, rgba(76, 18, 44, 0.9));
 }
 
 .sidebar {
@@ -52,7 +52,7 @@
   justify-content: space-between;
   padding: 24px 18px;
   border-right: 1px solid var(--border);
-  background: linear-gradient(180deg, var(--card-bg), rgba(15, 98, 254, 0.035));
+  background: linear-gradient(180deg, var(--card-bg), rgba(185, 28, 28, 0.045));
 }
 
 .brandBlock {
@@ -65,14 +65,19 @@
 .brandLogo {
   width: 48px;
   height: 48px;
-  border-radius: 16px;
+  border-radius: 18px;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  color: white;
-  font-weight: 800;
-  font-size: 18px;
+  background: rgba(255, 255, 255, 0.78);
   box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.brandLogo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .brandTitle {
@@ -132,7 +137,7 @@
 }
 
 .activeNavItem {
-  background: rgba(15, 98, 254, 0.1);
+  background: rgba(185, 28, 28, 0.1);
   color: var(--primary);
   font-weight: 700;
 }
@@ -144,7 +149,7 @@
   border-radius: 999px;
   display: inline-grid;
   place-items: center;
-  background: rgba(15, 98, 254, 0.08);
+  background: rgba(185, 28, 28, 0.08);
   color: var(--primary);
   text-align: center;
   font-size: 10px;
@@ -259,7 +264,7 @@
 }
 
 .iconAction:hover {
-  background: rgba(15, 98, 254, 0.1);
+  background: rgba(185, 28, 28, 0.1);
   color: var(--primary);
 }
 
@@ -308,7 +313,7 @@
   font-size: 18px;
   overflow: hidden;
   cursor: pointer;
-  box-shadow: 0 0 0 2px rgba(15, 98, 254, 0.2), 0 12px 26px rgba(16, 24, 40, 0.14);
+  box-shadow: 0 0 0 2px rgba(185, 28, 28, 0.18), 0 12px 26px rgba(16, 24, 40, 0.14);
   line-height: 1;
 }
 
@@ -436,7 +441,7 @@
   border-radius: 999px;
   display: grid;
   place-items: center;
-  background: rgba(15, 98, 254, 0.12);
+  background: rgba(185, 28, 28, 0.12);
   color: var(--primary);
   font-size: 11px;
   font-weight: 900;
@@ -502,14 +507,14 @@
   width: 92px;
   height: 92px;
   border-radius: 50%;
-  background: rgba(15, 98, 254, 0.08);
+  background: rgba(185, 28, 28, 0.08);
   pointer-events: none;
 }
 
 .desktopAccountCard:hover,
 .activeDesktopAccount {
   transform: translateY(-3px) scale(1.015);
-  border-color: rgba(15, 98, 254, 0.34);
+  border-color: rgba(185, 28, 28, 0.34);
   background: var(--bank-card-gradient);
   box-shadow: 0 16px 32px rgba(16, 24, 40, 0.1);
 }
@@ -578,8 +583,8 @@
 }
 
 .statTag {
-  background: rgba(20, 184, 166, 0.14);
-  color: #0f9b8e;
+  background: rgba(185, 28, 28, 0.12);
+  color: #b91c1c;
 }
 
 .statTagMuted {
@@ -933,7 +938,7 @@
     height: 46px;
     border: 1px solid var(--border);
     border-radius: 17px;
-    background: linear-gradient(145deg, var(--card-bg), rgba(15, 98, 254, 0.08));
+    background: linear-gradient(145deg, var(--card-bg), rgba(185, 28, 28, 0.08));
     color: var(--text);
     display: grid;
     place-items: center;
@@ -984,14 +989,14 @@
     border-radius: 50%;
     display: grid;
     place-items: center;
-    background: linear-gradient(135deg, var(--primary), #14b8a6);
+    background: linear-gradient(135deg, var(--primary), var(--accent));
     color: white;
     font-weight: 900;
     font-size: 20px;
     position: relative;
     flex: 0 0 auto;
     overflow: hidden;
-    box-shadow: 0 0 0 2px rgba(15, 98, 254, 0.13), 0 12px 24px rgba(16, 24, 40, 0.14);
+    box-shadow: 0 0 0 2px rgba(185, 28, 28, 0.13), 0 12px 24px rgba(16, 24, 40, 0.14);
     line-height: 1;
   }
 
@@ -1100,7 +1105,7 @@
     border-radius: 50%;
     display: grid;
     place-items: center;
-    background: linear-gradient(145deg, var(--card-bg), rgba(15, 98, 254, 0.08));
+    background: linear-gradient(145deg, var(--card-bg), rgba(185, 28, 28, 0.08));
     border: 1px solid var(--border);
     color: var(--primary);
     font-size: 12px;
@@ -1146,7 +1151,7 @@
     width: 132px;
     height: 132px;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(15, 98, 254, 0.12), rgba(20, 184, 166, 0.08));
+    background: linear-gradient(135deg, rgba(185, 28, 28, 0.12), rgba(239, 68, 68, 0.08));
     pointer-events: none;
   }
 
@@ -1157,7 +1162,7 @@
     width: 110px;
     height: 110px;
     border-radius: 50%;
-    background: rgba(15, 98, 254, 0.06);
+    background: rgba(185, 28, 28, 0.06);
     pointer-events: none;
   }
 
@@ -1418,7 +1423,7 @@
 
   [data-theme="dark"] .mobileAccountSkeleton {
     background:
-      radial-gradient(circle at 18% 12%, rgba(96, 165, 250, 0.16), transparent 36%),
+      radial-gradient(circle at 18% 12%, rgba(251, 113, 133, 0.16), transparent 36%),
       linear-gradient(135deg, rgba(15, 26, 43, 0.68), rgba(10, 21, 36, 0.42));
   }
 

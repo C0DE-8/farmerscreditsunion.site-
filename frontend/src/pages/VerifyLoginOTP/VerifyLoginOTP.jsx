@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import styles from "./VerifyLoginOTP.module.css";
 
+const BRAND_LOGO = "/westbridge-assets/images/westbridge-wg.png";
+
 export default function VerifyLoginOTP() {
   const navigate = useNavigate();
   const { verifyOtpLogin } = useAuth();
@@ -83,15 +85,14 @@ export default function VerifyLoginOTP() {
       <div className={`${styles.loginShell} ${mounted ? styles.showShell : ""}`}>
         <div className={styles.formPanel}>
           <div className={styles.logoRow}>
-            <div className={styles.logoBox}>✦</div>
-            <span className={styles.brandName}>Stercxa Bank</span>
+            <img className={styles.logoImage} src={BRAND_LOGO} alt="West Bridge Vault Reserve" />
           </div>
 
           <div className={styles.formContent}>
             <h1>Verify login OTP</h1>
             <p className={styles.subtitle}>
               Enter the one-time password sent to your email to complete your
-              secure sign in and continue to your Stercxa Bank dashboard.
+              secure sign in and continue to your West Bridge Vault Reserve dashboard.
             </p>
 
             <form className={styles.form} onSubmit={handleSubmit}>
@@ -152,7 +153,7 @@ export default function VerifyLoginOTP() {
             <h2>Secure every login with trusted verification.</h2>
             <p>
               Your account security matters. Confirm your one-time password and
-              continue with confidence using Stercxa Bank’s protected login flow.
+              continue with confidence using West Bridge Vault Reserve's protected login flow.
             </p>
 
             <div className={styles.usersRow}>
@@ -169,7 +170,7 @@ export default function VerifyLoginOTP() {
             <div className={styles.cardNumber}>•••• •••• •••• 9021</div>
             <div className={styles.cardFooter}>
               <span>SECURE LOGIN</span>
-              <span>STERCXA</span>
+              <span>WEST BRIDGE</span>
             </div>
           </div>
 

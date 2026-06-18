@@ -3,6 +3,8 @@ import GlassToast, { useGlassToast } from "../../components/Toast/GlassToast";
 import { useAuth } from "../../context/AuthContext";
 import styles from "./Admin.module.css";
 
+const BRAND_LOGO = "/westbridge-assets/images/westbridge-wg.png";
+
 const sections = [
   { path: "/admin", label: "Overview", end: true },
   { path: "/admin/onboarding", label: "Onboarding" },
@@ -36,9 +38,11 @@ export default function Admin() {
 
       <aside className={styles.sidebar}>
         <div className={styles.brand}>
-          <div className={styles.brandMark}>S</div>
+          <div className={styles.brandMark}>
+            <img src={BRAND_LOGO} alt="West Bridge Vault Reserve" />
+          </div>
           <div>
-            <strong>Stercxa Admin</strong>
+            <strong>West Bridge Admin</strong>
             <span>Operations Console</span>
           </div>
         </div>

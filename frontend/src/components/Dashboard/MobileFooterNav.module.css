@@ -44,8 +44,8 @@
     border-radius: 20px;
     background:
       radial-gradient(circle at 24% 16%, rgba(255, 255, 255, 0.9), transparent 36%),
-      linear-gradient(135deg, rgba(15, 98, 254, 0.18), rgba(20, 184, 166, 0.15));
-    box-shadow: 0 13px 28px rgba(15, 98, 254, 0.14);
+      linear-gradient(135deg, rgba(185, 28, 28, 0.18), rgba(239, 68, 68, 0.15));
+    box-shadow: 0 13px 28px rgba(185, 28, 28, 0.14);
     transform: translateX(calc(var(--active-offset) + var(--active-gap-offset)));
     transition: transform 0.34s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.24s ease;
     pointer-events: none;
@@ -116,7 +116,7 @@
   }
 
   .active {
-    color: #0f62fe !important;
+    color: #b91c1c !important;
   }
 
   .active::before {
@@ -149,12 +149,12 @@
 [data-theme="dark"] .activeFill {
   background:
     radial-gradient(circle at 24% 16%, rgba(255, 255, 255, 0.18), transparent 36%),
-    linear-gradient(135deg, rgba(96, 165, 250, 0.24), rgba(45, 212, 191, 0.18));
-  box-shadow: 0 13px 28px rgba(14, 165, 233, 0.14);
+    linear-gradient(135deg, rgba(251, 113, 133, 0.24), rgba(190, 24, 93, 0.18));
+  box-shadow: 0 13px 28px rgba(244, 63, 94, 0.16);
 }
 
 [data-theme="dark"] .active {
-  color: #7dd3fc !important;
+  color: #fecdd3 !important;
 }
 
 @media (max-width: 420px) {

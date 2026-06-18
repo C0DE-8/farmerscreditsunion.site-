@@ -59,6 +59,6 @@
 
 .menu button:hover,
 .menu .active {
-  background: rgba(15, 98, 254, 0.1);
+  background: rgba(185, 28, 28, 0.1);
   color: var(--primary);
 }

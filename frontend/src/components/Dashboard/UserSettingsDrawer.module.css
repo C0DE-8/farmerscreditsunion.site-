@@ -11,16 +11,16 @@
 
 .drawer {
   --drawer-bg:
-    radial-gradient(circle at 12% 8%, rgba(15, 98, 254, 0.12), transparent 32%),
-    radial-gradient(circle at 90% 14%, rgba(20, 184, 166, 0.12), transparent 28%),
+    radial-gradient(circle at 12% 8%, rgba(185, 28, 28, 0.12), transparent 32%),
+    radial-gradient(circle at 90% 14%, rgba(239, 68, 68, 0.12), transparent 28%),
     rgba(255, 255, 255, 0.84);
   --drawer-text: #101828;
   --drawer-muted: #667085;
   --drawer-border: rgba(226, 232, 240, 0.78);
   --drawer-surface: rgba(255, 255, 255, 0.66);
-  --drawer-hover: rgba(15, 98, 254, 0.08);
-  --drawer-icon-bg: rgba(15, 98, 254, 0.1);
-  --drawer-icon: #0f62fe;
+  --drawer-hover: rgba(185, 28, 28, 0.08);
+  --drawer-icon-bg: rgba(185, 28, 28, 0.1);
+  --drawer-icon: #b91c1c;
   width: min(420px, calc(100vw - 18px));
   height: 100%;
   padding: 22px;
@@ -38,16 +38,16 @@
 
 [data-theme="dark"] .drawer {
   --drawer-bg:
-    radial-gradient(circle at 12% 8%, rgba(96, 165, 250, 0.18), transparent 32%),
-    radial-gradient(circle at 90% 14%, rgba(45, 212, 191, 0.14), transparent 28%),
+    radial-gradient(circle at 12% 8%, rgba(251, 113, 133, 0.18), transparent 32%),
+    radial-gradient(circle at 90% 14%, rgba(190, 24, 93, 0.14), transparent 28%),
     rgba(12, 18, 32, 0.86);
   --drawer-text: #f8fafc;
   --drawer-muted: rgba(230, 235, 255, 0.64);
   --drawer-border: rgba(255, 255, 255, 0.14);
   --drawer-surface: rgba(255, 255, 255, 0.055);
-  --drawer-hover: rgba(114, 217, 255, 0.1);
-  --drawer-icon-bg: rgba(114, 217, 255, 0.12);
-  --drawer-icon: #72d9ff;
+  --drawer-hover: rgba(251, 113, 133, 0.1);
+  --drawer-icon-bg: rgba(251, 113, 133, 0.12);
+  --drawer-icon: #fecdd3;
   box-shadow: -24px 0 60px rgba(0, 0, 0, 0.28);
 }
 
@@ -91,7 +91,7 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, #0f62fe, #14b8a6);
+  background: linear-gradient(135deg, #b91c1c, #ef4444);
   color: white;
   font-weight: 800;
   flex: 0 0 auto;
@@ -131,7 +131,7 @@
   border: 1px solid var(--drawer-border);
   border-radius: 18px;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(15, 98, 254, 0.04)),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(185, 28, 28, 0.04)),
     var(--drawer-surface);
   color: var(--drawer-text);
   display: grid;
@@ -149,11 +149,11 @@
 
 .nav button:hover {
   background: var(--drawer-hover);
-  border-color: rgba(15, 98, 254, 0.22);
+  border-color: rgba(185, 28, 28, 0.22);
 }
 
 [data-theme="dark"] .nav button:hover {
-  border-color: rgba(114, 217, 255, 0.28);
+  border-color: rgba(251, 113, 133, 0.28);
 }
 
 .nav button:active {

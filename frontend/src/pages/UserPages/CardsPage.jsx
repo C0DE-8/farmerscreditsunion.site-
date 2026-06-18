@@ -29,6 +29,8 @@ const statusLabel = {
   rejected: "Rejected",
 };
 
+const DEFAULT_BANK_NAME = "West Bridge Vault Reserve";
+
 export default function CardsPage() {
   const navigate = useNavigate();
   const { userUser, logout } = useAuth();
@@ -37,7 +39,7 @@ export default function CardsPage() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [cards, setCards] = useState([]);
   const [profile, setProfile] = useState(userUser);
-  const [bankName, setBankName] = useState("Stercxa Bank");
+  const [bankName, setBankName] = useState(DEFAULT_BANK_NAME);
   const [loading, setLoading] = useState(true);
   const [submittingType, setSubmittingType] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
@@ -59,7 +61,7 @@ export default function CardsPage() {
 
       if (profileRes.status === "fulfilled") setProfile(profileRes.value.data?.user || userUser);
       if (cardRes.status === "fulfilled") setCards(cardRes.value.data?.cards || []);
-      if (bankRes.status === "fulfilled") setBankName(bankRes.value.data?.bank_name || "Stercxa Bank");
+      if (bankRes.status === "fulfilled") setBankName(bankRes.value.data?.bank_name || DEFAULT_BANK_NAME);
     } catch {
       notify("Unable to load your cards right now.", "error", "Cards unavailable");
     } finally {

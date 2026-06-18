@@ -21,6 +21,9 @@ import { useTheme } from "../../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { resolveAsset } from "../../utils/assets";
 
+const BRAND_LOGO = "/westbridge-assets/images/westbridge-wg.png";
+const DEFAULT_BANK_NAME = "West Bridge Vault Reserve";
+
 export default function Dashboard() {
   const { userUser, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
@@ -34,7 +37,7 @@ export default function Dashboard() {
   const [activeAccountIndex, setActiveAccountIndex] = useState(0);
   const [accountSwapDirection, setAccountSwapDirection] = useState("next");
   const [touchStartX, setTouchStartX] = useState(null);
-  const [bankName, setBankName] = useState("Stercxa Bank");
+  const [bankName, setBankName] = useState(DEFAULT_BANK_NAME);
   const accountSwipeHandledRef = useRef(false);
 
   const displayName =
@@ -89,9 +92,9 @@ export default function Dashboard() {
     async function loadBankName() {
       try {
         const res = await axiosInstance.get("/user/settings/bank-name");
-        if (active) setBankName(res.data?.bank_name || "Stercxa Bank");
+        if (active) setBankName(res.data?.bank_name || DEFAULT_BANK_NAME);
       } catch {
-        if (active) setBankName("Stercxa Bank");
+        if (active) setBankName(DEFAULT_BANK_NAME);
       }
     }
 
@@ -260,9 +263,11 @@ export default function Dashboard() {
     <div className={styles.dashboardPage}>
       <aside className={styles.sidebar}>
         <div className={styles.brandBlock}>
-          <div className={styles.brandLogo}>S</div>
+          <div className={styles.brandLogo}>
+            <img src={BRAND_LOGO} alt="West Bridge Vault Reserve" />
+          </div>
           <div>
-            <h2 className={styles.brandTitle}>Stercxa</h2>
+            <h2 className={styles.brandTitle}>West Bridge</h2>
             <p className={styles.brandSubtitle}>Banking Dashboard</p>
           </div>
         </div>

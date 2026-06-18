@@ -1,4 +1,4 @@
-/* RESET + GLOBAL DARK BACKGROUND */
+/* RESET + GLOBAL BASE BACKGROUND */
 
 html,
 body,
@@ -7,21 +7,25 @@ body,
 }
 
 html {
-  background: #050816; /* 🔥 your base dark color */
+  background: #f8fafc;
 }
 
 body {
   margin: 0;
   padding: 0;
-  background: #050816; /* prevents white flash */
+  background: #f8fafc;
   overflow-x: hidden;
 
   /* smooth feel */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* 🔥 THIS FIXES MOBILE DRAG / BOUNCE WHITE */
   overscroll-behavior: none;
+}
+
+[data-theme="dark"] html,
+[data-theme="dark"] body {
+  background: #07111f;
 }
 
 /* remove white highlight when tapping (mobile) */
