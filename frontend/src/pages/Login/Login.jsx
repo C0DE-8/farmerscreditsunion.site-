@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { registerUser } from "../../api/authApi";
 import GlassToast, { useGlassToast } from "../../components/Toast/GlassToast";
 import styles from "./Login.module.css";
 
 const ONBOARDING_DRAFT_KEY = "stercxa_onboarding_draft";
+const BRAND_LOGO = "/westbridge-assets/images/westbridge-wg.png";
 
 const emptyRegistration = {
   first_name: "",
@@ -102,6 +103,7 @@ export default function Login() {
 
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const registrationPhases = [
     {
@@ -125,6 +127,18 @@ export default function Login() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const requestedMode = params.get("mode");
+    if (requestedMode === "register") {
+      setMode("register");
+      return;
+    }
+    if (requestedMode === "login") {
+      setMode("login");
+    }
+  }, [location.search]);
 
   useEffect(() => {
     const { password, confirm_password, ...safeRegistration } = registration;
@@ -438,8 +452,7 @@ export default function Login() {
       <div className={`${styles.loginShell} ${mode === "register" ? styles.registerShell : ""} ${mounted ? styles.showShell : ""}`}>
         <div className={styles.formPanel}>
           <div className={styles.logoRow}>
-            <div className={styles.logoBox}>✦</div>
-            <span className={styles.brandName}>Stercxa Bank</span>
+            <img className={styles.logoImage} src={BRAND_LOGO} alt="West Bridge Vault Reserve" />
           </div>
 
           <div className={styles.formContent}>
@@ -466,7 +479,7 @@ export default function Login() {
             <h1>{mode === "login" ? "Welcome back" : "Start onboarding"}</h1>
             <p className={styles.subtitle}>
               {mode === "login"
-                ? "Sign in to access your Stercxa Bank dashboard, manage transactions, monitor accounts, and stay in control securely."
+                ? "Sign in to access your West Bridge Vault Reserve dashboard, manage transactions, monitor accounts, and stay in control securely."
                 : "Submit your banking profile and identification documents for admin review before account numbers are issued."}
             </p>
 
@@ -799,10 +812,10 @@ export default function Login() {
 
           <div className={styles.visualContent}>
             <div className={styles.stars}>✦ ✦</div>
-            <h2>Bank smarter with security, speed, and confidence.</h2>
+            <h2>Bank smarter with secure online banking built for daily control.</h2>
             <p>
-              Stercxa Bank gives you seamless transfers, account visibility,
-              spending insights, and a modern banking experience built for today.
+              West Bridge Vault Reserve gives you seamless transfers, account visibility,
+              funding support, and a modern banking experience built for today.
             </p>
 
             <div className={styles.usersRow}>
@@ -815,11 +828,11 @@ export default function Login() {
 
           <div className={styles.cardMock}>
             <div className={styles.cardChip}></div>
-            <div className={styles.cardBrand}>SB</div>
+            <div className={styles.cardBrand}>WB</div>
             <div className={styles.cardNumber}>1234 5678 9012 3456</div>
             <div className={styles.cardFooter}>
               <span>VALID THRU 08/32</span>
-              <span>STERCXA</span>
+              <span>WESTBRIDGE</span>
             </div>
           </div>
 

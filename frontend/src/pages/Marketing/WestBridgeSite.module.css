@@ -1,0 +1,542 @@
+.page {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-soft: rgba(255, 255, 255, 0.78);
+  --border: rgba(226, 232, 240, 0.94);
+  --text: #0f172a;
+  --muted: #64748b;
+  --primary: #e11d48;
+  --accent: #fb7185;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(30, 58, 138, 0.08), transparent 30%),
+    linear-gradient(180deg, #fbfdff 0%, var(--bg) 100%);
+  color: var(--text);
+}
+
+.container {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  background: rgba(255, 250, 251, 0.88);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.headerInner {
+  width: min(1180px, calc(100% - 32px));
+  min-height: 82px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 20px;
+  align-items: center;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.brand img,
+.footerLogo {
+  width: 190px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.brand strong,
+.brand span {
+  display: none;
+}
+
+.brand strong {
+  font-size: 15px;
+}
+
+.brand span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: 26px;
+  flex-wrap: wrap;
+}
+
+.nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.navActive,
+.nav a:hover {
+  color: var(--primary) !important;
+}
+
+.headerActions,
+.heroActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.primaryLink,
+.secondaryLink,
+.secondaryHeroLink {
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.primaryLink {
+  background: linear-gradient(135deg, var(--primary), #fb7185);
+  color: white;
+  box-shadow: 0 14px 28px rgba(225, 29, 72, 0.22);
+}
+
+.secondaryLink,
+.secondaryHeroLink {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--text);
+}
+
+.hero {
+  min-height: 82vh;
+  background: url("/westbridge-assets/images/banner.jpg") center/cover no-repeat;
+}
+
+.heroOverlay {
+  min-height: inherit;
+  display: grid;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(92, 16, 38, 0.84), rgba(168, 30, 64, 0.64));
+}
+
+.heroContent {
+  width: min(700px, 100%);
+  padding: 96px 0 82px;
+  color: white;
+}
+
+.heroContent h1 {
+  margin: 0;
+  font-size: clamp(42px, 7vw, 72px);
+  line-height: 0.98;
+}
+
+.heroContent h1 span {
+  display: block;
+  color: var(--accent);
+  font-size: clamp(20px, 3vw, 30px);
+  margin-top: 16px;
+}
+
+.heroContent p {
+  margin: 22px 0 0;
+  max-width: 620px;
+  font-size: 17px;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.section,
+.sectionAlt,
+.metricsSection {
+  padding: 88px 0;
+}
+
+.sectionAlt {
+  background: linear-gradient(180deg, rgba(30, 58, 138, 0.04), rgba(48, 205, 219, 0.04));
+}
+
+.twoCol,
+.contactSplit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: center;
+}
+
+.mediaCard,
+.copyCard,
+.projectCard,
+.metricCard,
+.serviceCard,
+.infoCard,
+.mapCard,
+.trustStrip,
+.ctaBand {
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  background: var(--surface-soft);
+  box-shadow: 0 20px 44px rgba(15, 23, 42, 0.07);
+  backdrop-filter: blur(16px) saturate(135%);
+  -webkit-backdrop-filter: blur(16px) saturate(135%);
+}
+
+.mediaCard,
+.copyCard,
+.mapCard {
+  position: relative;
+  overflow: hidden;
+}
+
+.mediaCard img,
+.projectCard img,
+.serviceCard img,
+.mapCard img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.mediaCard {
+  min-height: 520px;
+  display: grid;
+}
+
+.mediaCard img {
+  object-fit: contain;
+  background: linear-gradient(180deg, #fff1f4, #ffffff);
+}
+
+.experienceBadge {
+  position: absolute;
+  right: 22px;
+  bottom: 22px;
+  min-width: 150px;
+  padding: 18px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, var(--primary), #fb7185);
+  color: white;
+}
+
+.experienceBadge strong,
+.experienceBadge span {
+  display: block;
+}
+
+.experienceBadge strong {
+  font-size: 30px;
+}
+
+.copyCard {
+  padding: 34px;
+}
+
+.kicker {
+  display: inline-block;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.copyCard h2,
+.sectionHead h2,
+.ctaBand h2 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.08;
+}
+
+.copyCard p,
+.sectionHead p,
+.infoCard p,
+.footerCol p {
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.trustStrip {
+  margin-top: 24px;
+  padding: 18px 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.trustStrip svg {
+  color: var(--accent);
+  width: 22px;
+  height: 22px;
+}
+
+.metricsSection {
+  background: linear-gradient(180deg, rgba(122, 18, 48, 0.96), rgba(74, 10, 29, 0.98));
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.metricCard {
+  padding: 28px 22px;
+  text-align: center;
+  color: white;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.metricCard svg {
+  width: 22px;
+  height: 22px;
+  color: var(--accent);
+}
+
+.metricCard strong,
+.metricCard span {
+  display: block;
+}
+
+.metricCard strong {
+  font-size: 34px;
+  margin-top: 14px;
+}
+
+.metricCard span {
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.sectionHead {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 24px;
+  align-items: end;
+  margin-bottom: 28px;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.projectCard {
+  overflow: hidden;
+}
+
+.projectCard img {
+  aspect-ratio: 1.08 / 1;
+}
+
+.projectBody {
+  padding: 20px;
+}
+
+.projectBody span {
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.projectBody h3,
+.serviceCard h3,
+.infoCard h3 {
+  margin: 10px 0 0;
+  font-size: 22px;
+}
+
+.ctaBand {
+  padding: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.banner {
+  min-height: 280px;
+  background: url("/westbridge-assets/images/banner.jpg") center/cover no-repeat;
+}
+
+.bannerOverlay {
+  min-height: inherit;
+  display: grid;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(92, 16, 38, 0.86), rgba(168, 30, 64, 0.66));
+}
+
+.banner h1 {
+  color: white;
+  margin: 0;
+  font-size: clamp(36px, 5vw, 54px);
+}
+
+.breadcrumbs {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.breadcrumbs a {
+  color: rgba(255, 255, 255, 0.78);
+  text-decoration: none;
+}
+
+.serviceStack,
+.infoGrid {
+  display: grid;
+  gap: 18px;
+}
+
+.serviceCard {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  overflow: hidden;
+}
+
+.serviceCard img {
+  height: 100%;
+}
+
+.serviceCard div {
+  padding: 26px;
+}
+
+.serviceCard p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.serviceCard a {
+  color: var(--primary);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.infoGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.infoCard {
+  padding: 28px;
+}
+
+.infoCard svg {
+  width: 26px;
+  height: 26px;
+  color: var(--primary);
+}
+
+.mapCard {
+  min-height: 340px;
+}
+
+.mapCard img {
+  object-fit: contain;
+  background: linear-gradient(180deg, #fff1f4, #fff);
+}
+
+.footer {
+  margin-top: 70px;
+  padding: 58px 0 44px;
+  background: linear-gradient(180deg, #5f1027, #3a0718);
+  color: white;
+}
+
+.footerInner {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr 0.7fr 1fr;
+  gap: 22px;
+}
+
+.footerCol h4 {
+  margin: 0 0 14px;
+  font-size: 16px;
+}
+
+.footerCol a {
+  display: block;
+  color: rgba(255, 255, 255, 0.76);
+  text-decoration: none;
+  margin-bottom: 10px;
+}
+
+.footerCol p {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+@media (max-width: 1080px) {
+  .headerInner {
+    grid-template-columns: 1fr;
+    justify-items: start;
+    padding: 16px 0;
+  }
+
+  .nav,
+  .headerActions {
+    justify-content: flex-start;
+  }
+
+  .twoCol,
+  .contactSplit,
+  .sectionHead,
+  .footerInner {
+    grid-template-columns: 1fr;
+  }
+
+  .metricsGrid,
+  .cardGrid,
+  .infoGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .serviceCard {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .heroContent {
+    padding: 72px 0 60px;
+  }
+
+  .metricsGrid,
+  .cardGrid,
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .copyCard,
+  .ctaBand {
+    padding: 24px;
+  }
+
+  .ctaBand {
+    display: grid;
+  }
+
+  .mediaCard {
+    min-height: 360px;
+  }
+}

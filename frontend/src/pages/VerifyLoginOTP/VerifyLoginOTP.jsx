@@ -24,7 +24,7 @@ export default function VerifyLoginOTP() {
   useEffect(() => {
     if (!savedEmail) {
       alert("Login session expired. Please login again.");
-      navigate("/", { replace: true });
+      navigate("/login", { replace: true });
     }
   }, [savedEmail, navigate]);
 
@@ -44,7 +44,7 @@ export default function VerifyLoginOTP() {
 
     if (!formData.email) {
       alert("Missing login email. Please login again.");
-      navigate("/", { replace: true });
+      navigate("/login", { replace: true });
       return;
     }
 
@@ -125,7 +125,7 @@ export default function VerifyLoginOTP() {
                 <button
                   type="button"
                   className={styles.linkButton}
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate("/login")}
                 >
                   Back to login
                 </button>

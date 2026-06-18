@@ -23,6 +23,13 @@ import BillsAirtimePage from "../pages/UserPages/BillsAirtimePage";
 import CardsPage from "../pages/UserPages/CardsPage";
 import StatementsPage from "../pages/UserPages/StatementsPage";
 import SupportPage from "../pages/UserPages/SupportPage";
+import {
+  WestBridgeAboutPage,
+  WestBridgeContactPage,
+  WestBridgeHomePage,
+  WestBridgeProjectsPage,
+  WestBridgeServicesPage,
+} from "../pages/Marketing/WestBridgeSite";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 import PublicRoute from "../components/PublicRoute/PublicRoute";
 
@@ -32,6 +39,60 @@ export default function AppRoutes() {
       <Routes>
         <Route
           path="/"
+          element={
+            <PublicRoute>
+              <WestBridgeHomePage />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path="/about"
+          element={
+            <PublicRoute>
+              <WestBridgeAboutPage />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path="/projects"
+          element={
+            <PublicRoute>
+              <WestBridgeProjectsPage />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path="/services"
+          element={
+            <PublicRoute>
+              <WestBridgeServicesPage />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path="/contact"
+          element={
+            <PublicRoute>
+              <WestBridgeContactPage />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path="/auth"
           element={
             <PublicRoute>
               <Login />
