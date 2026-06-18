@@ -20,6 +20,8 @@ import ProfilePage from "../pages/UserPages/ProfilePage";
 import TransferDetailPage from "../pages/UserPages/TransferDetailPage";
 import FundingPage from "../pages/UserPages/FundingPage";
 import BillsAirtimePage from "../pages/UserPages/BillsAirtimePage";
+import CardsPage from "../pages/UserPages/CardsPage";
+import StatementsPage from "../pages/UserPages/StatementsPage";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 import PublicRoute from "../components/PublicRoute/PublicRoute";
 
@@ -58,11 +60,7 @@ export default function AppRoutes() {
           path="/cards"
           element={
             <ProtectedRoute allowedRoles={["user"]}>
-              <UserPage
-                type="cards"
-                title="Cards"
-                description="Manage your debit card requests, approved cards, and card account options."
-              />
+              <CardsPage />
             </ProtectedRoute>
           }
         />
@@ -160,7 +158,7 @@ export default function AppRoutes() {
           path="/statements"
           element={
             <ProtectedRoute allowedRoles={["user"]}>
-              <UserPage type="transactions" title="Statements" description="View and request account statements for your Savings and Current accounts." />
+              <StatementsPage />
             </ProtectedRoute>
           }
         />
