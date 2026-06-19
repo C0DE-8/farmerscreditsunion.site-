@@ -324,11 +324,23 @@ router.post('/create/users', authenticateToken, checkAdmin, async (req, res) => 
     is_admin = 0,                 // 0 or 1
     email_verified = 1,           // default: verified
     send_welcome = true,          // send welcome mail after creation
-    currency_sign = '$'           // optional, defaults to $
+    currency_sign = '$',          // optional, defaults to $
+    acct_status = 'active',
+    current_balance = 0,
+    savings_balance = 0,
+    loan_balance = 0,
+    profile_image_url = '',
   } = req.body || {};
 
   if (!username || !password || !email || !full_name) {
     return res.status(400).json({ error: 'username, password, full_name, email are required' });
+  }
+
+  if (!ALLOWED_ACCOUNT_STATUS.has(String(acct_status).trim().toLowerCase())) {
+    return res.status(400).json({
+      error: 'Invalid acct_status',
+      allowed: Array.from(ALLOWED_ACCOUNT_STATUS),
+    });
   }
 
   try {
@@ -340,9 +352,22 @@ router.post('/create/users', authenticateToken, checkAdmin, async (req, res) => 
     // Insert into users
     db.query(
       `INSERT INTO users 
-        (username, password, full_name, email, is_admin, account_number, email_verified, acct_status, currency_sign)
-       VALUES (?, ?, ?, ?, ?, ?, ?, 'active', ?)`,
-      [username, hashedPassword, full_name, email, is_admin ? 1 : 0, accountNumber, email_verified ? 1 : 0, currency_sign],
+        (username, password, full_name, email, is_admin, account_number, email_verified, acct_status, currency_sign, current_balance, savings_balance, loan_balance)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        username,
+        hashedPassword,
+        full_name,
+        email,
+        is_admin ? 1 : 0,
+        accountNumber,
+        email_verified ? 1 : 0,
+        String(acct_status).trim().toLowerCase(),
+        currency_sign,
+        Number(current_balance || 0),
+        Number(savings_balance || 0),
+        Number(loan_balance || 0),
+      ],
       (err, result) => {
         if (err) {
           if (err.code === 'ER_DUP_ENTRY') {
@@ -375,21 +400,40 @@ router.post('/create/users', authenticateToken, checkAdmin, async (req, res) => 
               }
             }
 
-            return res.json({
-              message: 'User created successfully',
-              user: {
-                id: userId,
-                username,
-                full_name,
-                email,
-                is_admin: !!is_admin,
-                email_verified: !!email_verified,
-                account_number: accountNumber,
-                accounts: {
-                  current: cAccountNumber,
-                  savings: sAccountNumber
-                }
+            const upsertImage = (cb) => {
+              if (!profile_image_url) return cb(null);
+              db.query(
+                'INSERT INTO user_images (user_id, image_url) VALUES (?, ?)',
+                [userId, profile_image_url],
+                cb
+              );
+            };
+
+            upsertImage((imageErr) => {
+              if (imageErr) {
+                console.error('❌ Failed to create profile image:', imageErr);
+                return res.status(500).json({ error: 'Failed to save profile image' });
               }
+
+              db.query(SELECT_USER_JOIN, [userId], (selectErr, rows) => {
+                if (selectErr) {
+                  console.error('❌ Failed to fetch created user:', selectErr);
+                  return res.status(500).json({ error: 'Failed to load created user' });
+                }
+
+                return res.json({
+                  message: 'User created successfully',
+                  user: rows?.[0] || {
+                    id: userId,
+                    username,
+                    full_name,
+                    email,
+                    account_number: accountNumber,
+                    c_account_number: cAccountNumber,
+                    s_account_number: sAccountNumber,
+                  },
+                });
+              });
             });
           }
         );

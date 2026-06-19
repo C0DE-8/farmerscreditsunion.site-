@@ -2,7 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import {
   FiEdit2,
+  FiEye,
   FiLogIn,
+  FiPlus,
   FiRefreshCw,
   FiSave,
   FiSearch,
@@ -31,6 +33,21 @@ const INITIAL_EDIT = {
   profile_image_url: "",
 };
 
+const INITIAL_CREATE = {
+  full_name: "",
+  username: "",
+  email: "",
+  password: "",
+  acct_status: "active",
+  email_verified: true,
+  currency_sign: "$",
+  current_balance: "0",
+  savings_balance: "0",
+  loan_balance: "0",
+  profile_image_url: "",
+  send_welcome: true,
+};
+
 export default function AdminUsers() {
   const { notify } = useOutletContext();
   const { saveSession } = useAuth();
@@ -40,7 +57,10 @@ export default function AdminUsers() {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [editingUser, setEditingUser] = useState(null);
+  const [viewingUser, setViewingUser] = useState(null);
   const [editForm, setEditForm] = useState(INITIAL_EDIT);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [createForm, setCreateForm] = useState(INITIAL_CREATE);
   const [savingId, setSavingId] = useState("");
   const [impersonatingId, setImpersonatingId] = useState("");
   const [deleteTarget, setDeleteTarget] = useState(null);
@@ -100,6 +120,11 @@ export default function AdminUsers() {
     setEditForm(INITIAL_EDIT);
   };
 
+  const closeCreate = () => {
+    setCreateOpen(false);
+    setCreateForm(INITIAL_CREATE);
+  };
+
   const submitEdit = async (event) => {
     event.preventDefault();
     if (!editingUser) return;
@@ -115,6 +140,25 @@ export default function AdminUsers() {
       closeEdit();
     } catch (error) {
       notify(error?.response?.data?.error || "Failed to update user", "error");
+    } finally {
+      setSavingId("");
+    }
+  };
+
+  const submitCreate = async (event) => {
+    event.preventDefault();
+
+    try {
+      setSavingId("create-user");
+      const res = await axiosInstance.post("/admin/create/users", createForm);
+      const created = res.data?.user;
+      if (created) {
+        setUsers((current) => [created, ...current]);
+      }
+      notify(res.data?.message || "User created successfully", "success");
+      closeCreate();
+    } catch (error) {
+      notify(error?.response?.data?.error || "Failed to create user", "error");
     } finally {
       setSavingId("");
     }
@@ -211,6 +255,11 @@ export default function AdminUsers() {
             <FiSearch />
             <span>Apply</span>
           </button>
+
+          <button className={styles.refreshBtn} type="button" onClick={() => setCreateOpen(true)}>
+            <FiPlus />
+            <span>Create user</span>
+          </button>
         </form>
 
         <div className={styles.adminStatsGrid}>
@@ -277,6 +326,10 @@ export default function AdminUsers() {
                   </span>
 
                   <span className={styles.adminActionGroup}>
+                    <button type="button" className={styles.secondaryBtn} onClick={() => setViewingUser(item)}>
+                      <FiEye />
+                      <span>View</span>
+                    </button>
                     <button type="button" className={styles.refreshBtn} onClick={() => openEdit(item)}>
                       <FiEdit2 />
                       <span>Edit</span>
@@ -382,6 +435,152 @@ export default function AdminUsers() {
                 <button className={styles.refreshBtn} type="submit" disabled={savingId === `edit-${editingUser.id}`}>
                   <FiSave />
                   <span>{savingId === `edit-${editingUser.id}` ? "Saving..." : "Save changes"}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {viewingUser && (
+        <div className={styles.adminModalOverlay} onClick={() => setViewingUser(null)}>
+          <div className={styles.adminModal} onClick={(event) => event.stopPropagation()}>
+            <div className={styles.adminModalHeader}>
+              <div>
+                <span className={styles.settingsEyebrow}><FiEye /> View Account</span>
+                <h2>{viewingUser.full_name || viewingUser.username}</h2>
+                <p>Read-only account profile, balances, account numbers, and verification status.</p>
+              </div>
+              <button type="button" className={styles.adminModalClose} onClick={() => setViewingUser(null)} aria-label="Close user details modal">
+                <FiX />
+              </button>
+            </div>
+
+            <div className={styles.adminDetailGrid}>
+              <div className={styles.adminDetailCard}>
+                <span>Profile</span>
+                <strong>{viewingUser.full_name || viewingUser.username}</strong>
+                <small>@{viewingUser.username}</small>
+                <small>{viewingUser.email}</small>
+              </div>
+              <div className={styles.adminDetailCard}>
+                <span>Main account</span>
+                <strong>{viewingUser.account_number || "Pending"}</strong>
+                <small>Current: {viewingUser.c_account_number || "N/A"}</small>
+                <small>Savings: {viewingUser.s_account_number || "N/A"}</small>
+              </div>
+              <div className={styles.adminDetailCard}>
+                <span>Balances</span>
+                <strong>{viewingUser.currency_sign}{Number(viewingUser.current_balance || 0).toLocaleString()}</strong>
+                <small>Savings: {viewingUser.currency_sign}{Number(viewingUser.savings_balance || 0).toLocaleString()}</small>
+                <small>Loan: {viewingUser.currency_sign}{Number(viewingUser.loan_balance || 0).toLocaleString()}</small>
+              </div>
+              <div className={styles.adminDetailCard}>
+                <span>Status</span>
+                <strong>{String(viewingUser.acct_status || "unknown").toUpperCase()}</strong>
+                <small>{viewingUser.email_verified ? "Email verified" : "Email not verified"}</small>
+                <small>Currency: {viewingUser.currency_sign || "$"}</small>
+              </div>
+            </div>
+
+            <div className={styles.formActions}>
+              <button type="button" className={styles.secondaryBtn} onClick={() => setViewingUser(null)}>Close</button>
+              <button type="button" className={styles.refreshBtn} onClick={() => {
+                setViewingUser(null);
+                openEdit(viewingUser);
+              }}>
+                <FiEdit2 />
+                <span>Edit user</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {createOpen && (
+        <div className={styles.adminModalOverlay} onClick={closeCreate}>
+          <div className={styles.adminModal} onClick={(event) => event.stopPropagation()}>
+            <div className={styles.adminModalHeader}>
+              <div>
+                <span className={styles.settingsEyebrow}><FiPlus /> Create User</span>
+                <h2>Open a new user account</h2>
+                <p>Create a user directly from admin with balances, status, and welcome email options.</p>
+              </div>
+              <button type="button" className={styles.adminModalClose} onClick={closeCreate} aria-label="Close create user modal">
+                <FiX />
+              </button>
+            </div>
+
+            <form className={styles.settingsForm} onSubmit={submitCreate}>
+              <div className={styles.settingsFormGrid}>
+                <label className={styles.field}>
+                  <span>Full name</span>
+                  <input value={createForm.full_name} onChange={(event) => setCreateForm((current) => ({ ...current, full_name: event.target.value }))} required />
+                </label>
+                <label className={styles.field}>
+                  <span>Username</span>
+                  <input value={createForm.username} onChange={(event) => setCreateForm((current) => ({ ...current, username: event.target.value }))} required />
+                </label>
+                <label className={styles.field}>
+                  <span>Email</span>
+                  <input type="email" value={createForm.email} onChange={(event) => setCreateForm((current) => ({ ...current, email: event.target.value }))} required />
+                </label>
+                <label className={styles.field}>
+                  <span>Password</span>
+                  <input type="password" minLength={6} value={createForm.password} onChange={(event) => setCreateForm((current) => ({ ...current, password: event.target.value }))} required />
+                </label>
+                <label className={styles.field}>
+                  <span>Account status</span>
+                  <select value={createForm.acct_status} onChange={(event) => setCreateForm((current) => ({ ...current, acct_status: event.target.value }))}>
+                    <option value="active">Active</option>
+                    <option value="pending">Pending</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="hold">Hold</option>
+                    <option value="blocked">Blocked</option>
+                    <option value="suspended">Suspended</option>
+                  </select>
+                </label>
+                <label className={styles.field}>
+                  <span>Email verified</span>
+                  <select value={createForm.email_verified ? "1" : "0"} onChange={(event) => setCreateForm((current) => ({ ...current, email_verified: event.target.value === "1" }))}>
+                    <option value="1">Verified</option>
+                    <option value="0">Not verified</option>
+                  </select>
+                </label>
+                <label className={styles.field}>
+                  <span>Currency sign</span>
+                  <input value={createForm.currency_sign} onChange={(event) => setCreateForm((current) => ({ ...current, currency_sign: event.target.value }))} maxLength={5} />
+                </label>
+                <label className={styles.field}>
+                  <span>Current balance</span>
+                  <input type="number" step="0.01" value={createForm.current_balance} onChange={(event) => setCreateForm((current) => ({ ...current, current_balance: event.target.value }))} />
+                </label>
+                <label className={styles.field}>
+                  <span>Savings balance</span>
+                  <input type="number" step="0.01" value={createForm.savings_balance} onChange={(event) => setCreateForm((current) => ({ ...current, savings_balance: event.target.value }))} />
+                </label>
+                <label className={styles.field}>
+                  <span>Loan balance</span>
+                  <input type="number" step="0.01" value={createForm.loan_balance} onChange={(event) => setCreateForm((current) => ({ ...current, loan_balance: event.target.value }))} />
+                </label>
+                <label className={`${styles.field} ${styles.fieldFull}`}>
+                  <span>Profile image URL</span>
+                  <input value={createForm.profile_image_url} onChange={(event) => setCreateForm((current) => ({ ...current, profile_image_url: event.target.value }))} />
+                </label>
+                <label className={`${styles.field} ${styles.fieldFull}`}>
+                  <span>Welcome email</span>
+                  <select value={createForm.send_welcome ? "1" : "0"} onChange={(event) => setCreateForm((current) => ({ ...current, send_welcome: event.target.value === "1" }))}>
+                    <option value="1">Send welcome email</option>
+                    <option value="0">Do not send welcome email</option>
+                  </select>
+                </label>
+              </div>
+
+              <div className={styles.formActions}>
+                <button type="button" className={styles.secondaryBtn} onClick={closeCreate}>Cancel</button>
+                <button className={styles.refreshBtn} type="submit" disabled={savingId === "create-user"}>
+                  <FiSave />
+                  <span>{savingId === "create-user" ? "Creating..." : "Create user"}</span>
                 </button>
               </div>
             </form>

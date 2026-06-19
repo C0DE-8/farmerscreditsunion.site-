@@ -208,6 +208,10 @@
   color: var(--text);
   font-weight: 800;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .sidebarLogoutBtn {
@@ -452,7 +456,7 @@
 
 .adminFilterBar {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) 220px auto;
+  grid-template-columns: minmax(0, 1.5fr) 220px auto auto;
   gap: 12px;
   margin-bottom: 16px;
 }
@@ -635,6 +639,46 @@
 .adminConfirmMeta small {
   margin-top: 6px;
   color: var(--text-soft);
+}
+
+.adminDetailGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.adminDetailCard {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--card-bg) 84%, transparent);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.adminDetailCard span,
+.adminDetailCard strong,
+.adminDetailCard small {
+  display: block;
+}
+
+.adminDetailCard span {
+  color: var(--text-soft);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.adminDetailCard strong {
+  margin: 8px 0 6px;
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+
+.adminDetailCard small {
+  color: var(--text-soft);
+  margin-top: 4px;
+  overflow-wrap: anywhere;
 }
 
 .panel h2,
@@ -1084,6 +1128,12 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .adminFilterBar,
+  .adminStatsGrid,
+  .adminDetailGrid {
+    grid-template-columns: 1fr;
+  }
+
   .profileCard,
   .settingsFormGrid {
     grid-template-columns: 1fr;
@@ -1139,6 +1189,8 @@
   .dashboardGrid,
   .metaGrid,
   .documents,
+  .adminStatsGrid,
+  .adminDetailGrid,
   .settingsFormGrid {
     grid-template-columns: 1fr;
   }
@@ -1176,5 +1228,19 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+  }
+
+  .adminFilterBar {
+    grid-template-columns: 1fr;
+  }
+
+  .adminActionGroup {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .adminActionGroup button {
+    width: 100%;
+    justify-content: center;
   }
 }
