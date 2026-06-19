@@ -3192,6 +3192,94 @@ router.patch('/users/:id/status', authenticateToken, checkAdmin, (req, res) => {
   });
 });
 
+router.delete('/users/:id', authenticateToken, checkAdmin, async (req, res) => {
+  const userId = Number(req.params.id) || 0;
+  const adminId = Number(req.user?.id) || 0;
+
+  if (!userId) {
+    return res.status(400).json({ error: 'Invalid user id' });
+  }
+
+  if (userId === adminId) {
+    return res.status(403).json({ error: 'You cannot delete your own admin account here' });
+  }
+
+  const conn = await db.promise().getConnection();
+
+  try {
+    await conn.beginTransaction();
+
+    const [users] = await conn.query(
+      'SELECT id, username, full_name, email, is_admin FROM users WHERE id = ? LIMIT 1',
+      [userId]
+    );
+
+    if (!users.length) {
+      await conn.rollback();
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const target = users[0];
+    if (Number(target.is_admin) === 1) {
+      await conn.rollback();
+      return res.status(403).json({ error: 'Admin accounts cannot be deleted from the users page' });
+    }
+
+    const [transfers] = await conn.query('SELECT id FROM transfers WHERE user_id = ?', [userId]);
+    const transferIds = transfers.map((item) => item.id).filter(Boolean);
+
+    const [tickets] = await conn.query('SELECT id FROM support_tickets WHERE user_id = ?', [userId]);
+    const ticketIds = tickets.map((item) => item.id).filter(Boolean);
+
+    if (transferIds.length) {
+      await conn.query(`DELETE FROM transfer_otps WHERE transfer_id IN (${transferIds.map(() => '?').join(',')})`, transferIds);
+    }
+
+    if (ticketIds.length) {
+      await conn.query(`DELETE FROM support_messages WHERE ticket_id IN (${ticketIds.map(() => '?').join(',')})`, ticketIds);
+    }
+
+    await conn.query('DELETE FROM login_otps WHERE user_id = ?', [userId]);
+    await conn.query('DELETE FROM otps WHERE user_id = ?', [userId]);
+    await conn.query('DELETE FROM password_resets WHERE user_id = ?', [userId]);
+    await conn.query('DELETE FROM activities WHERE user_id = ?', [userId]);
+    await conn.query('DELETE FROM self_transfers WHERE user_id = ?', [userId]);
+    await conn.query('DELETE FROM atm_cards WHERE user_id = ?', [userId]);
+    await conn.query('DELETE FROM deposits WHERE user_id = ?', [userId]);
+    await conn.query('DELETE FROM bill_payments WHERE user_id = ?', [userId]);
+    await conn.query('DELETE FROM loan_applications WHERE user_id = ?', [userId]);
+    await conn.query('DELETE FROM support_tickets WHERE user_id = ?', [userId]);
+    await conn.query('DELETE FROM transfers WHERE user_id = ?', [userId]);
+    await conn.query('DELETE FROM user_images WHERE user_id = ?', [userId]);
+    await conn.query('DELETE FROM accounts WHERE user_id = ?', [userId]);
+    await conn.query('DELETE FROM user_onboarding WHERE user_id = ?', [userId]);
+    await conn.query('DELETE FROM users WHERE id = ? LIMIT 1', [userId]);
+
+    await conn.commit();
+
+    try {
+      await logActivity(adminId, 'admin_delete_user', `Deleted user #${userId} (${target.username || target.email || target.full_name || 'unknown'})`);
+    } catch (_) {}
+
+    return res.json({
+      ok: true,
+      message: 'User account deleted successfully',
+      deleted_user: {
+        id: target.id,
+        username: target.username,
+        full_name: target.full_name,
+        email: target.email,
+      },
+    });
+  } catch (err) {
+    try { await conn.rollback(); } catch (_) {}
+    console.error('❌ DB ERROR [/admin/users/:id DELETE]:', err);
+    return res.status(500).json({ error: 'Failed to delete user', details: err.message });
+  } finally {
+    conn.release();
+  }
+});
+
 
 // Admin: get local transfer OTP status
 router.get("/settings/otp/local-transfer", authenticateToken, checkAdmin, (req, res) => {

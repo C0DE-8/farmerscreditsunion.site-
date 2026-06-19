@@ -3,8 +3,7 @@ import { FiLock, FiMail, FiSave, FiSettings, FiUser } from "react-icons/fi";
 import { useOutletContext } from "react-router-dom";
 import axiosInstance from "../../../api/axios";
 import { useAuth } from "../../../context/AuthContext";
-import { EmptyState } from "../AdminPrimitives";
-import { resolveAsset } from "../AdminPrimitives";
+import { resolveAsset, SettingsSkeleton } from "../AdminPrimitives";
 import styles from "../Admin.module.css";
 
 const INITIAL_PROFILE = {
@@ -33,38 +32,61 @@ export default function AdminSettings() {
   const [savingPassword, setSavingPassword] = useState(false);
 
   useEffect(() => {
+    let active = true;
+
     async function loadSettings() {
-      try {
-        setLoading(true);
-        const [settingsRes, feeRes, profileRes] = await Promise.allSettled([
-          axiosInstance.get("/admin/security-codes/settings"),
-          axiosInstance.get("/admin/transfer-fee"),
-          axiosInstance.get("/admin/profile"),
-        ]);
+      setLoading(true);
+      const [settingsRes, feeRes, profileRes] = await Promise.allSettled([
+        axiosInstance.get("/admin/security-codes/settings"),
+        axiosInstance.get("/admin/transfer-fee"),
+        axiosInstance.get("/admin/profile"),
+      ]);
 
-        setSettings(settingsRes.value?.data?.settings || null);
-        setFees(feeRes.value?.data?.fees || {});
+      if (!active) return;
 
-        const profile = profileRes.value?.data?.user || adminUser || {};
-        setProfileForm({
-          full_name: profile.full_name || "",
-          username: profile.username || "",
-          email: profile.email || "",
-          profile_image_url: profile.profile_image_url || "",
-        });
+      const nextSettings = settingsRes.status === "fulfilled" ? settingsRes.value?.data?.settings || null : null;
+      const nextFees = feeRes.status === "fulfilled" ? feeRes.value?.data?.fees || {} : {};
+      const profile = profileRes.status === "fulfilled" ? profileRes.value?.data?.user || adminUser || {} : adminUser || {};
+      const failedRequests = [settingsRes, feeRes, profileRes].filter((item) => item.status === "rejected").length;
 
-        if (profile?.id) {
-          updateSessionUser("admin", profile);
-        }
-      } catch (error) {
-        notify(error?.response?.data?.error || "Failed to load settings", "error");
-      } finally {
-        setLoading(false);
+      setSettings(nextSettings);
+      setFees(nextFees);
+      setProfileForm({
+        full_name: profile.full_name || "",
+        username: profile.username || "",
+        email: profile.email || "",
+        profile_image_url: profile.profile_image_url || "",
+      });
+
+      if (profile?.id) {
+        updateSessionUser("admin", profile);
       }
+
+      if (failedRequests === 3) {
+        notify("Failed to load admin settings.", "error");
+      } else if (failedRequests > 0) {
+        notify("Some admin settings could not be loaded.", "info");
+      }
+
+      setLoading(false);
     }
 
     loadSettings();
-  }, [adminUser, notify, updateSessionUser]);
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!adminUser) return;
+    setProfileForm((current) => ({
+      full_name: current.full_name || adminUser.full_name || "",
+      username: current.username || adminUser.username || "",
+      email: current.email || adminUser.email || "",
+      profile_image_url: current.profile_image_url || adminUser.profile_image_url || "",
+    }));
+  }, [adminUser]);
 
   const updateSecuritySetting = async (key, value) => {
     const next = { ...(settings || {}), [key]: value };
@@ -140,7 +162,7 @@ export default function AdminSettings() {
     [adminUser?.profile_image_url, profileForm.profile_image_url]
   );
 
-  if (loading) return <EmptyState>Loading settings...</EmptyState>;
+  if (loading) return <SettingsSkeleton />;
 
   return (
     <div className={styles.settingsStack}>

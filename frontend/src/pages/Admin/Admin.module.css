@@ -184,6 +184,10 @@
 .refreshBtn {
   background: rgba(185, 28, 28, 0.1);
   color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .logoutBtn {
@@ -193,6 +197,17 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+}
+
+.secondaryBtn {
+  min-height: 40px;
+  border-radius: 12px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+  font-weight: 800;
+  cursor: pointer;
 }
 
 .sidebarLogoutBtn {
@@ -404,7 +419,8 @@
   color: var(--text);
 }
 
-.field input {
+.field input,
+.field select {
   width: 100%;
   min-height: 46px;
   border-radius: 14px;
@@ -417,7 +433,8 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-.field input:focus {
+.field input:focus,
+.field select:focus {
   border-color: rgba(185, 28, 28, 0.38);
   box-shadow: 0 0 0 4px rgba(185, 28, 28, 0.08);
   transform: translateY(-1px);
@@ -431,6 +448,193 @@
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+
+.adminFilterBar {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) 220px auto;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.adminSearchField {
+  min-height: 46px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card-bg);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+}
+
+.adminSearchField input {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  outline: none;
+}
+
+.adminFilterBar select {
+  min-height: 46px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card-bg);
+  color: var(--text);
+  padding: 0 14px;
+  font: inherit;
+}
+
+.adminStatsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.adminStatCard {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--card-bg) 86%, transparent);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.adminStatCard span,
+.adminStatCard strong {
+  display: block;
+}
+
+.adminStatCard span {
+  color: var(--text-soft);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.adminStatCard strong {
+  margin-top: 8px;
+  font-size: 28px;
+}
+
+.adminUserCell {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+}
+
+.adminAvatar,
+.adminAvatarFallback {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card-bg) 84%, transparent);
+}
+
+.adminAvatar {
+  object-fit: cover;
+  display: block;
+}
+
+.adminAvatarFallback {
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--primary);
+}
+
+.adminActionGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.adminActionGroup button {
+  min-height: 36px;
+  font-size: 12px;
+}
+
+.adminModalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.38);
+  backdrop-filter: blur(10px);
+}
+
+.adminModal,
+.adminConfirmModal {
+  width: min(860px, 100%);
+  max-height: min(88vh, 900px);
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--card-bg) 90%, transparent);
+  box-shadow: 0 30px 70px rgba(15, 23, 42, 0.22);
+  padding: 20px;
+}
+
+.adminConfirmModal {
+  width: min(520px, 100%);
+}
+
+.adminModalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.adminModalHeader h2,
+.adminConfirmModal h2 {
+  margin: 8px 0 6px;
+  font-size: 22px;
+}
+
+.adminModalHeader p,
+.adminConfirmModal p {
+  margin: 0;
+  color: var(--text-soft);
+  line-height: 1.6;
+}
+
+.adminModalClose {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card-bg);
+  color: var(--text);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.adminConfirmMeta {
+  margin: 16px 0 20px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--card-bg) 84%, transparent);
+}
+
+.adminConfirmMeta strong,
+.adminConfirmMeta small {
+  display: block;
+}
+
+.adminConfirmMeta small {
+  margin-top: 6px;
+  color: var(--text-soft);
 }
 
 .panel h2,
@@ -706,6 +910,136 @@
 .emptyState {
   padding: 22px;
   color: var(--text-soft);
+}
+
+.skeletonSurface {
+  position: relative;
+  overflow: hidden;
+}
+
+.skeletonSurface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.42), transparent);
+  transform: translateX(-100%);
+  animation: skeletonShimmer 1.35s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.skeletonLine,
+.skeletonField,
+.skeletonBadge,
+.skeletonBadgeWide,
+.skeletonButton,
+.skeletonButtonWide,
+.skeletonThumb,
+.skeletonHeadCell {
+  border-radius: 12px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(241, 245, 249, 0.58));
+  border: 1px solid rgba(255, 255, 255, 0.52);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.56);
+}
+
+.skeletonStack {
+  display: grid;
+  gap: 12px;
+}
+
+.skeletonHeading {
+  width: 180px;
+  height: 18px;
+}
+
+.skeletonLabel {
+  width: 110px;
+  height: 12px;
+}
+
+.skeletonValue {
+  width: 120px;
+  height: 34px;
+}
+
+.skeletonMeta {
+  width: 70%;
+  height: 12px;
+}
+
+.skeletonRow {
+  width: 100%;
+  height: 14px;
+}
+
+.skeletonCell {
+  width: 100%;
+  height: 14px;
+}
+
+.skeletonBadge {
+  width: 88px;
+  height: 24px;
+}
+
+.skeletonBadgeWide {
+  width: 140px;
+  height: 30px;
+}
+
+.skeletonField {
+  width: 100%;
+  min-height: 46px;
+}
+
+.skeletonButton {
+  width: 92px;
+  min-height: 34px;
+}
+
+.skeletonButtonWide {
+  width: 150px;
+  min-height: 40px;
+}
+
+.skeletonThumb {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 18px;
+}
+
+.skeletonHeadCell {
+  width: 80%;
+  height: 10px;
+}
+
+.skeletonDocument {
+  display: grid;
+  gap: 8px;
+}
+
+@keyframes skeletonShimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+[data-theme="dark"] .skeletonSurface::after {
+  background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.16), transparent);
+}
+
+[data-theme="dark"] .skeletonLine,
+[data-theme="dark"] .skeletonField,
+[data-theme="dark"] .skeletonBadge,
+[data-theme="dark"] .skeletonBadgeWide,
+[data-theme="dark"] .skeletonButton,
+[data-theme="dark"] .skeletonButtonWide,
+[data-theme="dark"] .skeletonThumb,
+[data-theme="dark"] .skeletonHeadCell {
+  background:
+    linear-gradient(145deg, rgba(30, 41, 59, 0.78), rgba(15, 23, 42, 0.62));
+  border-color: rgba(148, 163, 184, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 @media (max-width: 1080px) {

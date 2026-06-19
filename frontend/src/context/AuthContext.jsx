@@ -148,6 +148,7 @@ export const AuthProvider = ({ children }) => {
         getSessionUser,
         getSessionToken,
         updateSessionUser,
+        saveSession,
       }}
     >
       {children}

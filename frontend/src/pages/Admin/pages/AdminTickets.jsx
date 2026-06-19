@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import axiosInstance from "../../../api/axios";
-import { DataTable, EmptyState, StatusBadge } from "../AdminPrimitives";
+import { DataTable, EmptyState, StatusBadge, TableSkeleton } from "../AdminPrimitives";
 import styles from "../Admin.module.css";
 
 export default function AdminTickets() {
@@ -35,7 +35,7 @@ export default function AdminTickets() {
     }
   };
 
-  if (loading) return <EmptyState>Loading tickets...</EmptyState>;
+  if (loading) return <TableSkeleton columns={5} rows={7} />;
 
   return (
     <section className={styles.panel}>

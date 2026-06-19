@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import axiosInstance from "../../../api/axios";
-import { EmptyState } from "../AdminPrimitives";
+import { EmptyState, WalletSkeleton } from "../AdminPrimitives";
 import styles from "../Admin.module.css";
 
 export default function AdminWallets() {
@@ -25,7 +25,7 @@ export default function AdminWallets() {
     loadWallets();
   }, [notify]);
 
-  if (loading) return <EmptyState>Loading wallets...</EmptyState>;
+  if (loading) return <WalletSkeleton />;
 
   return (
     <section className={styles.panel}>

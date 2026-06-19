@@ -1,46 +1,418 @@
-import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import {
+  FiEdit2,
+  FiLogIn,
+  FiRefreshCw,
+  FiSave,
+  FiSearch,
+  FiShield,
+  FiTrash2,
+  FiUser,
+  FiX,
+} from "react-icons/fi";
 import axiosInstance from "../../../api/axios";
-import { DataTable, EmptyState, StatusBadge } from "../AdminPrimitives";
+import { useAuth } from "../../../context/AuthContext";
+import { DataTable, EmptyState, resolveAsset, StatusBadge, TableSkeleton } from "../AdminPrimitives";
 import styles from "../Admin.module.css";
+
+const INITIAL_EDIT = {
+  full_name: "",
+  username: "",
+  email: "",
+  acct_status: "active",
+  email_verified: true,
+  currency_sign: "$",
+  current_balance: "0",
+  savings_balance: "0",
+  loan_balance: "0",
+  c_account_number: "",
+  s_account_number: "",
+  profile_image_url: "",
+};
 
 export default function AdminUsers() {
   const { notify } = useOutletContext();
+  const { saveSession } = useAuth();
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [editingUser, setEditingUser] = useState(null);
+  const [editForm, setEditForm] = useState(INITIAL_EDIT);
+  const [savingId, setSavingId] = useState("");
+  const [impersonatingId, setImpersonatingId] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deletingId, setDeletingId] = useState("");
+
+  const loadUsers = async (next = {}) => {
+    const nextQuery = next.query ?? query;
+    const nextStatus = next.status ?? statusFilter;
+
+    try {
+      setLoading(true);
+      const params = new URLSearchParams({ pageSize: "100" });
+      if (nextQuery.trim()) params.set("q", nextQuery.trim());
+      if (nextStatus !== "all") params.set("status", nextStatus);
+
+      const res = await axiosInstance.get(`/admin/users?${params.toString()}`);
+      setUsers(res.data?.users || []);
+    } catch (error) {
+      notify(error?.response?.data?.error || "Failed to load users", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    async function loadUsers() {
-      try {
-        setLoading(true);
-        const res = await axiosInstance.get("/admin/users?pageSize=100");
-        setUsers(res.data?.users || []);
-      } catch (error) {
-        notify(error?.response?.data?.error || "Failed to load users", "error");
-      } finally {
-        setLoading(false);
+    loadUsers({ query: "", status: "all" });
+  }, []);
+
+  const stats = useMemo(() => {
+    const active = users.filter((item) => String(item.acct_status).toLowerCase() === "active").length;
+    const pending = users.filter((item) => String(item.acct_status).toLowerCase() === "pending").length;
+    const verified = users.filter((item) => !!item.email_verified).length;
+    const hold = users.filter((item) => String(item.acct_status).toLowerCase() === "hold").length;
+    return { total: users.length, active, pending, verified, hold };
+  }, [users]);
+
+  const openEdit = (user) => {
+    setEditingUser(user);
+    setEditForm({
+      full_name: user.full_name || "",
+      username: user.username || "",
+      email: user.email || "",
+      acct_status: user.acct_status || "active",
+      email_verified: !!user.email_verified,
+      currency_sign: user.currency_sign || "$",
+      current_balance: String(user.current_balance ?? "0"),
+      savings_balance: String(user.savings_balance ?? "0"),
+      loan_balance: String(user.loan_balance ?? "0"),
+      c_account_number: user.c_account_number || "",
+      s_account_number: user.s_account_number || "",
+      profile_image_url: user.profile_image_url || "",
+    });
+  };
+
+  const closeEdit = () => {
+    setEditingUser(null);
+    setEditForm(INITIAL_EDIT);
+  };
+
+  const submitEdit = async (event) => {
+    event.preventDefault();
+    if (!editingUser) return;
+
+    try {
+      setSavingId(`edit-${editingUser.id}`);
+      const res = await axiosInstance.patch(`/admin/users/${editingUser.id}`, editForm);
+      const updated = res.data?.user;
+      if (updated) {
+        setUsers((current) => current.map((item) => (item.id === editingUser.id ? { ...item, ...updated } : item)));
       }
+      notify("User account updated", "success");
+      closeEdit();
+    } catch (error) {
+      notify(error?.response?.data?.error || "Failed to update user", "error");
+    } finally {
+      setSavingId("");
     }
+  };
 
+  const handleImpersonate = async (user) => {
+    try {
+      setImpersonatingId(String(user.id));
+      const res = await axiosInstance.post(`/admin/users/${user.id}/impersonate`, {
+        reason: "admin_console_access",
+      });
+
+      if (res.data?.token && res.data?.user) {
+        saveSession(res.data.token, res.data.user);
+        notify(`User session ready for ${user.username}`, "success");
+        const popup = window.open("/dashboard", "_blank");
+        if (!popup) {
+          navigate("/dashboard");
+        }
+      }
+    } catch (error) {
+      notify(error?.response?.data?.error || "Failed to sign in as user", "error");
+    } finally {
+      setImpersonatingId("");
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+
+    try {
+      setDeletingId(String(deleteTarget.id));
+      const res = await axiosInstance.delete(`/admin/users/${deleteTarget.id}`);
+      setUsers((current) => current.filter((item) => item.id !== deleteTarget.id));
+      notify(res.data?.message || "User deleted successfully", "success");
+      setDeleteTarget(null);
+    } catch (error) {
+      notify(error?.response?.data?.error || "Failed to delete user", "error");
+    } finally {
+      setDeletingId("");
+    }
+  };
+
+  const submitFilters = (event) => {
+    event.preventDefault();
     loadUsers();
-  }, [notify]);
+  };
 
-  if (loading) return <EmptyState>Loading users...</EmptyState>;
+  if (loading) return <TableSkeleton columns={6} rows={8} />;
 
   return (
-    <section className={styles.panel}>
-      <h2>Users</h2>
-      <DataTable headers={["User", "Email", "Account", "Status", "Verified"]}>
-        {users.map((item) => (
-          <div className={styles.tableRow} key={item.id} style={{ gridTemplateColumns: "repeat(5, minmax(0, 1fr))" }}>
-            <span>{item.full_name || item.username}</span>
-            <span>{item.email}</span>
-            <span>{item.account_number || "Pending"}</span>
-            <span><StatusBadge status={item.acct_status} /></span>
-            <span>{item.email_verified ? "Yes" : "No"}</span>
+    <>
+      <section className={styles.panel}>
+        <div className={styles.sectionHeader}>
+          <div>
+            <h2>Users</h2>
+            <p className={styles.subtitle}>Manage account details, access, balances, and user session support.</p>
           </div>
-        ))}
-      </DataTable>
-    </section>
+          <button className={styles.refreshBtn} type="button" onClick={() => loadUsers()}>
+            <FiRefreshCw />
+            <span>Refresh</span>
+          </button>
+        </div>
+
+        <form className={styles.adminFilterBar} onSubmit={submitFilters}>
+          <label className={styles.adminSearchField}>
+            <FiSearch />
+            <input
+              type="text"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search by name, username, email, or account number"
+            />
+          </label>
+
+          <select
+            value={statusFilter}
+            onChange={(event) => {
+              const next = event.target.value;
+              setStatusFilter(next);
+              loadUsers({ status: next });
+            }}
+          >
+            <option value="all">All statuses</option>
+            <option value="active">Active</option>
+            <option value="pending">Pending</option>
+            <option value="inactive">Inactive</option>
+            <option value="hold">Hold</option>
+            <option value="blocked">Blocked</option>
+            <option value="suspended">Suspended</option>
+          </select>
+
+          <button className={styles.refreshBtn} type="submit">
+            <FiSearch />
+            <span>Apply</span>
+          </button>
+        </form>
+
+        <div className={styles.adminStatsGrid}>
+          <article className={styles.adminStatCard}>
+            <span>Total users</span>
+            <strong>{stats.total}</strong>
+          </article>
+          <article className={styles.adminStatCard}>
+            <span>Active</span>
+            <strong>{stats.active}</strong>
+          </article>
+          <article className={styles.adminStatCard}>
+            <span>Pending</span>
+            <strong>{stats.pending}</strong>
+          </article>
+          <article className={styles.adminStatCard}>
+            <span>Verified</span>
+            <strong>{stats.verified}</strong>
+          </article>
+        </div>
+      </section>
+
+      <section className={styles.panel}>
+        {users.length === 0 ? (
+          <EmptyState>No users found for the selected filters.</EmptyState>
+        ) : (
+          <DataTable headers={["User", "Accounts", "Balances", "Status", "Security", "Actions"]}>
+            {users.map((item) => {
+              const avatar = resolveAsset(item.profile_image_url);
+              return (
+                <div className={styles.tableRow} key={item.id} style={{ gridTemplateColumns: "1.35fr 1fr 1fr 0.8fr 0.8fr 1.15fr" }}>
+                  <div className={styles.adminUserCell}>
+                    {avatar ? (
+                      <img className={styles.adminAvatar} src={avatar} alt={item.full_name || item.username} />
+                    ) : (
+                      <div className={styles.adminAvatarFallback}>
+                        {(item.full_name || item.username || "U").charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                    <div>
+                      <strong>{item.full_name || item.username}</strong>
+                      <small>@{item.username}</small>
+                      <small>{item.email}</small>
+                    </div>
+                  </div>
+
+                  <span>
+                    <strong>{item.account_number || "Pending"}</strong>
+                    <small>Current: {item.c_account_number || "N/A"}</small>
+                    <small>Savings: {item.s_account_number || "N/A"}</small>
+                  </span>
+
+                  <span>
+                    <strong>{item.currency_sign}{Number(item.current_balance || 0).toLocaleString()}</strong>
+                    <small>Savings: {item.currency_sign}{Number(item.savings_balance || 0).toLocaleString()}</small>
+                    <small>Loan: {item.currency_sign}{Number(item.loan_balance || 0).toLocaleString()}</small>
+                  </span>
+
+                  <span><StatusBadge status={item.acct_status} /></span>
+
+                  <span>
+                    <strong>{item.email_verified ? "Verified" : "Not verified"}</strong>
+                    <small>Currency: {item.currency_sign || "$"}</small>
+                  </span>
+
+                  <span className={styles.adminActionGroup}>
+                    <button type="button" className={styles.refreshBtn} onClick={() => openEdit(item)}>
+                      <FiEdit2 />
+                      <span>Edit</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.refreshBtn}
+                      onClick={() => handleImpersonate(item)}
+                      disabled={impersonatingId === String(item.id)}
+                    >
+                      <FiLogIn />
+                      <span>{impersonatingId === String(item.id) ? "Opening..." : "Login"}</span>
+                    </button>
+                    <button type="button" className={styles.logoutBtn} onClick={() => setDeleteTarget(item)}>
+                      <FiTrash2 />
+                      <span>Delete</span>
+                    </button>
+                  </span>
+                </div>
+              );
+            })}
+          </DataTable>
+        )}
+      </section>
+
+      {editingUser && (
+        <div className={styles.adminModalOverlay} onClick={closeEdit}>
+          <div className={styles.adminModal} onClick={(event) => event.stopPropagation()}>
+            <div className={styles.adminModalHeader}>
+              <div>
+                <span className={styles.settingsEyebrow}><FiUser /> Edit User</span>
+                <h2>{editingUser.full_name || editingUser.username}</h2>
+                <p>Update user account details, balances, verification, and account numbers.</p>
+              </div>
+              <button type="button" className={styles.adminModalClose} onClick={closeEdit} aria-label="Close edit user modal">
+                <FiX />
+              </button>
+            </div>
+
+            <form className={styles.settingsForm} onSubmit={submitEdit}>
+              <div className={styles.settingsFormGrid}>
+                <label className={styles.field}>
+                  <span>Full name</span>
+                  <input value={editForm.full_name} onChange={(event) => setEditForm((current) => ({ ...current, full_name: event.target.value }))} required />
+                </label>
+                <label className={styles.field}>
+                  <span>Username</span>
+                  <input value={editForm.username} onChange={(event) => setEditForm((current) => ({ ...current, username: event.target.value }))} required />
+                </label>
+                <label className={styles.field}>
+                  <span>Email</span>
+                  <input type="email" value={editForm.email} onChange={(event) => setEditForm((current) => ({ ...current, email: event.target.value }))} required />
+                </label>
+                <label className={styles.field}>
+                  <span>Currency sign</span>
+                  <input value={editForm.currency_sign} onChange={(event) => setEditForm((current) => ({ ...current, currency_sign: event.target.value }))} maxLength={5} />
+                </label>
+                <label className={styles.field}>
+                  <span>Account status</span>
+                  <select value={editForm.acct_status} onChange={(event) => setEditForm((current) => ({ ...current, acct_status: event.target.value }))}>
+                    <option value="active">Active</option>
+                    <option value="hold">Hold</option>
+                  </select>
+                </label>
+                <label className={styles.field}>
+                  <span>Email verified</span>
+                  <select
+                    value={editForm.email_verified ? "1" : "0"}
+                    onChange={(event) => setEditForm((current) => ({ ...current, email_verified: event.target.value === "1" }))}
+                  >
+                    <option value="1">Verified</option>
+                    <option value="0">Not verified</option>
+                  </select>
+                </label>
+                <label className={styles.field}>
+                  <span>Current balance</span>
+                  <input type="number" step="0.01" value={editForm.current_balance} onChange={(event) => setEditForm((current) => ({ ...current, current_balance: event.target.value }))} />
+                </label>
+                <label className={styles.field}>
+                  <span>Savings balance</span>
+                  <input type="number" step="0.01" value={editForm.savings_balance} onChange={(event) => setEditForm((current) => ({ ...current, savings_balance: event.target.value }))} />
+                </label>
+                <label className={styles.field}>
+                  <span>Loan balance</span>
+                  <input type="number" step="0.01" value={editForm.loan_balance} onChange={(event) => setEditForm((current) => ({ ...current, loan_balance: event.target.value }))} />
+                </label>
+                <label className={styles.field}>
+                  <span>Current account number</span>
+                  <input value={editForm.c_account_number} onChange={(event) => setEditForm((current) => ({ ...current, c_account_number: event.target.value }))} />
+                </label>
+                <label className={styles.field}>
+                  <span>Savings account number</span>
+                  <input value={editForm.s_account_number} onChange={(event) => setEditForm((current) => ({ ...current, s_account_number: event.target.value }))} />
+                </label>
+                <label className={`${styles.field} ${styles.fieldFull}`}>
+                  <span>Profile image URL</span>
+                  <input value={editForm.profile_image_url} onChange={(event) => setEditForm((current) => ({ ...current, profile_image_url: event.target.value }))} />
+                </label>
+              </div>
+
+              <div className={styles.formActions}>
+                <button type="button" className={styles.secondaryBtn} onClick={closeEdit}>Cancel</button>
+                <button className={styles.refreshBtn} type="submit" disabled={savingId === `edit-${editingUser.id}`}>
+                  <FiSave />
+                  <span>{savingId === `edit-${editingUser.id}` ? "Saving..." : "Save changes"}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {deleteTarget && (
+        <div className={styles.adminModalOverlay} onClick={() => setDeleteTarget(null)}>
+          <div className={styles.adminConfirmModal} onClick={(event) => event.stopPropagation()}>
+            <span className={styles.settingsEyebrow}><FiShield /> Delete account</span>
+            <h2>Delete {deleteTarget.full_name || deleteTarget.username}?</h2>
+            <p>This removes the user account and related account records from the banking system. This action cannot be undone.</p>
+
+            <div className={styles.adminConfirmMeta}>
+              <strong>{deleteTarget.email}</strong>
+              <small>{deleteTarget.account_number || "No main account number"}</small>
+            </div>
+
+            <div className={styles.formActions}>
+              <button type="button" className={styles.secondaryBtn} onClick={() => setDeleteTarget(null)}>
+                Cancel
+              </button>
+              <button className={styles.logoutBtn} type="button" onClick={handleDelete} disabled={deletingId === String(deleteTarget.id)}>
+                <FiTrash2 />
+                <span>{deletingId === String(deleteTarget.id) ? "Deleting..." : "Delete account"}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

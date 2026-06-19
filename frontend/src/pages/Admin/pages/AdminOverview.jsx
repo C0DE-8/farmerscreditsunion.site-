@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import axiosInstance from "../../../api/axios";
-import { EmptyState, StatusBadge } from "../AdminPrimitives";
+import { EmptyState, OverviewSkeleton, StatusBadge } from "../AdminPrimitives";
 import styles from "../Admin.module.css";
 
 export default function AdminOverview() {
@@ -72,7 +72,7 @@ export default function AdminOverview() {
     };
   }, [data]);
 
-  if (loading) return <EmptyState>Loading admin overview...</EmptyState>;
+  if (loading) return <OverviewSkeleton />;
 
   return (
     <>

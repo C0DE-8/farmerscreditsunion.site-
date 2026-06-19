@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import axiosInstance from "../../../api/axios";
-import { EmptyState, resolveAsset, StatusBadge } from "../AdminPrimitives";
+import { ApplicationListSkeleton, EmptyState, resolveAsset, StatusBadge } from "../AdminPrimitives";
 import styles from "../Admin.module.css";
 
 export default function AdminOnboarding() {
@@ -69,7 +69,7 @@ export default function AdminOnboarding() {
       </div>
 
       {loading ? (
-        <EmptyState>Loading onboarding applications...</EmptyState>
+        <ApplicationListSkeleton />
       ) : applications.length === 0 ? (
         <EmptyState>No onboarding applications found.</EmptyState>
       ) : (

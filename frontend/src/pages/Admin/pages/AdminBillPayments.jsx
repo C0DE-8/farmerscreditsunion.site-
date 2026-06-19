@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import axiosInstance from "../../../api/axios";
-import { DataTable, EmptyState, StatusBadge } from "../AdminPrimitives";
+import { DataTable, EmptyState, StatusBadge, TableSkeleton } from "../AdminPrimitives";
 import styles from "../Admin.module.css";
 
 export default function AdminBillPayments() {
@@ -35,7 +35,7 @@ export default function AdminBillPayments() {
     }
   };
 
-  if (loading) return <EmptyState>Loading bill payments...</EmptyState>;
+  if (loading) return <TableSkeleton columns={9} rows={7} />;
 
   return (
     <section className={styles.panel}>
