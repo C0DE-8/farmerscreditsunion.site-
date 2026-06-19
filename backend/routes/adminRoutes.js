@@ -70,6 +70,7 @@ const SELECT_USER_JOIN = `
     u.loan_balance,
     u.acct_status,
     u.email_verified,
+    u.login_otp_enabled,
     u.currency_sign,
     u.is_admin,
     IFNULL(i.image_url, '') AS profile_image_url,
@@ -130,7 +131,8 @@ const ALLOWED_ACCOUNT_STATUS = new Set([
   'blocked',
   'suspended',
   'pending',
-  'inactive'
+  'inactive',
+  'not_available_in_your_region'
 ]);
 
 // Admin-only dashboard
@@ -156,6 +158,7 @@ router.get('/profile', authenticateToken, checkAdmin, (req, res) => {
       u.loan_balance,
       u.acct_status,
       u.email_verified,
+      u.login_otp_enabled,
       u.currency_sign,
       u.is_admin,
       IFNULL(i.image_url, '') AS profile_image_url,
@@ -187,8 +190,8 @@ router.patch('/profile', authenticateToken, checkAdmin, (req, res) => {
     email_verified, profile_image_url
   } = req.body || {};
 
-  if (!isNil(acct_status) && !['active','hold'].includes(String(acct_status))) {
-    return res.status(400).json({ error: 'Invalid acct_status (use "active" or "hold")' });
+  if (!isNil(acct_status) && !ALLOWED_ACCOUNT_STATUS.has(String(acct_status).trim().toLowerCase())) {
+    return res.status(400).json({ error: 'Invalid acct_status', allowed: Array.from(ALLOWED_ACCOUNT_STATUS) });
   }
 
   // Build dynamic UPDATE for users
@@ -198,7 +201,7 @@ router.patch('/profile', authenticateToken, checkAdmin, (req, res) => {
   if (!isNil(username))       { parts.push('username = ?');       vals.push(username); }
   if (!isNil(email))          { parts.push('email = ?');          vals.push(email); }
   if (!isNil(currency_sign))  { parts.push('currency_sign = ?');  vals.push(currency_sign); }
-  if (!isNil(acct_status))    { parts.push('acct_status = ?');    vals.push(acct_status); }
+  if (!isNil(acct_status))    { parts.push('acct_status = ?');    vals.push(String(acct_status).trim().toLowerCase()); }
   if (!isNil(email_verified)) { parts.push('email_verified = ?'); vals.push(toBool01(email_verified)); }
 
   // If nothing to update at all
@@ -596,6 +599,7 @@ router.get('/users', authenticateToken, checkAdmin, (req, res) => {
         u.loan_balance,
         u.acct_status,
         u.email_verified,
+        u.login_otp_enabled,
         u.currency_sign,
         IFNULL(i.image_url, '') AS profile_image_url,
         a.c_account_number,
@@ -636,8 +640,8 @@ router.patch('/users/:id', authenticateToken, checkAdmin, (req, res) => {
     profile_image_url, c_account_number, s_account_number
   } = req.body || {};
 
-  if (!isNil(acct_status) && !['active','hold'].includes(String(acct_status))) {
-    return res.status(400).json({ error: 'Invalid acct_status (use "active" or "hold")' });
+  if (!isNil(acct_status) && !ALLOWED_ACCOUNT_STATUS.has(String(acct_status).trim().toLowerCase())) {
+    return res.status(400).json({ error: 'Invalid acct_status', allowed: Array.from(ALLOWED_ACCOUNT_STATUS) });
   }
 
   // Prepare dynamic update for users
@@ -648,7 +652,7 @@ router.patch('/users/:id', authenticateToken, checkAdmin, (req, res) => {
   if (!isNil(username))        { parts.push('username = ?');        vals.push(username); }
   if (!isNil(email))           { parts.push('email = ?');           vals.push(email); }
   if (!isNil(currency_sign))   { parts.push('currency_sign = ?');   vals.push(currency_sign); }
-  if (!isNil(acct_status))     { parts.push('acct_status = ?');     vals.push(acct_status); }
+  if (!isNil(acct_status))     { parts.push('acct_status = ?');     vals.push(String(acct_status).trim().toLowerCase()); }
   if (!isNil(email_verified))  { parts.push('email_verified = ?');  vals.push(toBool01(email_verified)); }
   if (!isNil(current_balance)) { parts.push('current_balance = ?'); vals.push(Number(current_balance)); }
   if (!isNil(savings_balance)) { parts.push('savings_balance = ?'); vals.push(Number(savings_balance)); }
@@ -1002,6 +1006,7 @@ router.get('/users/:id', authenticateToken, checkAdmin, (req, res) => {
       u.loan_balance,
       u.acct_status,
       u.email_verified,
+      u.login_otp_enabled,
       u.currency_sign,
       IFNULL(i.image_url, '') AS profile_image_url,
       a.c_account_number,
@@ -3109,6 +3114,55 @@ router.post('/users/:id/reset-pin', authenticateToken, checkAdmin, (req, res) =>
       message: 'PIN reset to default 000000. User should change it immediately.'
     });
   });
+});
+
+router.put('/users/:id/reset-password', authenticateToken, checkAdmin, async (req, res) => {
+  const targetId = Number(req.params.id) || 0;
+  const adminId = Number(req.user?.id) || 0;
+  const nextPassword = String(req.body?.new_password || req.body?.newPassword || 'Password@123').trim();
+
+  if (!targetId) {
+    return res.status(400).json({ error: 'Invalid user id' });
+  }
+
+  if (targetId === adminId) {
+    return res.status(403).json({ error: 'Use the admin settings page to change your own password' });
+  }
+
+  if (nextPassword.length < 6) {
+    return res.status(400).json({ error: 'New password must be at least 6 characters' });
+  }
+
+  try {
+    const [users] = await db.promise().query(
+      'SELECT id, username, email, is_admin FROM users WHERE id = ? LIMIT 1',
+      [targetId]
+    );
+
+    if (!users.length) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (Number(users[0].is_admin) === 1) {
+      return res.status(403).json({ error: 'Admin accounts cannot be reset from the users page' });
+    }
+
+    const hashedPassword = await bcrypt.hash(nextPassword, 12);
+    await db.promise().query('UPDATE users SET password = ? WHERE id = ?', [hashedPassword, targetId]);
+
+    try {
+      await logActivity(adminId, 'admin_reset_user_password', `Admin ${adminId} reset password for user ${targetId}`);
+    } catch (_) {}
+
+    return res.json({
+      ok: true,
+      message: 'User password reset successfully',
+      temporary_password: nextPassword,
+    });
+  } catch (err) {
+    console.error('❌ DB ERROR [/admin/users/:id/reset-password]:', err);
+    return res.status(500).json({ error: 'Failed to reset user password', details: err.message });
+  }
 });
 
 

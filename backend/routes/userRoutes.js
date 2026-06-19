@@ -54,6 +54,22 @@ function hashOtp(otp) {
 }
 // otp ends 
 
+async function ensureTransactionsAllowed(userId) {
+  const [rows] = await db.promise().query(
+    'SELECT acct_status FROM users WHERE id = ? LIMIT 1',
+    [userId]
+  );
+
+  const status = String(rows?.[0]?.acct_status || "").trim().toLowerCase();
+  if (status === "not_available_in_your_region") {
+    const error = new Error("This service is not available in your region");
+    error.statusCode = 403;
+    throw error;
+  }
+
+  return status;
+}
+
 // 📄 Get authenticated user's full profile (without is_admin)
 router.get('/profile', authenticateToken, (req, res) => {
   const userId = req.user.id;
@@ -325,6 +341,9 @@ router.post('/transfer/local', authenticateToken, (req, res) => {
     return res.status(400).json({ error: 'Missing required fields including PIN' });
   }
 
+  ensureTransactionsAllowed(userId)
+    .then(() => {
+
   // Step 1: Get User PIN + Currency Sign
   db.query('SELECT transaction_pin, currency_sign FROM users WHERE id = ?', [userId], (err, results) => {
     if (err) return res.status(500).json({ error: 'Failed to fetch PIN' });
@@ -379,6 +398,14 @@ router.post('/transfer/local', authenticateToken, (req, res) => {
       });
     });
   });
+    })
+    .catch((error) => {
+      if (error?.statusCode) {
+        return res.status(error.statusCode).json({ error: error.message });
+      }
+      console.error('❌ Local transfer status validation failed:', error);
+      return res.status(500).json({ error: 'Failed to validate account status' });
+    });
 });
 
 
@@ -418,6 +445,9 @@ router.post("/transfer/local/initiate", authenticateToken, (req, res) => {
   if (!Number.isFinite(amt) || amt <= 0) {
     return res.status(400).json({ error: "Amount must be a valid number > 0" });
   }
+
+  ensureTransactionsAllowed(userId)
+    .then(() => {
 
   const balanceColumn = fromAccount === "savings" ? "savings_balance" : "current_balance";
 
@@ -627,6 +657,14 @@ router.post("/transfer/local/initiate", authenticateToken, (req, res) => {
       );
     });
   });
+    })
+    .catch((error) => {
+      if (error?.statusCode) {
+        return res.status(error.statusCode).json({ error: error.message });
+      }
+      console.error('❌ Local transfer initiate status validation failed:', error);
+      return res.status(500).json({ error: 'Failed to validate account status' });
+    });
 });
 // ✅ Verify local transfer OTP
 router.post("/transfer/local/verify", authenticateToken, (req, res) => {
@@ -971,6 +1009,8 @@ router.post('/transfer/wire', authenticateToken, async (req, res) => {
   }
 
   try {
+    await ensureTransactionsAllowed(userId);
+
     // 0) Read admin settings for code requirements
     const [[settingsRow]] = await db.promise().query(
       'SELECT require_imf, require_cot, require_tax FROM security_settings WHERE id = 1'
@@ -1083,6 +1123,9 @@ router.post('/transfer/wire', authenticateToken, async (req, res) => {
     });
 
   } catch (error) {
+    if (error?.statusCode) {
+      return res.status(error.statusCode).json({ error: error.message });
+    }
     console.error('❌ Wire transfer error:', error);
     res.status(500).json({ error: 'Wire transfer failed' });
   }
@@ -1134,6 +1177,9 @@ router.post("/transfer/wire/initiate", authenticateToken, (req, res) => {
   if (!Number.isFinite(amt) || amt <= 0) {
     return res.status(400).json({ error: "Amount must be a valid number > 0" });
   }
+
+  ensureTransactionsAllowed(userId)
+    .then(() => {
 
   const balanceColumn = fromAccount === "savings" ? "savings_balance" : "current_balance";
 
@@ -1428,6 +1474,14 @@ router.post("/transfer/wire/initiate", authenticateToken, (req, res) => {
       );
     });
   });
+    })
+    .catch((error) => {
+      if (error?.statusCode) {
+        return res.status(error.statusCode).json({ error: error.message });
+      }
+      console.error('❌ Wire transfer initiate status validation failed:', error);
+      return res.status(500).json({ error: 'Failed to validate account status' });
+    });
 });
 // ✅ 2) Verify wire transfer OTP => deduct + mark otp_status verified
 router.post("/transfer/wire/verify", authenticateToken, (req, res) => {
@@ -1800,6 +1854,9 @@ router.post('/transfer/self', authenticateToken, (req, res) => {
     return res.status(400).json({ error: 'Invalid self transfer request' });
   }
 
+  ensureTransactionsAllowed(userId)
+    .then(() => {
+
   // Step 1: Get and verify user's PIN
   db.query('SELECT transaction_pin FROM users WHERE id = ?', [userId], (err, results) => {
     if (err) return res.status(500).json({ error: 'DB error on PIN' });
@@ -1841,6 +1898,14 @@ router.post('/transfer/self', authenticateToken, (req, res) => {
       res.json({ message: 'Self transfer completed successfully' });
     });
   });
+    })
+    .catch((error) => {
+      if (error?.statusCode) {
+        return res.status(error.statusCode).json({ error: error.message });
+      }
+      console.error('❌ Self transfer status validation failed:', error);
+      return res.status(500).json({ error: 'Failed to validate account status' });
+    });
 });
 // 📜 Get self-transfer history (formatted)
 router.get('/transfer/self/history', authenticateToken, (req, res) => {
@@ -2024,6 +2089,7 @@ router.get('/wallets', authenticateToken, async (req, res) => {
 router.post('/bill-payments', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;
+    await ensureTransactionsAllowed(userId);
     const {
       payment_kind = 'bill',
       bill_category = 'electricity',
@@ -2094,6 +2160,9 @@ router.post('/bill-payments', authenticateToken, async (req, res) => {
       payment_id: result.insertId,
     });
   } catch (error) {
+    if (error?.statusCode) {
+      return res.status(error.statusCode).json({ error: error.message });
+    }
     console.error('❌ Bill payment request error:', error);
     res.status(500).json({ error: 'Failed to submit bill payment request' });
   }
@@ -2373,6 +2442,7 @@ router.post('/deposit', authenticateToken, proofupload.single('proof'), async (r
   try {
     const { amount, wallet_id, deposit_type = 'topup_account', account_type = 'current', note = '' } = req.body;
     const user_id = req.user.id;
+    await ensureTransactionsAllowed(user_id);
     const proof_path = req.file ? req.file.path : null;
     const amountNum = Number(amount);
 
@@ -2401,6 +2471,9 @@ router.post('/deposit', authenticateToken, proofupload.single('proof'), async (r
 
     res.json({ message: 'Deposit submitted successfully and awaiting admin confirmation' });
   } catch (error) {
+    if (error?.statusCode) {
+      return res.status(error.statusCode).json({ error: error.message });
+    }
     console.error('❌ Deposit upload error:', error);
     res.status(500).json({ error: 'Failed to submit deposit' });
   }
@@ -2464,6 +2537,7 @@ router.post('/loans', authenticateToken, async (req, res) => {
   }
 
   try {
+    await ensureTransactionsAllowed(userId);
     await db.promise().query(
       `INSERT INTO loan_applications
         (user_id, full_name, gender, marital_status, email, ssn, mobile_number,
@@ -2493,6 +2567,9 @@ router.post('/loans', authenticateToken, async (req, res) => {
     await logActivity(userId, 'loan_request', `Submitted ${loan_service} loan request`);
     res.json({ message: 'Loan request submitted successfully and is pending admin review.' });
   } catch (error) {
+    if (error?.statusCode) {
+      return res.status(error.statusCode).json({ error: error.message });
+    }
     console.error('❌ Loan request error:', error);
     res.status(500).json({ error: 'Failed to submit loan request' });
   }

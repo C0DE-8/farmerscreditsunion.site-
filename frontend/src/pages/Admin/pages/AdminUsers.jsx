@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import {
   FiEdit2,
   FiEye,
+  FiImage,
   FiLogIn,
   FiPlus,
   FiRefreshCw,
@@ -30,7 +31,6 @@ const INITIAL_EDIT = {
   loan_balance: "0",
   c_account_number: "",
   s_account_number: "",
-  profile_image_url: "",
 };
 
 const INITIAL_CREATE = {
@@ -44,9 +44,18 @@ const INITIAL_CREATE = {
   current_balance: "0",
   savings_balance: "0",
   loan_balance: "0",
-  profile_image_url: "",
   send_welcome: true,
 };
+
+const ACCOUNT_STATUS_OPTIONS = [
+  { value: "active", label: "Active" },
+  { value: "pending", label: "Pending" },
+  { value: "inactive", label: "Inactive" },
+  { value: "hold", label: "Hold" },
+  { value: "blocked", label: "Blocked" },
+  { value: "suspended", label: "Suspended" },
+  { value: "not_available_in_your_region", label: "Not available in your region" },
+];
 
 export default function AdminUsers() {
   const { notify } = useOutletContext();
@@ -61,10 +70,15 @@ export default function AdminUsers() {
   const [editForm, setEditForm] = useState(INITIAL_EDIT);
   const [createOpen, setCreateOpen] = useState(false);
   const [createForm, setCreateForm] = useState(INITIAL_CREATE);
+  const [editImageFile, setEditImageFile] = useState(null);
+  const [createImageFile, setCreateImageFile] = useState(null);
   const [savingId, setSavingId] = useState("");
   const [impersonatingId, setImpersonatingId] = useState("");
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deletingId, setDeletingId] = useState("");
+  const editFileRef = useRef(null);
+  const createFileRef = useRef(null);
+  const viewFileRef = useRef(null);
 
   const loadUsers = async (next = {}) => {
     const nextQuery = next.query ?? query;
@@ -111,18 +125,36 @@ export default function AdminUsers() {
       loan_balance: String(user.loan_balance ?? "0"),
       c_account_number: user.c_account_number || "",
       s_account_number: user.s_account_number || "",
-      profile_image_url: user.profile_image_url || "",
     });
+    setEditImageFile(null);
   };
 
   const closeEdit = () => {
     setEditingUser(null);
     setEditForm(INITIAL_EDIT);
+    setEditImageFile(null);
   };
 
   const closeCreate = () => {
     setCreateOpen(false);
     setCreateForm(INITIAL_CREATE);
+    setCreateImageFile(null);
+  };
+
+  const updateUserRow = (userId, updates) => {
+    setUsers((current) => current.map((item) => (item.id === userId ? { ...item, ...updates } : item)));
+    setViewingUser((current) => (current && current.id === userId ? { ...current, ...updates } : current));
+    setEditingUser((current) => (current && current.id === userId ? { ...current, ...updates } : current));
+  };
+
+  const uploadUserImage = async (userId, file) => {
+    if (!file) return null;
+    const formData = new FormData();
+    formData.append("image", file);
+    const res = await axiosInstance.post(`/admin/users/${userId}/upload-image`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data?.image_url || "";
   };
 
   const submitEdit = async (event) => {
@@ -133,8 +165,14 @@ export default function AdminUsers() {
       setSavingId(`edit-${editingUser.id}`);
       const res = await axiosInstance.patch(`/admin/users/${editingUser.id}`, editForm);
       const updated = res.data?.user;
+      let nextImageUrl = updated?.profile_image_url || "";
+
+      if (editImageFile) {
+        nextImageUrl = await uploadUserImage(editingUser.id, editImageFile);
+      }
+
       if (updated) {
-        setUsers((current) => current.map((item) => (item.id === editingUser.id ? { ...item, ...updated } : item)));
+        updateUserRow(editingUser.id, { ...updated, ...(nextImageUrl ? { profile_image_url: nextImageUrl } : {}) });
       }
       notify("User account updated", "success");
       closeEdit();
@@ -153,7 +191,12 @@ export default function AdminUsers() {
       const res = await axiosInstance.post("/admin/create/users", createForm);
       const created = res.data?.user;
       if (created) {
-        setUsers((current) => [created, ...current]);
+        let nextUser = created;
+        if (createImageFile && created.id) {
+          const image_url = await uploadUserImage(created.id, createImageFile);
+          nextUser = { ...created, profile_image_url: image_url };
+        }
+        setUsers((current) => [nextUser, ...current]);
       }
       notify(res.data?.message || "User created successfully", "success");
       closeCreate();
@@ -202,6 +245,52 @@ export default function AdminUsers() {
     }
   };
 
+  const handleResetPin = async (user) => {
+    try {
+      const res = await axiosInstance.post(`/admin/users/${user.id}/reset-pin`);
+      notify(res.data?.message || "User PIN reset to default", "success");
+    } catch (error) {
+      notify(error?.response?.data?.error || "Failed to reset user PIN", "error");
+    }
+  };
+
+  const handleResetPassword = async (user) => {
+    try {
+      const res = await axiosInstance.put(`/admin/users/${user.id}/reset-password`);
+      const tempPassword = res.data?.temporary_password;
+      notify(
+        tempPassword ? `Password reset. Temporary password: ${tempPassword}` : (res.data?.message || "User password reset"),
+        "success"
+      );
+    } catch (error) {
+      notify(error?.response?.data?.error || "Failed to reset user password", "error");
+    }
+  };
+
+  const handleToggleLoginOtp = async (user) => {
+    const nextEnabled = !user.login_otp_enabled;
+    try {
+      const res = await axiosInstance.put("/admin/user/login-otp-toggle", {
+        userId: user.id,
+        enabled: nextEnabled,
+      });
+      updateUserRow(user.id, { login_otp_enabled: nextEnabled ? 1 : 0 });
+      notify(res.data?.message || "Login OTP updated", "success");
+    } catch (error) {
+      notify(error?.response?.data?.error || "Failed to update login OTP", "error");
+    }
+  };
+
+  const handleViewImageUpload = async (user, file) => {
+    try {
+      const image_url = await uploadUserImage(user.id, file);
+      updateUserRow(user.id, { profile_image_url: image_url });
+      notify("User image updated", "success");
+    } catch (error) {
+      notify(error?.response?.data?.error || "Failed to upload user image", "error");
+    }
+  };
+
   const submitFilters = (event) => {
     event.preventDefault();
     loadUsers();
@@ -243,12 +332,9 @@ export default function AdminUsers() {
             }}
           >
             <option value="all">All statuses</option>
-            <option value="active">Active</option>
-            <option value="pending">Pending</option>
-            <option value="inactive">Inactive</option>
-            <option value="hold">Hold</option>
-            <option value="blocked">Blocked</option>
-            <option value="suspended">Suspended</option>
+            {ACCOUNT_STATUS_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
           </select>
 
           <button className={styles.refreshBtn} type="submit">
@@ -323,6 +409,7 @@ export default function AdminUsers() {
                   <span>
                     <strong>{item.email_verified ? "Verified" : "Not verified"}</strong>
                     <small>Currency: {item.currency_sign || "$"}</small>
+                    <small>Login OTP: {item.login_otp_enabled ? "On" : "Off"}</small>
                   </span>
 
                   <span className={styles.adminActionGroup}>
@@ -390,8 +477,9 @@ export default function AdminUsers() {
                 <label className={styles.field}>
                   <span>Account status</span>
                   <select value={editForm.acct_status} onChange={(event) => setEditForm((current) => ({ ...current, acct_status: event.target.value }))}>
-                    <option value="active">Active</option>
-                    <option value="hold">Hold</option>
+                    {ACCOUNT_STATUS_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
                   </select>
                 </label>
                 <label className={styles.field}>
@@ -425,8 +513,13 @@ export default function AdminUsers() {
                   <input value={editForm.s_account_number} onChange={(event) => setEditForm((current) => ({ ...current, s_account_number: event.target.value }))} />
                 </label>
                 <label className={`${styles.field} ${styles.fieldFull}`}>
-                  <span>Profile image URL</span>
-                  <input value={editForm.profile_image_url} onChange={(event) => setEditForm((current) => ({ ...current, profile_image_url: event.target.value }))} />
+                  <span>Profile image upload</span>
+                  <input
+                    ref={editFileRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={(event) => setEditImageFile(event.target.files?.[0] || null)}
+                  />
                 </label>
               </div>
 
@@ -480,7 +573,38 @@ export default function AdminUsers() {
                 <strong>{String(viewingUser.acct_status || "unknown").toUpperCase()}</strong>
                 <small>{viewingUser.email_verified ? "Email verified" : "Email not verified"}</small>
                 <small>Currency: {viewingUser.currency_sign || "$"}</small>
+                <small>Login OTP: {viewingUser.login_otp_enabled ? "Enabled" : "Disabled"}</small>
               </div>
+            </div>
+
+            <div className={styles.adminControlBar}>
+              <button type="button" className={styles.secondaryBtn} onClick={() => viewFileRef.current?.click()}>
+                <FiImage />
+                <span>Upload image</span>
+              </button>
+              <input
+                ref={viewFileRef}
+                className={styles.hiddenFileInput}
+                type="file"
+                accept="image/*"
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  if (file) handleViewImageUpload(viewingUser, file);
+                  event.target.value = "";
+                }}
+              />
+              <button type="button" className={styles.secondaryBtn} onClick={() => handleResetPin(viewingUser)}>
+                <FiShield />
+                <span>Reset PIN</span>
+              </button>
+              <button type="button" className={styles.secondaryBtn} onClick={() => handleResetPassword(viewingUser)}>
+                <FiRefreshCw />
+                <span>Reset password</span>
+              </button>
+              <button type="button" className={styles.refreshBtn} onClick={() => handleToggleLoginOtp(viewingUser)}>
+                <FiShield />
+                <span>{viewingUser.login_otp_enabled ? "Disable OTP" : "Enable OTP"}</span>
+              </button>
             </div>
 
             <div className={styles.formActions}>
@@ -532,12 +656,9 @@ export default function AdminUsers() {
                 <label className={styles.field}>
                   <span>Account status</span>
                   <select value={createForm.acct_status} onChange={(event) => setCreateForm((current) => ({ ...current, acct_status: event.target.value }))}>
-                    <option value="active">Active</option>
-                    <option value="pending">Pending</option>
-                    <option value="inactive">Inactive</option>
-                    <option value="hold">Hold</option>
-                    <option value="blocked">Blocked</option>
-                    <option value="suspended">Suspended</option>
+                    {ACCOUNT_STATUS_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
                   </select>
                 </label>
                 <label className={styles.field}>
@@ -564,8 +685,13 @@ export default function AdminUsers() {
                   <input type="number" step="0.01" value={createForm.loan_balance} onChange={(event) => setCreateForm((current) => ({ ...current, loan_balance: event.target.value }))} />
                 </label>
                 <label className={`${styles.field} ${styles.fieldFull}`}>
-                  <span>Profile image URL</span>
-                  <input value={createForm.profile_image_url} onChange={(event) => setCreateForm((current) => ({ ...current, profile_image_url: event.target.value }))} />
+                  <span>Profile image upload</span>
+                  <input
+                    ref={createFileRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={(event) => setCreateImageFile(event.target.files?.[0] || null)}
+                  />
                 </label>
                 <label className={`${styles.field} ${styles.fieldFull}`}>
                   <span>Welcome email</span>

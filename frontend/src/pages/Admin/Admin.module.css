@@ -648,6 +648,18 @@
   margin-bottom: 18px;
 }
 
+.adminControlBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
 .adminDetailCard {
   border: 1px solid var(--border);
   border-radius: 18px;
@@ -1237,6 +1249,16 @@
   .adminActionGroup {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .adminControlBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .adminControlBar button {
+    width: 100%;
+    justify-content: center;
   }
 
   .adminActionGroup button {

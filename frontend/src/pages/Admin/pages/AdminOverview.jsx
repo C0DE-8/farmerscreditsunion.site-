@@ -72,6 +72,11 @@ export default function AdminOverview() {
     };
   }, [data]);
 
+  const recentPendingApplications = useMemo(
+    () => data.applications.filter((item) => String(item.status).toLowerCase() === "pending").slice(0, 5),
+    [data.applications]
+  );
+
   if (loading) return <OverviewSkeleton />;
 
   return (
@@ -88,15 +93,15 @@ export default function AdminOverview() {
       <div className={styles.dashboardGrid}>
         <section className={styles.panel}>
           <h2>Recent Onboarding</h2>
-          {data.applications.slice(0, 5).length ? (
-            data.applications.slice(0, 5).map((item) => (
+          {recentPendingApplications.length ? (
+            recentPendingApplications.map((item) => (
               <div className={styles.compactRow} key={item.id}>
                 <strong>{item.full_name}</strong>
                 <StatusBadge status={item.status} />
               </div>
             ))
           ) : (
-            <EmptyState>No onboarding records yet.</EmptyState>
+            <EmptyState>No pending onboarding records.</EmptyState>
           )}
         </section>
 
