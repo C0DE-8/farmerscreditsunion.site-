@@ -283,7 +283,7 @@ export default function BillsAirtimePage() {
             className={form.payment_kind === "airtime" ? styles.activeSegment : ""}
             onClick={() => updateField("payment_kind", "airtime")}
           >
-            Airtime
+            Top Up
           </button>
         </div>
 
@@ -435,6 +435,7 @@ export default function BillsAirtimePage() {
                 <div>
                   <span>Ready to submit</span>
                   <strong>{form.payment_kind === "airtime" ? "Airtime request" : "Bill payment request"}</strong>
+                  
                 </div>
                 <div className={styles.billReviewPinBadge}>
                   <FiLock />
@@ -472,7 +473,7 @@ export default function BillsAirtimePage() {
           <div className={styles.panelHead}>
             <div>
               <h2>Recent Requests</h2>
-              <p>Your latest bills and airtime payment requests.</p>
+              <p>Your latest bill and top-up payment requests.</p>
             </div>
             <div className={styles.viewToggle} aria-label="History view mode">
               <button
@@ -500,7 +501,7 @@ export default function BillsAirtimePage() {
               <strong>Loading top-up requests...</strong>
             </div>
           ) : payments.length === 0 ? (
-            <p className={styles.empty}>No bill or airtime requests yet.</p>
+            <p className={styles.empty}>No bill or top-up requests yet.</p>
           ) : (
             <div
               className={`${styles.transactionList} ${
@@ -529,7 +530,7 @@ export default function BillsAirtimePage() {
                   <div>
                     <strong>{payment.provider_name}</strong>
                     <small>
-                      {payment.payment_kind === "airtime" ? "Airtime" : payment.bill_category} • {payment.from_account} • {payment.created_at}
+                      {payment.payment_kind === "airtime" ? "Top Up" : payment.bill_category} • {payment.from_account} • {payment.created_at}
                     </small>
                   </div>
                   <div className={styles.historyAside}>
