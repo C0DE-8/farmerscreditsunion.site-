@@ -13,6 +13,7 @@ import AdminUsers from "../pages/Admin/pages/AdminUsers";
 import AdminWallets from "../pages/Admin/pages/AdminWallets";
 import AdminBillPayments from "../pages/Admin/pages/AdminBillPayments";
 import VerifyLoginOTP from "../pages/VerifyLoginOTP/VerifyLoginOTP";
+import { NotFoundPage, ServerErrorPage } from "../pages/ErrorPages/ErrorPages";
 import TransactionsPage from "../pages/UserPages/TransactionsPage";
 import TransactionHistoryPage from "../pages/UserPages/TransactionHistoryPage";
 import ConvertPage from "../pages/UserPages/ConvertPage";
@@ -104,7 +105,7 @@ export default function AppRoutes() {
         />
 
         <Route
-          path="/admin/auth"
+          path="/lock/admin/auth"
           element={
             <PublicRoute>
               <Login />
@@ -120,6 +121,8 @@ export default function AppRoutes() {
             </PublicRoute>
           }
         />
+
+        <Route path="/500" element={<ServerErrorPage />} />
 
         <Route
           path="/dashboard"
@@ -266,6 +269,8 @@ export default function AppRoutes() {
           <Route path="wallets" element={<AdminWallets />} />
           <Route path="settings" element={<AdminSettings />} />
         </Route>
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );

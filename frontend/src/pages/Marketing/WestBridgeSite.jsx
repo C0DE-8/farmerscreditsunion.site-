@@ -137,7 +137,7 @@ function MarketingLayout({ children, activePath }) {
             <h4>Company</h4>
             <Link to="/contact">Contact</Link>
             <Link to="/auth?mode=login">Account Login</Link>
-            <Link to="/admin/auth">Admin Login</Link>
+            <Link to="/lock/admin/auth">Admin Login</Link>
             <Link to="/auth?mode=register">Open Account</Link>
           </div>
           <div className={styles.footerCol}>

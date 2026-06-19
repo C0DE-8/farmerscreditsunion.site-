@@ -9,7 +9,7 @@ export default function ProtectedRoute({ children, allowedRoles }) {
 
   if (!routeUser) {
     if (allowedRoles?.length === 1 && allowedRoles[0] === "admin") {
-      return <Navigate to="/admin/auth" replace />;
+      return <Navigate to="/lock/admin/auth" replace />;
     }
     return <Navigate to="/auth" replace />;
   }

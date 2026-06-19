@@ -71,6 +71,7 @@ const SELECT_USER_JOIN = `
     u.acct_status,
     u.email_verified,
     u.currency_sign,
+    u.is_admin,
     IFNULL(i.image_url, '') AS profile_image_url,
     a.c_account_number,
     a.s_account_number
@@ -258,10 +259,15 @@ router.patch('/profile', authenticateToken, checkAdmin, (req, res) => {
 router.put("/change-password", authenticateToken, checkAdmin, async (req, res) => {
   try {
     const adminId = req.user.id;
-    const { oldPassword, newPassword } = req.body;
+    const oldPassword = req.body?.oldPassword || req.body?.current_password;
+    const newPassword = req.body?.newPassword || req.body?.new_password;
 
     if (!oldPassword || !newPassword) {
       return res.status(400).json({ error: "Old and new password required" });
+    }
+
+    if (String(newPassword).length < 6) {
+      return res.status(400).json({ error: "New password must be at least 6 characters" });
     }
 
     // Get admin current password

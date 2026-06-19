@@ -104,7 +104,7 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const isAdminAuth = location.pathname.startsWith("/admin/auth");
+  const isAdminAuth = location.pathname.startsWith("/lock/admin/auth");
 
   const registrationPhases = [
     {
