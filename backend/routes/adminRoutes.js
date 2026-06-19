@@ -1141,7 +1141,7 @@ router.get('/security-codes', authenticateToken, checkAdmin, (req, res) => {
         return res.status(500).json({ error: 'Database error', details: err.message });
       }
       if (!rows || rows.length === 0) {
-        return res.status(404).json({ error: 'No security codes found' });
+        return res.json({ codes: { imf_code: '', cot_code: '', tax_code: '' } });
       }
       return res.json({ codes: rows[0] });
     }
@@ -1209,7 +1209,7 @@ router.get('/transfer-fee', authenticateToken, checkAdmin, (req, res) => {
         return res.status(500).json({ error: 'Database error', details: err.message });
       }
       if (!rows || rows.length === 0) {
-        return res.status(404).json({ error: 'No transfer fees set' });
+        return res.json({ fees: { local: 0, wire: 0 } });
       }
 
       const fees = {};

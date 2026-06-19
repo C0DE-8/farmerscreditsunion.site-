@@ -25,12 +25,30 @@ const INITIAL_CODES = {
   tax_code: "",
 };
 
+const INITIAL_SETTINGS = {
+  require_imf: true,
+  require_cot: true,
+  require_tax: true,
+};
+
+const codeFields = [
+  { key: "imf_code", setting: "require_imf", label: "IMF Code" },
+  { key: "cot_code", setting: "require_cot", label: "COT Code" },
+  { key: "tax_code", setting: "require_tax", label: "TAX Code" },
+];
+
+const feeFields = [
+  { type: "local", label: "Local Transfer Fee" },
+  { type: "wire", label: "Wire Transfer Fee" },
+];
+
 export default function AdminSettings() {
   const outletContext = useOutletContext() || {};
   const notify = outletContext.notify || (() => {});
   const { adminUser, updateSessionUser } = useAuth();
-  const [settings, setSettings] = useState(null);
+  const [settings, setSettings] = useState(INITIAL_SETTINGS);
   const [fees, setFees] = useState({});
+  const [feeDrafts, setFeeDrafts] = useState({});
   const [securityCodes, setSecurityCodes] = useState(INITIAL_CODES);
   const [profileForm, setProfileForm] = useState(INITIAL_PROFILE);
   const [passwordForm, setPasswordForm] = useState(INITIAL_PASSWORD);
@@ -38,6 +56,7 @@ export default function AdminSettings() {
   const [savingProfile, setSavingProfile] = useState(false);
   const [savingPassword, setSavingPassword] = useState(false);
   const [savingCodes, setSavingCodes] = useState(false);
+  const [savingFee, setSavingFee] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -53,14 +72,18 @@ export default function AdminSettings() {
 
       if (!active) return;
 
-      const nextSettings = settingsRes.status === "fulfilled" ? settingsRes.value?.data?.settings || null : null;
+      const nextSettings = settingsRes.status === "fulfilled" ? settingsRes.value?.data?.settings || INITIAL_SETTINGS : INITIAL_SETTINGS;
       const nextFees = feeRes.status === "fulfilled" ? feeRes.value?.data?.fees || {} : {};
-      const nextCodes = codesRes.status === "fulfilled" ? codesRes.value?.data || INITIAL_CODES : INITIAL_CODES;
+      const nextCodes = codesRes.status === "fulfilled" ? codesRes.value?.data?.codes || INITIAL_CODES : INITIAL_CODES;
       const profile = profileRes.status === "fulfilled" ? profileRes.value?.data?.user || adminUser || {} : adminUser || {};
       const failedRequests = [settingsRes, feeRes, profileRes, codesRes].filter((item) => item.status === "rejected").length;
 
       setSettings(nextSettings);
       setFees(nextFees);
+      setFeeDrafts({
+        local: nextFees.local ?? "",
+        wire: nextFees.wire ?? "",
+      });
       setSecurityCodes({
         imf_code: nextCodes.imf_code || "",
         cot_code: nextCodes.cot_code || "",
@@ -77,7 +100,7 @@ export default function AdminSettings() {
         updateSessionUser("admin", profile);
       }
 
-      if (failedRequests === 3) {
+      if (failedRequests === 4) {
         notify("Failed to load admin settings.", "error");
       } else if (failedRequests > 0) {
         notify("Some admin settings could not be loaded.", "info");
@@ -108,20 +131,49 @@ export default function AdminSettings() {
     setSettings(next);
 
     try {
-      await axiosInstance.post("/admin/security-codes/settings", next);
+      const res = await axiosInstance.post("/admin/security-codes/settings", next);
+      setSettings(res.data?.settings || next);
       notify("Security settings updated", "success");
     } catch (error) {
+      setSettings(settings);
       notify(error?.response?.data?.error || "Failed to update security settings", "error");
     }
   };
 
-  const updateFee = async (type, fee_amount) => {
+  const toggleAllSecuritySettings = async (enabled) => {
+    const next = {
+      require_imf: enabled,
+      require_cot: enabled,
+      require_tax: enabled,
+    };
+    setSettings(next);
+
     try {
+      const res = await axiosInstance.post("/admin/security-codes/settings", { require_codes: enabled });
+      setSettings(res.data?.settings || next);
+      notify(`All code requirements ${enabled ? "enabled" : "disabled"}`, "success");
+    } catch (error) {
+      setSettings(settings);
+      notify(error?.response?.data?.error || "Failed to update security settings", "error");
+    }
+  };
+
+  const updateFee = async (type) => {
+    const fee_amount = feeDrafts[type];
+    if (fee_amount === "" || Number.isNaN(Number(fee_amount)) || Number(fee_amount) < 0) {
+      notify("Enter a valid transfer fee.", "error");
+      return;
+    }
+
+    try {
+      setSavingFee(type);
       const res = await axiosInstance.post("/admin/set-transfer-fee", { type, fee_amount });
       notify(res.data?.message || "Transfer fee updated", "success");
       setFees((current) => ({ ...current, [type]: Number(fee_amount) }));
     } catch (error) {
       notify(error?.response?.data?.error || "Failed to update transfer fee", "error");
+    } finally {
+      setSavingFee("");
     }
   };
 
@@ -346,27 +398,50 @@ export default function AdminSettings() {
           </div>
         </div>
 
-        <div className={styles.settingsGrid}>
-          {["require_imf", "require_cot", "require_tax"].map((key) => (
-            <label className={styles.toggleRow} key={key}>
-              <span>{key.replace("require_", "").toUpperCase()} required</span>
+        <div className={styles.requirementActions}>
+          <button className={styles.applyBtn} type="button" onClick={() => toggleAllSecuritySettings(true)}>
+            Enable all code checks
+          </button>
+          <button className={styles.secondaryBtn} type="button" onClick={() => toggleAllSecuritySettings(false)}>
+            Disable all code checks
+          </button>
+        </div>
+
+        <div className={styles.operationalGrid}>
+          {codeFields.map((item) => (
+            <label className={styles.requirementCard} key={item.setting}>
+              <span>{item.label}</span>
+              <strong>{settings?.[item.setting] ? "Required" : "Not required"}</strong>
               <input
                 type="checkbox"
-                checked={!!settings?.[key]}
-                onChange={(e) => updateSecuritySetting(key, e.target.checked)}
+                checked={!!settings?.[item.setting]}
+                onChange={(e) => updateSecuritySetting(item.setting, e.target.checked)}
               />
             </label>
           ))}
 
-          {["local", "wire"].map((type) => (
-            <label className={styles.feeRow} key={type}>
-              <span>{type} transfer fee</span>
-              <input
-                type="number"
-                defaultValue={fees?.[type] ?? ""}
-                onBlur={(e) => e.target.value && updateFee(type, e.target.value)}
-              />
-            </label>
+          {feeFields.map((item) => (
+            <div className={styles.feeManageCard} key={item.type}>
+              <div>
+                <h3>{item.label}</h3>
+                <span>Current Fee</span>
+                <strong>${Number(fees?.[item.type] || 0).toFixed(2)}</strong>
+              </div>
+              <label className={styles.field}>
+                <span>New fee amount</span>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={feeDrafts[item.type] ?? ""}
+                  onChange={(event) => setFeeDrafts((current) => ({ ...current, [item.type]: event.target.value }))}
+                />
+              </label>
+              <button className={styles.applyBtn} type="button" onClick={() => updateFee(item.type)} disabled={savingFee === item.type}>
+                <FiSave />
+                <span>{savingFee === item.type ? "Saving..." : "Save fee"}</span>
+              </button>
+            </div>
           ))}
         </div>
       </section>
@@ -381,14 +456,11 @@ export default function AdminSettings() {
         </div>
 
         <form className={styles.settingsForm} onSubmit={submitSecurityCodes}>
-          <div className={styles.settingsFormGrid}>
-            {[
-              { key: "imf_code", label: "IMF Code" },
-              { key: "cot_code", label: "COT Code" },
-              { key: "tax_code", label: "TAX Code" },
-            ].map((item) => (
-              <label className={styles.field} key={item.key}>
-                <span>{item.label}</span>
+          <div className={styles.codeCardsGrid}>
+            {codeFields.map((item) => (
+              <label className={styles.codeValueCard} key={item.key}>
+                <span>Current {item.label}</span>
+                <strong>{securityCodes[item.key] || "Not set"}</strong>
                 <div className={styles.copyField}>
                   <input
                     type="text"

@@ -337,12 +337,12 @@ export default function AdminUsers() {
             ))}
           </select>
 
-          <button className={styles.refreshBtn} type="submit">
+          <button className={styles.applyBtn} type="submit">
             <FiSearch />
             <span>Apply</span>
           </button>
 
-          <button className={styles.refreshBtn} type="button" onClick={() => setCreateOpen(true)}>
+          <button className={styles.createBtn} type="button" onClick={() => setCreateOpen(true)}>
             <FiPlus />
             <span>Create user</span>
           </button>
@@ -419,13 +419,13 @@ export default function AdminUsers() {
                           <FiEye />
                           <span>View</span>
                         </button>
-                        <button type="button" className={styles.refreshBtn} onClick={() => openEdit(item)}>
+                        <button type="button" className={styles.editBtn} onClick={() => openEdit(item)}>
                           <FiEdit2 />
                           <span>Edit</span>
                         </button>
                         <button
                           type="button"
-                          className={styles.refreshBtn}
+                          className={styles.loginBtn}
                           onClick={() => handleImpersonate(item)}
                           disabled={impersonatingId === String(item.id)}
                         >
@@ -489,20 +489,20 @@ export default function AdminUsers() {
                         <FiEye />
                         <span>View</span>
                       </button>
-                      <button type="button" className={styles.refreshBtn} onClick={() => openEdit(item)}>
+                      <button type="button" className={styles.editBtn} onClick={() => openEdit(item)}>
                         <FiEdit2 />
                         <span>Edit</span>
                       </button>
                       <button
                         type="button"
-                        className={styles.refreshBtn}
+                        className={styles.loginBtn}
                         onClick={() => handleImpersonate(item)}
                         disabled={impersonatingId === String(item.id)}
                       >
                         <FiLogIn />
                         <span>{impersonatingId === String(item.id) ? "Opening..." : "Login"}</span>
                       </button>
-                      <button type="button" className={styles.logoutBtn} onClick={() => setDeleteTarget(item)}>
+                      <button type="button" className={`${styles.logoutBtn} ${styles.mobileDeleteBtn}`} onClick={() => setDeleteTarget(item)}>
                         <FiTrash2 />
                         <span>Delete</span>
                       </button>
@@ -688,6 +688,13 @@ export default function AdminUsers() {
               }}>
                 <FiEdit2 />
                 <span>Edit user</span>
+              </button>
+              <button type="button" className={styles.logoutBtn} onClick={() => {
+                setDeleteTarget(viewingUser);
+                setViewingUser(null);
+              }}>
+                <FiTrash2 />
+                <span>Delete user</span>
               </button>
             </div>
           </div>

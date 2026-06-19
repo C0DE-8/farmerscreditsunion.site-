@@ -182,12 +182,64 @@
 }
 
 .refreshBtn {
-  background: rgba(185, 28, 28, 0.1);
-  color: var(--primary);
+  background: rgba(217, 119, 6, 0.12);
+  color: #b45309;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+}
+
+.applyBtn,
+.createBtn {
+  min-height: 40px;
+  border-radius: 12px;
+  padding: 0 14px;
+  font-weight: 800;
+  border: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.applyBtn {
+  background: rgba(8, 145, 178, 0.12);
+  color: #0f766e;
+  border: 1px solid rgba(8, 145, 178, 0.18);
+}
+
+.createBtn {
+  background: rgba(124, 58, 237, 0.12);
+  color: #6d28d9;
+  border: 1px solid rgba(124, 58, 237, 0.18);
+}
+
+.editBtn,
+.loginBtn {
+  min-height: 40px;
+  border-radius: 12px;
+  padding: 0 14px;
+  font-weight: 800;
+  border: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.editBtn {
+  background: rgba(37, 99, 235, 0.12);
+  color: #1d4ed8;
+  border: 1px solid rgba(37, 99, 235, 0.18);
+}
+
+.loginBtn {
+  background: rgba(22, 163, 74, 0.12);
+  color: #15803d;
+  border: 1px solid rgba(22, 163, 74, 0.18);
 }
 
 .logoutBtn {
@@ -461,6 +513,187 @@
   gap: 10px;
 }
 
+.transferControlGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.75fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.requirementActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.codeControlList {
+  display: grid;
+  gap: 12px;
+}
+
+.codeControlCard,
+.feeManageCard {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--card-bg) 90%, transparent);
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+
+.codeControlCard {
+  display: grid;
+  gap: 12px;
+}
+
+.operationalGrid,
+.codeCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.requirementCard,
+.codeValueCard {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--card-bg) 90%, transparent);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.requirementCard {
+  min-height: 128px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 12px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.requirementCard span,
+.requirementCard strong,
+.codeValueCard span,
+.codeValueCard strong {
+  display: block;
+}
+
+.requirementCard span,
+.codeValueCard span {
+  color: var(--text-soft);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.requirementCard strong {
+  font-size: 20px;
+}
+
+.requirementCard input {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  width: 42px;
+  height: 24px;
+  accent-color: var(--primary);
+}
+
+.codeValueCard {
+  display: grid;
+  gap: 12px;
+}
+
+.codeValueCard strong {
+  min-height: 36px;
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--primary);
+  padding: 10px 12px;
+  font-size: 20px;
+  overflow-wrap: anywhere;
+}
+
+.codeControlCard .toggleRow {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.feeCardGrid {
+  display: grid;
+  gap: 14px;
+}
+
+.feeManageCard {
+  display: grid;
+  gap: 14px;
+}
+
+.feeManageCard h3,
+.feeManageCard span,
+.feeManageCard strong {
+  display: block;
+}
+
+.feeManageCard h3 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+
+.feeManageCard > div > span {
+  color: var(--text-soft);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.feeManageCard strong {
+  margin-top: 6px;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.transferFilters {
+  display: grid;
+  grid-template-columns: minmax(240px, 1.5fr) repeat(3, minmax(150px, 0.55fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.paginationBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 14px;
+  color: var(--text-soft);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.paginationActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.paginationActions strong {
+  color: var(--text);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.paginationActions button:disabled,
+.secondaryBtn:disabled,
+.applyBtn:disabled,
+.refreshBtn:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+}
+
 .adminFilterBar {
   display: grid;
   grid-template-columns: minmax(0, 1.5fr) 220px auto auto;
@@ -596,7 +829,7 @@
 
 .adminMobileActions {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 10px;
 }
 
@@ -1218,7 +1451,9 @@
 
   .adminFilterBar,
   .adminStatsGrid,
-  .adminDetailGrid {
+  .adminDetailGrid,
+  .transferControlGrid,
+  .transferFilters {
     grid-template-columns: 1fr;
   }
 
@@ -1279,7 +1514,22 @@
   .documents,
   .adminStatsGrid,
   .adminDetailGrid,
-  .settingsFormGrid {
+  .settingsFormGrid,
+  .transferControlGrid,
+  .transferFilters {
+    grid-template-columns: 1fr;
+  }
+
+  .paginationBar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .paginationActions {
+    justify-content: flex-start;
+  }
+
+  .copyField {
     grid-template-columns: 1fr;
   }
 
