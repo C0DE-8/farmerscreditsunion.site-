@@ -448,6 +448,13 @@
   grid-column: 1 / -1;
 }
 
+.copyField {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+
 .formActions {
   display: flex;
   justify-content: flex-end;
@@ -527,6 +534,75 @@
   grid-template-columns: 52px minmax(0, 1fr);
   gap: 12px;
   align-items: center;
+}
+
+.adminUsersDesktopTable {
+  display: block;
+}
+
+.adminUsersMobileList {
+  display: none;
+  gap: 12px;
+}
+
+.adminUserMobileCard {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--card-bg) 86%, transparent);
+  padding: 14px;
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 14px;
+}
+
+.adminMobileMeta {
+  display: grid;
+  gap: 12px;
+}
+
+.adminMobileMeta > div {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--card-bg) 92%, transparent);
+}
+
+.adminMobileMeta span,
+.adminMobileMeta strong,
+.adminMobileMeta small {
+  display: block;
+}
+
+.adminMobileMeta span {
+  color: var(--text-soft);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.adminMobileMeta strong {
+  margin: 6px 0;
+}
+
+.adminMobileMeta small {
+  color: var(--text-soft);
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+}
+
+.adminStatusWrap {
+  margin: 6px 0;
+}
+
+.adminMobileActions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.adminMobileActions button {
+  width: 100%;
+  justify-content: center;
 }
 
 .adminAvatar,
@@ -1251,6 +1327,18 @@
     align-items: stretch;
   }
 
+  .adminUsersDesktopTable {
+    display: none;
+  }
+
+  .adminUsersMobileList {
+    display: grid;
+  }
+
+  .copyField {
+    grid-template-columns: 1fr;
+  }
+
   .adminControlBar {
     flex-direction: column;
     align-items: stretch;
@@ -1264,5 +1352,9 @@
   .adminActionGroup button {
     width: 100%;
     justify-content: center;
+  }
+
+  .adminMobileActions {
+    grid-template-columns: 1fr;
   }
 }

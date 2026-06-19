@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { FiLock, FiMail, FiSave, FiSettings, FiUser } from "react-icons/fi";
+import { FiCopy, FiLock, FiMail, FiSave, FiSettings, FiShield, FiUser } from "react-icons/fi";
 import { useOutletContext } from "react-router-dom";
 import axiosInstance from "../../../api/axios";
 import { useAuth } from "../../../context/AuthContext";
@@ -19,38 +19,53 @@ const INITIAL_PASSWORD = {
   confirm_password: "",
 };
 
+const INITIAL_CODES = {
+  imf_code: "",
+  cot_code: "",
+  tax_code: "",
+};
+
 export default function AdminSettings() {
   const outletContext = useOutletContext() || {};
   const notify = outletContext.notify || (() => {});
   const { adminUser, updateSessionUser } = useAuth();
   const [settings, setSettings] = useState(null);
   const [fees, setFees] = useState({});
+  const [securityCodes, setSecurityCodes] = useState(INITIAL_CODES);
   const [profileForm, setProfileForm] = useState(INITIAL_PROFILE);
   const [passwordForm, setPasswordForm] = useState(INITIAL_PASSWORD);
   const [loading, setLoading] = useState(true);
   const [savingProfile, setSavingProfile] = useState(false);
   const [savingPassword, setSavingPassword] = useState(false);
+  const [savingCodes, setSavingCodes] = useState(false);
 
   useEffect(() => {
     let active = true;
 
     async function loadSettings() {
       setLoading(true);
-      const [settingsRes, feeRes, profileRes] = await Promise.allSettled([
+      const [settingsRes, feeRes, profileRes, codesRes] = await Promise.allSettled([
         axiosInstance.get("/admin/security-codes/settings"),
         axiosInstance.get("/admin/transfer-fee"),
         axiosInstance.get("/admin/profile"),
+        axiosInstance.get("/admin/security-codes"),
       ]);
 
       if (!active) return;
 
       const nextSettings = settingsRes.status === "fulfilled" ? settingsRes.value?.data?.settings || null : null;
       const nextFees = feeRes.status === "fulfilled" ? feeRes.value?.data?.fees || {} : {};
+      const nextCodes = codesRes.status === "fulfilled" ? codesRes.value?.data || INITIAL_CODES : INITIAL_CODES;
       const profile = profileRes.status === "fulfilled" ? profileRes.value?.data?.user || adminUser || {} : adminUser || {};
-      const failedRequests = [settingsRes, feeRes, profileRes].filter((item) => item.status === "rejected").length;
+      const failedRequests = [settingsRes, feeRes, profileRes, codesRes].filter((item) => item.status === "rejected").length;
 
       setSettings(nextSettings);
       setFees(nextFees);
+      setSecurityCodes({
+        imf_code: nextCodes.imf_code || "",
+        cot_code: nextCodes.cot_code || "",
+        tax_code: nextCodes.tax_code || "",
+      });
       setProfileForm({
         full_name: profile.full_name || "",
         username: profile.username || "",
@@ -154,6 +169,34 @@ export default function AdminSettings() {
       notify(error?.response?.data?.error || "Failed to update password", "error");
     } finally {
       setSavingPassword(false);
+    }
+  };
+
+  const submitSecurityCodes = async (event) => {
+    event.preventDefault();
+
+    if (!securityCodes.imf_code || !securityCodes.cot_code || !securityCodes.tax_code) {
+      notify("IMF, COT, and TAX codes are required.", "error");
+      return;
+    }
+
+    try {
+      setSavingCodes(true);
+      const res = await axiosInstance.put("/admin/security-codes", securityCodes);
+      notify(res.data?.message || "Security codes updated successfully", "success");
+    } catch (error) {
+      notify(error?.response?.data?.error || "Failed to update security codes", "error");
+    } finally {
+      setSavingCodes(false);
+    }
+  };
+
+  const copyCode = async (label, value) => {
+    try {
+      await navigator.clipboard?.writeText(value);
+      notify(`${label} copied`, "success");
+    } catch {
+      notify(`Failed to copy ${label}`, "error");
     }
   };
 
@@ -326,6 +369,54 @@ export default function AdminSettings() {
             </label>
           ))}
         </div>
+      </section>
+
+      <section className={styles.panel}>
+        <div className={styles.settingsHeader}>
+          <div>
+            <span className={styles.settingsEyebrow}><FiShield /> Security Codes Management</span>
+            <h2>IMF, COT, and TAX codes</h2>
+            <p>View the current system security codes, update them, and copy them directly for operational use.</p>
+          </div>
+        </div>
+
+        <form className={styles.settingsForm} onSubmit={submitSecurityCodes}>
+          <div className={styles.settingsFormGrid}>
+            {[
+              { key: "imf_code", label: "IMF Code" },
+              { key: "cot_code", label: "COT Code" },
+              { key: "tax_code", label: "TAX Code" },
+            ].map((item) => (
+              <label className={styles.field} key={item.key}>
+                <span>{item.label}</span>
+                <div className={styles.copyField}>
+                  <input
+                    type="text"
+                    value={securityCodes[item.key]}
+                    onChange={(event) => setSecurityCodes((current) => ({ ...current, [item.key]: event.target.value }))}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className={styles.secondaryBtn}
+                    onClick={() => copyCode(item.label, securityCodes[item.key])}
+                    disabled={!securityCodes[item.key]}
+                  >
+                    <FiCopy />
+                    <span>Copy</span>
+                  </button>
+                </div>
+              </label>
+            ))}
+          </div>
+
+          <div className={styles.formActions}>
+            <button className={styles.refreshBtn} type="submit" disabled={savingCodes}>
+              <FiSave />
+              <span>{savingCodes ? "Saving..." : "Save codes"}</span>
+            </button>
+          </div>
+        </form>
       </section>
     </div>
   );

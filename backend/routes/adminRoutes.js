@@ -3302,7 +3302,7 @@ router.delete('/users/:id', authenticateToken, checkAdmin, async (req, res) => {
     return res.status(403).json({ error: 'You cannot delete your own admin account here' });
   }
 
-  const conn = await db.promise().getConnection();
+  const conn = db.promise();
 
   try {
     await conn.beginTransaction();
@@ -3373,8 +3373,6 @@ router.delete('/users/:id', authenticateToken, checkAdmin, async (req, res) => {
     try { await conn.rollback(); } catch (_) {}
     console.error('❌ DB ERROR [/admin/users/:id DELETE]:', err);
     return res.status(500).json({ error: 'Failed to delete user', details: err.message });
-  } finally {
-    conn.release();
   }
 });
 

@@ -372,73 +372,146 @@ export default function AdminUsers() {
         {users.length === 0 ? (
           <EmptyState>No users found for the selected filters.</EmptyState>
         ) : (
-          <DataTable headers={["User", "Accounts", "Balances", "Status", "Security", "Actions"]}>
-            {users.map((item) => {
-              const avatar = resolveAsset(item.profile_image_url);
-              return (
-                <div className={styles.tableRow} key={item.id} style={{ gridTemplateColumns: "1.35fr 1fr 1fr 0.8fr 0.8fr 1.15fr" }}>
-                  <div className={styles.adminUserCell}>
-                    {avatar ? (
-                      <img className={styles.adminAvatar} src={avatar} alt={item.full_name || item.username} />
-                    ) : (
-                      <div className={styles.adminAvatarFallback}>
-                        {(item.full_name || item.username || "U").charAt(0).toUpperCase()}
+          <>
+            <div className={styles.adminUsersDesktopTable}>
+              <DataTable headers={["User", "Accounts", "Balances", "Status", "Security", "Actions"]}>
+                {users.map((item) => {
+                  const avatar = resolveAsset(item.profile_image_url);
+                  return (
+                    <div className={styles.tableRow} key={item.id} style={{ gridTemplateColumns: "1.35fr 1fr 1fr 0.8fr 0.8fr 1.15fr" }}>
+                      <div className={styles.adminUserCell}>
+                        {avatar ? (
+                          <img className={styles.adminAvatar} src={avatar} alt={item.full_name || item.username} />
+                        ) : (
+                          <div className={styles.adminAvatarFallback}>
+                            {(item.full_name || item.username || "U").charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                        <div>
+                          <strong>{item.full_name || item.username}</strong>
+                          <small>@{item.username}</small>
+                          <small>{item.email}</small>
+                        </div>
                       </div>
-                    )}
-                    <div>
-                      <strong>{item.full_name || item.username}</strong>
-                      <small>@{item.username}</small>
-                      <small>{item.email}</small>
+
+                      <span>
+                        <strong>{item.account_number || "Pending"}</strong>
+                        <small>Current: {item.c_account_number || "N/A"}</small>
+                        <small>Savings: {item.s_account_number || "N/A"}</small>
+                      </span>
+
+                      <span>
+                        <strong>{item.currency_sign}{Number(item.current_balance || 0).toLocaleString()}</strong>
+                        <small>Savings: {item.currency_sign}{Number(item.savings_balance || 0).toLocaleString()}</small>
+                        <small>Loan: {item.currency_sign}{Number(item.loan_balance || 0).toLocaleString()}</small>
+                      </span>
+
+                      <span><StatusBadge status={item.acct_status} /></span>
+
+                      <span>
+                        <strong>{item.email_verified ? "Verified" : "Not verified"}</strong>
+                        <small>Currency: {item.currency_sign || "$"}</small>
+                        <small>Login OTP: {item.login_otp_enabled ? "On" : "Off"}</small>
+                      </span>
+
+                      <span className={styles.adminActionGroup}>
+                        <button type="button" className={styles.secondaryBtn} onClick={() => setViewingUser(item)}>
+                          <FiEye />
+                          <span>View</span>
+                        </button>
+                        <button type="button" className={styles.refreshBtn} onClick={() => openEdit(item)}>
+                          <FiEdit2 />
+                          <span>Edit</span>
+                        </button>
+                        <button
+                          type="button"
+                          className={styles.refreshBtn}
+                          onClick={() => handleImpersonate(item)}
+                          disabled={impersonatingId === String(item.id)}
+                        >
+                          <FiLogIn />
+                          <span>{impersonatingId === String(item.id) ? "Opening..." : "Login"}</span>
+                        </button>
+                        <button type="button" className={styles.logoutBtn} onClick={() => setDeleteTarget(item)}>
+                          <FiTrash2 />
+                          <span>Delete</span>
+                        </button>
+                      </span>
                     </div>
-                  </div>
+                  );
+                })}
+              </DataTable>
+            </div>
 
-                  <span>
-                    <strong>{item.account_number || "Pending"}</strong>
-                    <small>Current: {item.c_account_number || "N/A"}</small>
-                    <small>Savings: {item.s_account_number || "N/A"}</small>
-                  </span>
+            <div className={styles.adminUsersMobileList}>
+              {users.map((item) => {
+                const avatar = resolveAsset(item.profile_image_url);
+                return (
+                  <article className={styles.adminUserMobileCard} key={`mobile-${item.id}`}>
+                    <div className={styles.adminUserCell}>
+                      {avatar ? (
+                        <img className={styles.adminAvatar} src={avatar} alt={item.full_name || item.username} />
+                      ) : (
+                        <div className={styles.adminAvatarFallback}>
+                          {(item.full_name || item.username || "U").charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <div>
+                        <strong>{item.full_name || item.username}</strong>
+                        <small>@{item.username}</small>
+                        <small>{item.email}</small>
+                      </div>
+                    </div>
 
-                  <span>
-                    <strong>{item.currency_sign}{Number(item.current_balance || 0).toLocaleString()}</strong>
-                    <small>Savings: {item.currency_sign}{Number(item.savings_balance || 0).toLocaleString()}</small>
-                    <small>Loan: {item.currency_sign}{Number(item.loan_balance || 0).toLocaleString()}</small>
-                  </span>
+                    <div className={styles.adminMobileMeta}>
+                      <div>
+                        <span>Account</span>
+                        <strong>{item.account_number || "Pending"}</strong>
+                        <small>Current: {item.c_account_number || "N/A"}</small>
+                        <small>Savings: {item.s_account_number || "N/A"}</small>
+                      </div>
+                      <div>
+                        <span>Balances</span>
+                        <strong>{item.currency_sign}{Number(item.current_balance || 0).toLocaleString()}</strong>
+                        <small>Savings: {item.currency_sign}{Number(item.savings_balance || 0).toLocaleString()}</small>
+                        <small>Loan: {item.currency_sign}{Number(item.loan_balance || 0).toLocaleString()}</small>
+                      </div>
+                      <div>
+                        <span>Status</span>
+                        <div className={styles.adminStatusWrap}><StatusBadge status={item.acct_status} /></div>
+                        <small>{item.email_verified ? "Verified" : "Not verified"}</small>
+                        <small>Login OTP: {item.login_otp_enabled ? "On" : "Off"}</small>
+                      </div>
+                    </div>
 
-                  <span><StatusBadge status={item.acct_status} /></span>
-
-                  <span>
-                    <strong>{item.email_verified ? "Verified" : "Not verified"}</strong>
-                    <small>Currency: {item.currency_sign || "$"}</small>
-                    <small>Login OTP: {item.login_otp_enabled ? "On" : "Off"}</small>
-                  </span>
-
-                  <span className={styles.adminActionGroup}>
-                    <button type="button" className={styles.secondaryBtn} onClick={() => setViewingUser(item)}>
-                      <FiEye />
-                      <span>View</span>
-                    </button>
-                    <button type="button" className={styles.refreshBtn} onClick={() => openEdit(item)}>
-                      <FiEdit2 />
-                      <span>Edit</span>
-                    </button>
-                    <button
-                      type="button"
-                      className={styles.refreshBtn}
-                      onClick={() => handleImpersonate(item)}
-                      disabled={impersonatingId === String(item.id)}
-                    >
-                      <FiLogIn />
-                      <span>{impersonatingId === String(item.id) ? "Opening..." : "Login"}</span>
-                    </button>
-                    <button type="button" className={styles.logoutBtn} onClick={() => setDeleteTarget(item)}>
-                      <FiTrash2 />
-                      <span>Delete</span>
-                    </button>
-                  </span>
-                </div>
-              );
-            })}
-          </DataTable>
+                    <div className={styles.adminMobileActions}>
+                      <button type="button" className={styles.secondaryBtn} onClick={() => setViewingUser(item)}>
+                        <FiEye />
+                        <span>View</span>
+                      </button>
+                      <button type="button" className={styles.refreshBtn} onClick={() => openEdit(item)}>
+                        <FiEdit2 />
+                        <span>Edit</span>
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.refreshBtn}
+                        onClick={() => handleImpersonate(item)}
+                        disabled={impersonatingId === String(item.id)}
+                      >
+                        <FiLogIn />
+                        <span>{impersonatingId === String(item.id) ? "Opening..." : "Login"}</span>
+                      </button>
+                      <button type="button" className={styles.logoutBtn} onClick={() => setDeleteTarget(item)}>
+                        <FiTrash2 />
+                        <span>Delete</span>
+                      </button>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </>
         )}
       </section>
 
