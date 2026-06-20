@@ -33,9 +33,11 @@ import SupportPage from "../pages/UserPages/SupportPage";
 import {
   WestBridgeAboutPage,
   WestBridgeContactPage,
+  WestBridgeFaqPage,
   WestBridgeHomePage,
   WestBridgeProjectsPage,
   WestBridgeServicesPage,
+  WestBridgeTermsPage,
 } from "../pages/Marketing/WestBridgeSite";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 import PublicRoute from "../components/PublicRoute/PublicRoute";
@@ -126,6 +128,24 @@ export default function AppRoutes() {
           element={
             <PublicRoute>
               <WestBridgeContactPage />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path="/faq"
+          element={
+            <PublicRoute>
+              <WestBridgeFaqPage />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path="/terms"
+          element={
+            <PublicRoute>
+              <WestBridgeTermsPage />
             </PublicRoute>
           }
         />

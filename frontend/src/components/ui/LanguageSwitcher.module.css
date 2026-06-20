@@ -169,6 +169,11 @@
   -webkit-backdrop-filter: blur(14px) saturate(140%);
 }
 
+.menuAlignLeft .options {
+  left: 0;
+  right: auto;
+}
+
 .option {
   min-height: 44px;
   display: grid;

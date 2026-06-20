@@ -329,7 +329,7 @@ function getGoogleLanguages() {
   return [{ code: "en", label: "English" }, ...options];
 }
 
-export default function LanguageSwitcher({ compact = false }) {
+export default function LanguageSwitcher({ compact = false, menuAlign = "right" }) {
   const labelId = useId();
   const listboxId = useId();
   const switcherRef = useRef(null);
@@ -391,7 +391,12 @@ export default function LanguageSwitcher({ compact = false }) {
   };
 
   return (
-    <div className={`${styles.switcher} ${compact ? styles.compact : ""}`} ref={switcherRef}>
+    <div
+      className={`${styles.switcher} ${compact ? styles.compact : ""} ${
+        menuAlign === "left" ? styles.menuAlignLeft : ""
+      }`}
+      ref={switcherRef}
+    >
       <span id={labelId}>Language</span>
       <div className={styles.control}>
         <b className={styles.languageMark} aria-hidden="true">

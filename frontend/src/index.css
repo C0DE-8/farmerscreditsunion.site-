@@ -56,3 +56,44 @@ body {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 10px;
 }
+
+.style-two-language-switcher {
+  position: fixed;
+  top: 50%;
+  left: 16px;
+  right: auto;
+  z-index: 1040;
+  transform: translateY(-50%);
+}
+
+.style-two-language-switcher > div {
+  margin: 0;
+  max-width: calc(100vw - 24px);
+}
+
+@media (max-width: 1199px) {
+  .style-two-language-switcher {
+    left: 14px;
+  }
+}
+
+@media (max-width: 991px) {
+  .style-two-language-switcher {
+    top: auto;
+    bottom: 88px;
+    left: 12px;
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .style-two-language-switcher {
+    left: 10px;
+    transform: scale(0.88);
+    transform-origin: bottom left;
+  }
+
+  .style-two-language-switcher > div {
+    min-width: 132px;
+  }
+}
