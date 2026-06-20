@@ -142,11 +142,11 @@
 }
 
 .mobileMenuOpen {
-  max-height: 420px;
+  max-height: 620px;
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
-  padding: 14px;
+  padding: 16px;
 }
 
 .mobileNav {
@@ -173,9 +173,9 @@
 }
 
 .mobileMenuActions {
-  margin-top: 14px;
+  margin-top: 16px;
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
 .mobileMenuActions .secondaryLink,

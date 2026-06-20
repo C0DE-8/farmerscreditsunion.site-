@@ -21,6 +21,21 @@
   position: relative;
 }
 
+.control::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  opacity: 0.48;
+  transform: rotate(45deg);
+  position: absolute;
+  right: 15px;
+  top: 18px;
+  pointer-events: none;
+  z-index: 3;
+}
+
 .languageMark {
   width: 46px;
   height: 46px;
@@ -100,6 +115,8 @@
   cursor: pointer;
   position: relative;
   z-index: 2;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 .switcher select:focus {
@@ -113,45 +130,59 @@
 }
 
 .compact {
-  min-width: 126px;
+  min-width: 96px;
 }
 
-.compact span,
+.compact > span,
 .compact small {
   display: none;
 }
 
+.compact .control {
+  grid-template-columns: 34px 50px;
+  gap: 6px;
+}
+
+.compact .control::after {
+  right: 11px;
+  top: 16px;
+  width: 6px;
+  height: 6px;
+}
+
 .compact .languageMark {
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   border-radius: 999px;
 }
 
 .compact .languageMark svg {
-  width: 19px;
-  height: 19px;
+  width: 17px;
+  height: 17px;
 }
 
 .compact .languageMark span {
-  width: 20px;
-  height: 20px;
-  font-size: 13px;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  font-size: 12px;
 }
 
 .compact .selectedLanguage,
 .compact select {
-  height: 40px;
-  min-height: 40px;
+  height: 34px;
+  min-height: 34px;
   border-radius: 999px;
 }
 
 .compact .selectedLanguage {
   background: rgba(255, 255, 255, 0.92);
-  padding: 0 28px 0 10px;
+  padding: 0 24px 0 9px;
   font-size: 0;
 }
 
 .compact .selectedLanguage small {
   font-size: 11px;
   opacity: 0.82;
+  display: block;
 }

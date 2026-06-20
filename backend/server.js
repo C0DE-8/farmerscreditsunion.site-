@@ -9,6 +9,8 @@ const cors = require('cors');
 
 const app = express();
 
+app.set('trust proxy', 1);
+
 // Enable CORS
 app.use(cors({
   origin: '*', // or replace '*' with your frontend URL, e.g., 'http://localhost:3000'

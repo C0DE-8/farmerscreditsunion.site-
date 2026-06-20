@@ -27,6 +27,76 @@ const getBankName = () => {
   });
 };
 
+const cleanIp = (value = '') => {
+  const ip = String(value)
+    .split(',')[0]
+    .trim()
+    .replace(/^::ffff:/, '');
+
+  if (!ip || ip === '::1') return '127.0.0.1';
+  return ip;
+};
+
+const getRequestIp = (req = {}) => {
+  const headers = req.headers || {};
+  const forwarded = headers.forwarded?.match(/for="?([^;,"]+)/i)?.[1];
+
+  return cleanIp(
+    headers['cf-connecting-ip'] ||
+    headers['true-client-ip'] ||
+    headers['x-real-ip'] ||
+    headers['x-client-ip'] ||
+    headers['x-forwarded-for'] ||
+    forwarded ||
+    req.ip ||
+    req.socket?.remoteAddress ||
+    req.connection?.remoteAddress ||
+    ''
+  ) || 'Unknown';
+};
+
+const isPrivateIp = (ip = '') => {
+  return (
+    ip === 'Unknown' ||
+    ip === '127.0.0.1' ||
+    ip === '::1' ||
+    /^10\./.test(ip) ||
+    /^192\.168\./.test(ip) ||
+    /^172\.(1[6-9]|2\d|3[0-1])\./.test(ip)
+  );
+};
+
+const formatClientHintsBrand = (value = '') => {
+  const brands = String(value)
+    .split(',')
+    .map((part) => part.match(/"([^"]+)";v="([^"]+)"/))
+    .filter(Boolean)
+    .map((match) => `${match[1]} ${match[2]}`)
+    .filter((brand) => !/not.a.brand|not a brand/i.test(brand));
+
+  return brands[0] || '';
+};
+
+const getClientDetails = (req = {}) => {
+  const headers = req.headers || {};
+  const agent = useragent.parse(headers['user-agent'] || '');
+  const clientHintBrowser = formatClientHintsBrand(headers['sec-ch-ua']);
+  const clientHintPlatform = String(headers['sec-ch-ua-platform'] || '').replace(/"/g, '');
+  const isMobile = String(headers['sec-ch-ua-mobile'] || '').includes('?1');
+
+  const parsedBrowser = agent.family && agent.family !== 'Other' ? agent.toAgent() : '';
+  const parsedOs = agent.os?.family && agent.os.family !== 'Other' ? agent.os.toString() : '';
+
+  return {
+    browser: clientHintBrowser || parsedBrowser || headers['user-agent'] || 'Unknown browser',
+    device: [
+      clientHintPlatform || parsedOs || 'Unknown device',
+      isMobile ? 'Mobile' : headers['sec-ch-ua-mobile'] ? 'Desktop' : ''
+    ].filter(Boolean).join(' - '),
+    userAgent: headers['user-agent'] || 'Not provided'
+  };
+};
+
 /* -------------------- SEND OTP EMAIL -------------------- */
 const sendOTPEmail = async (to, fullName, otp) => {
   const bankName = await getBankName();
@@ -162,27 +232,26 @@ const sendOnboardingRejectedEmail = async (to, fullName, reason) => {
 /* -------------------- LOGIN ALERT EMAIL -------------------- */
 const sendLoginAlertEmail = async (to, fullName, req = {}) => {
   const bankName = await getBankName();
-
-  const headers = req.headers || {};
-  const connection = req.connection || {};
-
-  const ip =
-    headers['x-forwarded-for']?.split(',')[0]?.trim() ||
-    connection.remoteAddress ||
-    'Unknown';
-
-  const agent = useragent.parse(headers['user-agent'] || '');
-  const os = agent.os.toString();
-  const browser = agent.toAgent();
+  const ip = getRequestIp(req);
+  const { browser, device, userAgent } = getClientDetails(req);
 
   let locationInfo = 'Unknown Location';
-  try {
-    const locRes = await axios.get(`http://ip-api.com/json/${ip}`);
-    if (locRes.data?.status === 'success') {
-      const { city, regionName, country, isp } = locRes.data;
-      locationInfo = `${city}, ${regionName}, ${country} (${isp})`;
+  if (isPrivateIp(ip)) {
+    locationInfo = 'Unavailable for private/local IP';
+  } else {
+    try {
+      const locRes = await axios.get(`http://ip-api.com/json/${encodeURIComponent(ip)}`, {
+        timeout: 2500
+      });
+      if (locRes.data?.status === 'success') {
+        const { city, regionName, country, isp } = locRes.data;
+        locationInfo = [city, regionName, country].filter(Boolean).join(', ');
+        if (isp) locationInfo += ` (${isp})`;
+      }
+    } catch {
+      locationInfo = 'Location lookup unavailable';
     }
-  } catch {}
+  }
 
   const mailOptions = {
     from: `"${bankName}" <${process.env.EMAIL_USER}>`,
@@ -199,10 +268,11 @@ const sendLoginAlertEmail = async (to, fullName, req = {}) => {
           <ul>
             <li><strong>IP:</strong> ${ip}</li>
             <li><strong>Location:</strong> ${locationInfo}</li>
-            <li><strong>Device:</strong> ${os}</li>
+            <li><strong>Device:</strong> ${device}</li>
             <li><strong>Browser:</strong> ${browser}</li>
             <li><strong>Time:</strong> ${new Date().toLocaleString()}</li>
           </ul>
+          <p style="color:#64748b;font-size:12px;margin-top:20px;">User agent: ${userAgent}</p>
         </div>
       </div>
     `

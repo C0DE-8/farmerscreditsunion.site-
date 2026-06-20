@@ -284,7 +284,7 @@ router.post('/login', async (req, res) => {
       }
 
       try {
-        await sendLoginAlertEmail(user.email, user.full_name);
+        await sendLoginAlertEmail(user.email, user.full_name, req);
         logActivity(user.id, 'login_alert_sent', 'Login alert email sent');
       } catch (e) {
         console.warn('⚠️ Failed to send login alert email:', e.message);
