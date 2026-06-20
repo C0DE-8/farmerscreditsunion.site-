@@ -186,9 +186,7 @@
 .drawerActions {
   margin-top: auto;
   padding-top: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
   gap: 12px;
 }
 

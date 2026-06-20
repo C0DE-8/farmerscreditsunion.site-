@@ -11,6 +11,7 @@ import {
   FiUsers,
   FiX,
 } from "react-icons/fi";
+import LanguageSwitcher from "../../components/ui/LanguageSwitcher";
 import styles from "./WestBridgeSite.module.css";
 
 const asset = (path) => `/westbridge-assets/images/${path}`;
@@ -82,6 +83,7 @@ function MarketingLayout({ children, activePath }) {
           </nav>
 
           <div className={styles.headerActions}>
+            <LanguageSwitcher compact />
             <Link className={styles.secondaryLink} to="/auth?mode=login">Login</Link>
             <Link className={styles.primaryLink} to="/auth?mode=register">Open Account</Link>
           </div>
@@ -110,6 +112,7 @@ function MarketingLayout({ children, activePath }) {
             ))}
           </nav>
           <div className={styles.mobileMenuActions}>
+            <LanguageSwitcher />
             <Link className={styles.secondaryLink} to="/auth?mode=login">Login</Link>
             <Link className={styles.primaryLink} to="/auth?mode=register">Open Account</Link>
           </div>

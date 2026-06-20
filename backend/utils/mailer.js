@@ -57,24 +57,48 @@ const sendOTPEmail = async (to, fullName, otp) => {
 };
 
 /* -------------------- SEND WELCOME EMAIL -------------------- */
-const sendWelcomeEmail = async (to, fullName, accountNumber) => {
+const sendWelcomeEmail = async (to, fullName, accountNumber, details = {}) => {
   const bankName = await getBankName();
+  const currentAccountNumber = details.currentAccountNumber || details.current_account_number || "";
+  const savingsAccountNumber = details.savingsAccountNumber || details.savings_account_number || "";
+  const status = details.status || "Active";
+  const loginUrl = details.loginUrl || process.env.FRONTEND_URL || "";
 
   const mailOptions = {
     from: `"${bankName}" <${process.env.EMAIL_USER}>`,
     to,
-    subject: `Welcome to ${bankName} 🎉`,
+    subject: `${bankName} - Account Approved`,
     html: `
-      <div style="max-width: 600px;margin:auto;">
-        <div style="background:#003366;color:white;padding:20px;">
-          <h2>${bankName}</h2>
-          <p>Welcome to your secure banking experience</p>
+      <div style="max-width:640px;margin:auto;font-family:Arial,sans-serif;color:#0f172a;border:1px solid #e5e7eb;border-radius:16px;overflow:hidden;">
+        <div style="background:#003366;color:white;padding:24px;">
+          <h2 style="margin:0 0 8px;">${bankName}</h2>
+          <p style="margin:0;">Your account has been approved</p>
         </div>
-        <div style="padding:30px;">
+        <div style="padding:30px;background:#ffffff;">
           <p>Dear <strong>${fullName}</strong>,</p>
-          <p>Your account has been created successfully.</p>
-          <div style="text-align:center;margin:25px 0;">
-            <span style="font-size:26px;font-weight:bold;color:#003366;">${accountNumber}</span>
+          <p>Your online banking account has been approved and activated. Keep the account details below for your records.</p>
+          <div style="margin:24px 0;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:18px;">
+            <p style="margin:0 0 12px;color:#64748b;font-size:13px;text-transform:uppercase;font-weight:bold;">Primary account number</p>
+            <p style="margin:0;font-size:26px;font-weight:bold;color:#003366;letter-spacing:1px;">${accountNumber}</p>
+          </div>
+          <table style="width:100%;border-collapse:collapse;margin:18px 0;">
+            <tr>
+              <td style="padding:12px;border:1px solid #e2e8f0;background:#f8fafc;"><strong>Current Account</strong></td>
+              <td style="padding:12px;border:1px solid #e2e8f0;">${currentAccountNumber || "Generated"}</td>
+            </tr>
+            <tr>
+              <td style="padding:12px;border:1px solid #e2e8f0;background:#f8fafc;"><strong>Savings Account</strong></td>
+              <td style="padding:12px;border:1px solid #e2e8f0;">${savingsAccountNumber || "Generated"}</td>
+            </tr>
+            <tr>
+              <td style="padding:12px;border:1px solid #e2e8f0;background:#f8fafc;"><strong>Account Status</strong></td>
+              <td style="padding:12px;border:1px solid #e2e8f0;">${status}</td>
+            </tr>
+          </table>
+          <p>You can now sign in to access your dashboard, transfer funds, request cards, and manage your account securely.</p>
+          ${loginUrl ? `<p><a href="${loginUrl}" style="display:inline-block;background:#003366;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:10px;font-weight:bold;">Login to your account</a></p>` : ""}
+          <div style="margin-top:24px;padding:14px;background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;color:#9a3412;">
+            <strong>Security reminder:</strong> ${bankName} will never ask for your password, OTP, PIN, or full card details by email.
           </div>
         </div>
       </div>
@@ -113,18 +137,22 @@ const sendOnboardingRejectedEmail = async (to, fullName, reason) => {
   return transporter.sendMail({
     from: `"${bankName}" <${process.env.EMAIL_USER}>`,
     to,
-    subject: `${bankName} - Onboarding Update`,
+    subject: `${bankName} - Account Application Update`,
     html: `
-      <div style="max-width:600px;margin:auto;font-family:Arial,sans-serif;">
-        <div style="background:#003366;color:white;padding:20px;">
-          <h2>${bankName}</h2>
-          <p>Account onboarding update</p>
+      <div style="max-width:640px;margin:auto;font-family:Arial,sans-serif;color:#0f172a;border:1px solid #e5e7eb;border-radius:16px;overflow:hidden;">
+        <div style="background:#7f1d1d;color:white;padding:24px;">
+          <h2 style="margin:0 0 8px;">${bankName}</h2>
+          <p style="margin:0;">Account application update</p>
         </div>
-        <div style="padding:30px;">
+        <div style="padding:30px;background:#ffffff;">
           <p>Hello <strong>${fullName}</strong>,</p>
-          <p>Your online banking onboarding could not be approved at this time.</p>
-          <p><strong>Reason:</strong> ${reason}</p>
-          <p>Please contact support if you need help correcting your submission.</p>
+          <p>Your online banking application could not be approved at this time.</p>
+          <div style="margin:22px 0;background:#fef2f2;border:1px solid #fecaca;border-radius:14px;padding:16px;">
+            <p style="margin:0 0 8px;color:#991b1b;font-weight:bold;">Reason</p>
+            <p style="margin:0;color:#7f1d1d;">${reason}</p>
+          </div>
+          <p>Please review the information you submitted and contact support if you need help correcting your application.</p>
+          <p style="color:#64748b;font-size:13px;">If you believe this was a mistake, reply to this email or contact support with your registered email address.</p>
         </div>
       </div>
     `

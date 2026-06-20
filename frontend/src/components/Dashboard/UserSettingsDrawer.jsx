@@ -2,6 +2,7 @@ import styles from "./UserSettingsDrawer.module.css";
 import { useNavigate } from "react-router-dom";
 import { Headphones, LogOut, ShieldCheck, UserRound, X } from "lucide-react";
 import { resolveAsset } from "../../utils/assets";
+import LanguageSwitcher from "../ui/LanguageSwitcher";
 import { ThemeToggle } from "../ui/theme-toggle";
 
 export default function UserSettingsDrawer({
@@ -59,6 +60,7 @@ export default function UserSettingsDrawer({
         </nav>
 
         <div className={styles.drawerActions}>
+          <LanguageSwitcher />
           <ThemeToggle isDark={theme === "dark"} onToggle={onToggleTheme} />
 
           <button type="button" className={styles.logoutButton} onClick={onLogout}>

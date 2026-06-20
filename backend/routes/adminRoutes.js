@@ -910,7 +910,11 @@ router.post('/onboarding/:id/approve', authenticateToken, checkAdmin, async (req
     await conn.commit();
 
     try {
-      await sendWelcomeEmail(application.email, application.full_name, accountNumber);
+      await sendWelcomeEmail(application.email, application.full_name, accountNumber, {
+        currentAccountNumber: cAccountNumber,
+        savingsAccountNumber: sAccountNumber,
+        status: 'Active',
+      });
     } catch (emailErr) {
       console.warn('⚠️ Approval welcome email failed:', emailErr?.message || emailErr);
     }
