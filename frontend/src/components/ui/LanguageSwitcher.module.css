@@ -45,9 +45,9 @@
   place-items: center;
   background:
     radial-gradient(circle at 30% 26%, rgba(255, 255, 255, 0.95), transparent 28%),
-    linear-gradient(135deg, rgba(185, 28, 28, 0.16), rgba(8, 145, 178, 0.12));
-  color: #b91c1c;
-  border: 1px solid rgba(185, 28, 28, 0.18);
+    linear-gradient(135deg, rgba(26, 44, 121, 0.16), rgba(8, 145, 178, 0.12));
+  color: #1A2C79;
+  border: 1px solid rgba(26, 44, 121, 0.18);
   font-size: 20px;
   font-weight: 950;
   line-height: 1;
@@ -93,8 +93,8 @@
   height: 100%;
   display: grid;
   place-items: center;
-  color: #b91c1c;
-  background: #fff7ed;
+  color: #1A2C79;
+  background: #eef5ff;
 }
 
 .flagFallback svg {
@@ -146,7 +146,7 @@
 }
 
 .selectButton:focus {
-  box-shadow: 0 0 0 4px rgba(185, 28, 28, 0.1);
+  box-shadow: 0 0 0 4px rgba(26, 44, 121, 0.1);
 }
 
 .options {
@@ -192,13 +192,13 @@
 
 .option:hover,
 .option:focus {
-  background: rgba(225, 29, 72, 0.08);
+  background: rgba(26, 44, 121, 0.08);
   outline: none;
 }
 
 .optionActive {
-  background: rgba(225, 29, 72, 0.12);
-  color: #9f1239;
+  background: rgba(26, 44, 121, 0.12);
+  color: #1A2C79;
 }
 
 .optionFlag {

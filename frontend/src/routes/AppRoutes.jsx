@@ -43,6 +43,7 @@ import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 import PublicRoute from "../components/PublicRoute/PublicRoute";
 import LogoPreloader from "../components/ui/LogoPreloader";
 import { prepareSavedGoogleLanguage } from "../components/ui/LanguageSwitcher";
+import SmartsuppChat from "../components/Chat/SmartsuppChat";
 
 function LanguageBootGate({ children }) {
   const location = useLocation();
@@ -86,6 +87,7 @@ export default function AppRoutes() {
   return (
     <BrowserRouter>
       <LanguageBootGate>
+        <SmartsuppChat />
         <Routes>
         <Route
           path="/"

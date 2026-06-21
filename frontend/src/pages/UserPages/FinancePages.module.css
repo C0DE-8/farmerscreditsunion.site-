@@ -4,17 +4,17 @@
   --text: #0f172a;
   --text-soft: #64748b;
   --border: rgba(226, 232, 240, 0.9);
-  --primary: #b91c1c;
-  --chart-blue: #dc2626;
-  --chart-red: #ef4444;
+  --primary: #1A2C79;
+  --chart-blue: #1A2C79;
+  --chart-red: #007cc5;
   --chart-violet: #7c3aed;
   --chart-teal: #0f766e;
   --soft-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
   min-height: 100vh;
   padding: 20px 16px 112px;
   background:
-    radial-gradient(circle at top left, rgba(185, 28, 28, 0.1), transparent 30%),
-    radial-gradient(circle at top right, rgba(239, 68, 68, 0.08), transparent 28%),
+    radial-gradient(circle at top left, rgba(26, 44, 121, 0.1), transparent 30%),
+    radial-gradient(circle at top right, rgba(0, 124, 197, 0.08), transparent 28%),
     linear-gradient(180deg, #fbfdff 0%, #f3f6fb 100%);
   color: var(--text);
 }
@@ -25,11 +25,11 @@
   --text: #f8fafc;
   --text-soft: #94a3b8;
   --border: rgba(148, 163, 184, 0.24);
-  --primary: #fb7185;
+  --primary: #6A8FDB;
   --soft-shadow: 0 22px 48px rgba(2, 6, 23, 0.34);
   background:
-    radial-gradient(circle at top left, rgba(251, 113, 133, 0.14), transparent 30%),
-    radial-gradient(circle at top right, rgba(190, 24, 93, 0.1), transparent 28%),
+    radial-gradient(circle at top left, rgba(106, 143, 219, 0.14), transparent 30%),
+    radial-gradient(circle at top right, rgba(0, 124, 197, 0.1), transparent 28%),
     linear-gradient(180deg, #07111f 0%, #081525 100%);
 }
 
@@ -70,7 +70,7 @@
   display: grid;
   place-items: center;
   border-radius: 16px;
-  background: rgba(185, 28, 28, 0.1);
+  background: rgba(26, 44, 121, 0.1);
   color: var(--primary);
   margin-bottom: 10px;
 }
@@ -190,7 +190,7 @@
 
 .cardSliderDotActive {
   width: 28px !important;
-  background: linear-gradient(135deg, #b91c1c, #ef4444) !important;
+  background: linear-gradient(135deg, #1A2C79, #007cc5) !important;
 }
 
 .cardViewport {
@@ -418,7 +418,7 @@
 
 .cardBrandMark span:first-child {
   right: 22px;
-  background: rgba(239, 68, 68, 0.82);
+  background: rgba(0, 124, 197, 0.82);
 }
 
 .cardBrandMark span:last-child {
@@ -487,7 +487,7 @@
   font-weight: 900;
   cursor: pointer;
   color: white;
-  background: linear-gradient(135deg, #b91c1c, #ef4444);
+  background: linear-gradient(135deg, #1A2C79, #007cc5);
 }
 
 .primaryButton,
@@ -507,7 +507,7 @@
 
 .primaryButton {
   color: white;
-  background: linear-gradient(135deg, #b91c1c, #ef4444);
+  background: linear-gradient(135deg, #1A2C79, #007cc5);
 }
 
 .secondaryButton {
@@ -518,7 +518,7 @@
 
 .dangerButton {
   color: white;
-  background: linear-gradient(135deg, #dc2626, #ef4444);
+  background: linear-gradient(135deg, #1A2C79, #007cc5);
 }
 
 .actionGlassCard button:disabled {
@@ -588,7 +588,7 @@
   border: 1px solid rgba(248, 113, 113, 0.24);
   border-radius: 14px;
   background: rgba(220, 38, 38, 0.08);
-  color: #dc2626;
+  color: #1A2C79;
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -649,11 +649,11 @@
 }
 
 .chartInflow {
-  background: linear-gradient(180deg, #fb7185, #b91c1c);
+  background: linear-gradient(180deg, #6A8FDB, #1A2C79);
 }
 
 .chartOutflow {
-  background: linear-gradient(180deg, #fb7185, #ef4444);
+  background: linear-gradient(180deg, #6A8FDB, #007cc5);
 }
 
 .barList {
@@ -762,11 +762,11 @@
 }
 
 .barFillblue {
-  background: linear-gradient(90deg, #fb7185, #b91c1c);
+  background: linear-gradient(90deg, #6A8FDB, #1A2C79);
 }
 
 .barFillred {
-  background: linear-gradient(90deg, #fb7185, #ef4444);
+  background: linear-gradient(90deg, #6A8FDB, #007cc5);
 }
 
 .barFillviolet {
@@ -822,7 +822,7 @@
 }
 
 .filterActive {
-  background: linear-gradient(135deg, #b91c1c, #ef4444) !important;
+  background: linear-gradient(135deg, #1A2C79, #007cc5) !important;
   color: #fff !important;
 }
 
@@ -831,7 +831,7 @@
 }
 
 .amountNegative {
-  color: #dc2626;
+  color: #1A2C79;
 }
 
 .preloaderBlock {
@@ -864,7 +864,7 @@
   position: absolute;
   inset: -2px;
   border-radius: inherit;
-  background: conic-gradient(from 0deg, #7f1d1d, #e11d48, #fb7185, #fecdd3, #7f1d1d);
+  background: conic-gradient(from 0deg, #0b1d4f, #007cc5, #6A8FDB, #9fcdff, #0b1d4f);
   animation: spin 1.05s linear infinite;
 }
 

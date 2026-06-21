@@ -17,7 +17,7 @@
   border-radius: 32px;
   border: 1px solid rgba(226, 232, 240, 0.88);
   background:
-    radial-gradient(circle at top, rgba(185, 28, 28, 0.1), transparent 34%),
+    radial-gradient(circle at top, rgba(26, 44, 121, 0.1), transparent 34%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 250, 255, 0.94));
   box-shadow: 0 30px 70px rgba(15, 23, 42, 0.18);
   padding: 22px 20px 20px;
@@ -26,7 +26,7 @@
 :global([data-theme="dark"]) .sheet {
   border-color: rgba(148, 163, 184, 0.24);
   background:
-    radial-gradient(circle at top, rgba(251, 113, 133, 0.16), transparent 34%),
+    radial-gradient(circle at top, rgba(106, 143, 219, 0.16), transparent 34%),
     linear-gradient(180deg, rgba(12, 22, 38, 0.96), rgba(7, 17, 31, 0.94));
   box-shadow: 0 30px 70px rgba(2, 6, 23, 0.46);
 }
@@ -64,8 +64,8 @@
   margin: 6px auto 16px;
   padding: 0 18px;
   border-radius: 18px;
-  background: rgba(185, 28, 28, 0.08);
-  color: #b91c1c;
+  background: rgba(26, 44, 121, 0.08);
+  color: #1A2C79;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -74,8 +74,8 @@
 }
 
 :global([data-theme="dark"]) .heroBadge {
-  background: rgba(251, 113, 133, 0.14);
-  color: #fecdd3;
+  background: rgba(106, 143, 219, 0.14);
+  color: #9fcdff;
 }
 
 .copy {
@@ -129,7 +129,7 @@
 }
 
 .slotFilled {
-  border-color: rgba(185, 28, 28, 0.24);
+  border-color: rgba(26, 44, 121, 0.24);
 }
 
 :global([data-theme="dark"]) .slot {
@@ -165,7 +165,7 @@
 .keyButton svg {
   width: 24px;
   height: 24px;
-  color: #ef4444;
+  color: #007cc5;
 }
 
 :global([data-theme="dark"]) .keyButton {
@@ -190,9 +190,9 @@
 }
 
 .submitButton:not(:disabled) {
-  background: linear-gradient(135deg, #b91c1c, #ef4444);
+  background: linear-gradient(135deg, #1A2C79, #007cc5);
   color: #fff;
-  box-shadow: 0 18px 36px rgba(185, 28, 28, 0.24);
+  box-shadow: 0 18px 36px rgba(26, 44, 121, 0.24);
 }
 
 @media (max-width: 520px) {

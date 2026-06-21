@@ -7,18 +7,49 @@ const SCRIPT_ID = "google-translate-script";
 const ELEMENT_ID = "google_translate_element";
 let googleTranslateReady = false;
 
-const fallbackLanguages = [
-  { code: "en", label: "English" },
-  { code: "es", label: "Spanish" },
-  { code: "fr", label: "French" },
-  { code: "de", label: "German" },
-  { code: "it", label: "Italian" },
-  { code: "pt", label: "Portuguese" },
-  { code: "ar", label: "Arabic" },
-  { code: "zh-CN", label: "Chinese" },
-  { code: "hi", label: "Hindi" },
-  { code: "ja", label: "Japanese" },
+const fallbackLanguageCodes = [
+  "en", "af", "sq", "am", "ar", "hy", "az", "eu", "be", "bn", "bs", "bg", "ca", "ceb",
+  "ny", "zh-CN", "zh-TW", "co", "hr", "cs", "da", "nl", "eo", "et", "tl", "fi", "fr",
+  "fy", "gl", "ka", "de", "el", "gu", "ht", "ha", "haw", "he", "hi", "hmn", "hu", "is",
+  "ig", "id", "ga", "it", "ja", "jv", "kn", "kk", "km", "rw", "ko", "ku", "ky", "lo",
+  "la", "lv", "lt", "lb", "mk", "mg", "ms", "ml", "mt", "mi", "mr", "mn", "my", "ne",
+  "no", "or", "ps", "fa", "pl", "pt", "pa", "ro", "ru", "sm", "gd", "sr", "st", "sn",
+  "sd", "si", "sk", "sl", "so", "es", "su", "sw", "sv", "tg", "ta", "tt", "te", "th",
+  "tr", "tk", "uk", "ur", "ug", "uz", "vi", "cy", "xh", "yi", "yo", "zu",
 ];
+
+const languageNameOverrides = {
+  "zh-CN": "Chinese (Simplified)",
+  "zh-TW": "Chinese (Traditional)",
+  ceb: "Cebuano",
+  ny: "Chichewa",
+  fy: "Frisian",
+  ht: "Haitian Creole",
+  hmn: "Hmong",
+  ku: "Kurdish",
+  lb: "Luxembourgish",
+  sm: "Samoan",
+  gd: "Scottish Gaelic",
+  st: "Sesotho",
+  sn: "Shona",
+  sd: "Sindhi",
+  ug: "Uyghur",
+};
+
+function languageLabelForCode(code) {
+  if (languageNameOverrides[code]) return languageNameOverrides[code];
+  try {
+    const displayNames = new Intl.DisplayNames(["en"], { type: "language" });
+    return displayNames.of(code) || code;
+  } catch {
+    return code;
+  }
+}
+
+const fallbackLanguages = fallbackLanguageCodes.map((code) => ({
+  code,
+  label: languageLabelForCode(code),
+}));
 
 const languageFlagCountries = {
   af: "za",
@@ -233,6 +264,10 @@ function setTranslateCookie(code) {
   const value = code === "en" ? "" : `/en/${code}`;
   document.cookie = `googtrans=${value}; path=/; ${expires ? `expires=${expires};` : ""}`;
   document.cookie = `googtrans=${value}; path=/; domain=${window.location.hostname}; ${expires ? `expires=${expires};` : ""}`;
+  const hostParts = window.location.hostname.split(".");
+  if (hostParts.length > 2) {
+    document.cookie = `googtrans=${value}; path=/; domain=.${hostParts.slice(-2).join(".")}; ${expires ? `expires=${expires};` : ""}`;
+  }
 }
 
 function syncDocumentLanguage(code) {
@@ -309,10 +344,11 @@ function applyGoogleLanguage(code) {
   if (combo && code !== "en") {
     combo.value = code;
     combo.dispatchEvent(new Event("change"));
-    return;
   }
 
-  window.location.reload();
+  window.setTimeout(() => {
+    window.location.reload();
+  }, 180);
 }
 
 function getGoogleLanguages() {
