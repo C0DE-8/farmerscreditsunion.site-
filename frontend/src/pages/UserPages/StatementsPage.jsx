@@ -125,8 +125,8 @@ export default function StatementsPage() {
           })),
           ...wireTransfers.map((item) => ({
             id: `wire-${item.id}`,
-            title: item.account_name || "Wire transfer",
-            subtitle: item.bank_name || item.reason || "Wire transfer",
+            title: item.account_name || "International transfer",
+            subtitle: item.bank_name || item.reason || "International transfer",
             amount: item.entry_type === "credit" ? Math.abs(Number(item.amount || 0)) : -Math.abs(Number(item.amount || 0)),
             direction: item.entry_type === "credit" ? "inflow" : "outflow",
             category: "wire",
@@ -291,7 +291,7 @@ export default function StatementsPage() {
           <div>
             <span className={styles.eyebrow}>Account summary</span>
             <h2>Cash movement across your account</h2>
-            <p>Review deposits, bills, self transfers, local transfers, and wire activity in one statement view.</p>
+            <p>Review deposits, bills, self transfers, local transfers, and international transfer activity in one statement view.</p>
           </div>
           <div className={styles.heroMeta}>
             <FiBarChart2 />

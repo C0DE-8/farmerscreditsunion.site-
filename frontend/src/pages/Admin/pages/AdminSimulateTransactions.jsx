@@ -322,7 +322,7 @@ export default function AdminSimulateTransactions() {
           <div>
             <span className={styles.settingsEyebrow}><FiShuffle /> Simulate Transactions</span>
             <h2>Create transfer history</h2>
-            <p>Create local or wire transfer rows for a customer. Use this for account history setup and controlled demo data.</p>
+            <p>Create local or international transfer rows for a customer. Use this for account history setup and controlled demo data.</p>
           </div>
           <button className={styles.secondaryBtn} type="button" onClick={loadUsers}>
             <FiRefreshCw />
@@ -387,7 +387,7 @@ export default function AdminSimulateTransactions() {
                 <span>Transfer type</span>
                 <select value={form.transfer_type} onChange={(event) => updateField("transfer_type", event.target.value)}>
                   <option value="local">Local</option>
-                  <option value="wire">Wire</option>
+                  <option value="wire">International</option>
                 </select>
               </label>
               <label className={styles.field}>
@@ -512,7 +512,7 @@ export default function AdminSimulateTransactions() {
           <div>
             <span className={styles.settingsEyebrow}><FiActivity /> Customer Transfer History</span>
             <h2>{selectedUser ? selectedUser.full_name || selectedUser.username || `User #${selectedUser.id}` : "Selected customer"}</h2>
-            <p>Review recent local and wire transfers for this customer before or after creating simulated history.</p>
+            <p>Review recent local and international transfers for this customer before or after creating simulated history.</p>
           </div>
           <div className={styles.headerActions}>
             <label className={styles.field}>
@@ -520,7 +520,7 @@ export default function AdminSimulateTransactions() {
               <select value={historyFilter} onChange={(event) => setHistoryFilter(event.target.value)}>
                 <option value="all">All transfers</option>
                 <option value="local">Local only</option>
-                <option value="wire">Wire only</option>
+                <option value="wire">International only</option>
               </select>
             </label>
             <label className={styles.field}>
@@ -560,7 +560,7 @@ export default function AdminSimulateTransactions() {
                     <span>Type</span>
                     <select value={editingTransfer.transfer_type} onChange={(event) => updateEditingTransfer("transfer_type", event.target.value)}>
                       <option value="local">Local</option>
-                      <option value="wire">Wire</option>
+                      <option value="wire">International</option>
                     </select>
                   </label>
                   <label className={styles.field}>
@@ -709,7 +709,7 @@ export default function AdminSimulateTransactions() {
             </label>
             {[
               ["update_reason", "Update empty reasons"],
-              ["fill_wire_extras", "Fill wire extras"],
+              ["fill_wire_extras", "Fill international extras"],
               ["preserve_existing", "Preserve existing values"],
               ["dry_run", "Dry run only"],
             ].map(([key, label]) => (

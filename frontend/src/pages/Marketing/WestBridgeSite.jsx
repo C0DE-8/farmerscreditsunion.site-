@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import LanguageSwitcher from "../../components/ui/LanguageSwitcher";
+import LanguageSwitcher, { prepareSavedGoogleLanguage } from "../../components/ui/LanguageSwitcher";
 
 const STYLE_TWO_ROOT = "/style-two/";
 
@@ -218,7 +218,14 @@ function StyleTwoPage({ page }) {
     let cancelled = false;
 
     ensureStyleTwoAssets().then(() => {
-      if (!cancelled) initializeStyleTwoPage();
+      if (!cancelled) {
+        initializeStyleTwoPage();
+        prepareSavedGoogleLanguage({
+          timeout: 5200,
+          minDelay: 300,
+          settleDelay: 900,
+        });
+      }
     });
 
     return () => {

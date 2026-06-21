@@ -114,7 +114,7 @@
     }
     .pricing .pricing-table .pricing-header {
     position: relative;
-    background: #dc2626;
+    background: #0e206d;
     padding: 22px 22px;
     text-align: center;
     border-top-right-radius: 8px;
@@ -148,7 +148,7 @@
     }
     .pricing .pricing-list {
     padding: 20px 0 40px 0;
-    border: 1px solid #dc2626;
+    border: 1px solid #0e206d;
     }
     .pricing .pricing-list ul {
     padding: 0px;
@@ -294,7 +294,7 @@
     .pricing-rate {
     font-size: 70px;
     font-weight: 700;
-    color: #ef4444;
+    color: #1A2C79;
     position: relative;
     text-align: center;
     }

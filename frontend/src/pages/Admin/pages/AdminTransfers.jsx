@@ -27,7 +27,7 @@ const codeFields = [
 
 const feeTypes = [
   { type: "local", label: "Local Transfer Fee" },
-  { type: "wire", label: "Wire Transfer Fee" },
+  { type: "wire", label: "International Transfer Fee" },
 ];
 
 const formatFee = (value) => {
@@ -293,7 +293,7 @@ export default function AdminTransfers() {
           <div className={styles.settingsHeader}>
             <div>
               <span className={styles.settingsEyebrow}><FiDollarSign /> Transfer Fee Management</span>
-              <h2>Local and wire fees</h2>
+              <h2>Local and international transfer fees</h2>
               <p>See each current fee and update the amount charged when customers submit a transfer.</p>
             </div>
           </div>
@@ -354,7 +354,7 @@ export default function AdminTransfers() {
             <select value={filters.type} onChange={(event) => setFilters((current) => ({ ...current, type: event.target.value }))}>
               <option value="all">All types</option>
               <option value="local">Local</option>
-              <option value="wire">Wire</option>
+              <option value="wire">International</option>
             </select>
           </label>
           <label className={styles.field}>

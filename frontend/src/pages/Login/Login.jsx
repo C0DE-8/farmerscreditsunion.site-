@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { registerUser } from "../../api/authApi";
 import GlassToast, { useGlassToast } from "../../components/Toast/GlassToast";
+import LanguageSwitcher from "../../components/ui/LanguageSwitcher";
 import LogoPreloader from "../../components/ui/LogoPreloader";
 import styles from "./Login.module.css";
 
@@ -456,6 +457,9 @@ export default function Login() {
       <div className={styles.backgroundGrid}></div>
 
       <GlassToast toasts={toasts} onDismiss={dismissToast} />
+      <div className={styles.languageSwitcher}>
+        <LanguageSwitcher compact />
+      </div>
 
       <div className={`${styles.loginShell} ${mode === "register" ? styles.registerShell : ""} ${mounted ? styles.showShell : ""}`}>
         <div className={styles.formPanel}>

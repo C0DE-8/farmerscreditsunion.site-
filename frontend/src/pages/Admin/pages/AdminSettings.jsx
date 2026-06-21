@@ -39,7 +39,7 @@ const codeFields = [
 
 const feeFields = [
   { type: "local", label: "Local Transfer Fee" },
-  { type: "wire", label: "Wire Transfer Fee" },
+  { type: "wire", label: "International Transfer Fee" },
 ];
 
 export default function AdminSettings() {

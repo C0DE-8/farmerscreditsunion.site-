@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import LanguageSwitcher from "../../components/ui/LanguageSwitcher";
 import LogoPreloader from "../../components/ui/LogoPreloader";
 import styles from "./VerifyLoginOTP.module.css";
 
@@ -83,6 +84,9 @@ export default function VerifyLoginOTP() {
       <div className={styles.backgroundGlowOne}></div>
       <div className={styles.backgroundGlowTwo}></div>
       <div className={styles.backgroundGrid}></div>
+      <div className={styles.languageSwitcher}>
+        <LanguageSwitcher compact />
+      </div>
 
       <div className={`${styles.loginShell} ${mounted ? styles.showShell : ""}`}>
         <div className={styles.formPanel}>

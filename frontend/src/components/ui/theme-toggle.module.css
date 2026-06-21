@@ -13,7 +13,7 @@
 }
 
 .toggle:focus-visible {
-  outline: 2px solid rgba(185, 28, 28, 0.45);
+  outline: 2px solid rgba(26, 44, 121, 0.45);
   outline-offset: 3px;
 }
 

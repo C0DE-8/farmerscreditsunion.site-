@@ -1,17 +1,23 @@
 import styles from "./Dashboard.module.css";
 import { useEffect, useRef, useState } from "react";
 import {
+  FiClock,
   FiCreditCard,
   FiDownload,
   FiEye,
   FiEyeOff,
   FiFileText,
+  FiGlobe,
+  FiHome,
+  FiLogOut,
   FiPhone,
   FiPlus,
   FiRepeat,
   FiSend,
   FiSettings,
+  FiShield,
   FiTrendingUp,
+  FiUser,
 } from "react-icons/fi";
 import axiosInstance from "../../api/axios";
 import MobileFooterNav from "../../components/Dashboard/MobileFooterNav";
@@ -39,6 +45,7 @@ export default function Dashboard() {
   const [accountSwapDirection, setAccountSwapDirection] = useState("next");
   const [touchStartX, setTouchStartX] = useState(null);
   const [bankName, setBankName] = useState(DEFAULT_BANK_NAME);
+  const [currentTime, setCurrentTime] = useState(() => new Date());
   const accountSwipeHandledRef = useRef(false);
 
   const displayName =
@@ -49,6 +56,21 @@ export default function Dashboard() {
   const currentBalance = Number(profile?.current_balance || 0);
   const totalBalance = savingsBalance + currentBalance;
   const profileImage = resolveAsset(profile?.profile_image_url || "");
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "Local time";
+  const currentHour = currentTime.getHours();
+  const greeting =
+    currentHour < 12 ? "Good Morning" : currentHour < 17 ? "Good Afternoon" : "Good Evening";
+  const formattedClock = currentTime.toLocaleTimeString(undefined, {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+  const formattedDate = currentTime.toLocaleDateString(undefined, {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 
   const formatMoney = (value) =>
     `${currencySign}${Number(value || 0).toLocaleString(undefined, {
@@ -137,9 +159,15 @@ export default function Dashboard() {
             const amount = parseAmount(item.amount);
             const isCredit = item.entry_type === "credit";
             const title =
-              item.account_name ||
-              item.bank_name ||
-              (item.to_account ? "Self transfer" : "Transfer");
+              item.type === "wire"
+                ? "International Transfer"
+                : item.type === "local"
+                  ? "Local Transfer"
+                  : item.to_account
+                    ? "Self transfer"
+                    : item.account_name ||
+                      item.bank_name ||
+                      "Transfer";
             const transferBank = item.bank_name || (item.to_account ? bankName : "");
 
             return {
@@ -171,16 +199,24 @@ export default function Dashboard() {
     };
   }, [bankName]);
 
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
   const handleLogout = () => {
     logout("user");
     navigate("/", { replace: true });
   };
 
-  const quickTransfers = [
-    { name: "John", short: "J", account: "65318" },
-    { name: "Sarah", short: "S", account: "48741" },
-    { name: "Daniel", short: "D", account: "27400" },
-    { name: "Amara", short: "A", account: "53518" },
+  const quickActions = [
+    { label: "Send Money", shortLabel: "Send", icon: <FiSend />, path: "/transactions", tone: "primary" },
+    { label: "Add Money", shortLabel: "Add Money", icon: <FiPlus />, path: "/funding", tone: "green" },
+    { label: "Convert", shortLabel: "Convert", icon: <FiRepeat />, path: "/convert", tone: "soft" },
+    { label: "History", shortLabel: "History", icon: <FiClock />, path: "/transaction-history", tone: "purple" },
   ];
 
   const transactions = [
@@ -282,37 +318,65 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <nav className={styles.nav}>
-          <p className={styles.navLabel}>General</p>
+        <button className={styles.sidebarProfile} type="button" onClick={() => navigate("/profile")}>
+          <div className={styles.sidebarAvatar}>
+            {profileImage ? <img src={profileImage} alt={displayName} /> : displayName.charAt(0).toUpperCase()}
+          </div>
+          <strong>{displayName}</strong>
+          <span>ID: {accountNumber}</span>
+          <small><FiShield /> KYC Verified</small>
+        </button>
 
-          <button className={`${styles.navItem} ${styles.activeNavItem}`}>
-            <span className={styles.navIcon}>Home</span>
+        <nav className={styles.nav}>
+          <p className={styles.navLabel}>Main Menu</p>
+
+          <button className={`${styles.navItem} ${styles.activeNavItem}`} type="button">
+            <span className={styles.navIcon}><FiHome /></span>
             <span>Dashboard</span>
           </button>
 
-          <button className={styles.navItem}>
-            <span className={styles.navIcon}>Pay</span>
+          <button className={styles.navItem} type="button" onClick={() => navigate("/transactions")}>
+            <span className={styles.navIcon}><FiSend /></span>
             <span>Payments</span>
           </button>
 
-          <button className={styles.navItem}>
-            <span className={styles.navIcon}>Card</span>
+          <button className={styles.navItem} type="button" onClick={() => navigate("/cards")}>
+            <span className={styles.navIcon}><FiCreditCard /></span>
             <span>Cards</span>
           </button>
 
-          <button className={styles.navItem}>
-            <span className={styles.navIcon}>Bill</span>
-            <span>Invoices</span>
+          <p className={styles.navLabel}>Transfers</p>
+
+          <button className={styles.navItem} type="button" onClick={() => navigate("/transactions")}>
+            <span className={styles.navIcon}><FiSend /></span>
+            <span>Local Transfer</span>
           </button>
 
-          <button className={styles.navItem}>
-            <span className={styles.navIcon}>Data</span>
-            <span>Insights</span>
+          <button className={styles.navItem} type="button" onClick={() => navigate("/transactions?type=wire")}>
+            <span className={styles.navIcon}><FiGlobe /></span>
+            <span>International Transfer</span>
           </button>
 
-          <button className={styles.navItem}>
-            <span className={styles.navIcon}>More</span>
-            <span>More</span>
+          <button className={styles.navItem} type="button" onClick={() => navigate("/funding")}>
+            <span className={styles.navIcon}><FiPlus /></span>
+            <span>Deposit</span>
+          </button>
+
+          <p className={styles.navLabel}>Services</p>
+
+          <button className={styles.navItem} type="button" onClick={() => navigate("/loans")}>
+            <span className={styles.navIcon}><FiTrendingUp /></span>
+            <span>Loan Request</span>
+          </button>
+
+          <button className={styles.navItem} type="button" onClick={() => navigate("/statements")}>
+            <span className={styles.navIcon}><FiFileText /></span>
+            <span>Statements</span>
+          </button>
+
+          <button className={styles.navItem} type="button" onClick={() => navigate("/more")}>
+            <span className={styles.navIcon}><FiUser /></span>
+            <span>Account</span>
           </button>
         </nav>
 
@@ -322,7 +386,7 @@ export default function Dashboard() {
             type="button"
             onClick={handleLogout}
           >
-            <span className={styles.navIcon}>Exit</span>
+            <span className={styles.navIcon}><FiLogOut /></span>
             <span>Logout</span>
           </button>
 
@@ -377,49 +441,43 @@ export default function Dashboard() {
           </header>
 
           <section className={styles.mobileBalanceCard}>
-            <div className={styles.balanceLabelRow}>
-              <span className={styles.balancePill}>Total Balance</span>
+            <div className={styles.mobileGreetingRow}>
+              <div>
+                <span>{greeting}</span>
+                <strong>{displayName}</strong>
+              </div>
+              <div className={styles.mobileClock}>
+                <strong>{formattedClock}</strong>
+                <span>{formattedDate}</span>
+              </div>
             </div>
 
             {profileLoading ? (
               <div className={`${styles.skeleton} ${styles.balanceSkeleton}`} />
             ) : (
-              <div className={styles.mobileBalanceLine}>
-                <h1 className={styles.mobileBalanceAmount}>
-                  {displayMoney(totalBalance)}
-                </h1>
-                <button
-                  className={styles.eyeButton}
-                  type="button"
-                  onClick={() => setBalanceVisible((current) => !current)}
-                  aria-label={balanceVisible ? "Hide balance" : "Show balance"}
-                >
-                  {balanceVisible ? <FiEyeOff /> : <FiEye />}
-                </button>
-              </div>
+              <>
+                <div className={styles.mobileBalanceLine}>
+                  <div>
+                    <span className={styles.balancePill}>Available Balance</span>
+                    <h1 className={styles.mobileBalanceAmount}>
+                      {displayMoney(totalBalance)}
+                    </h1>
+                  </div>
+                  <button
+                    className={styles.eyeButton}
+                    type="button"
+                    onClick={() => setBalanceVisible((current) => !current)}
+                    aria-label={balanceVisible ? "Hide balance" : "Show balance"}
+                  >
+                    {balanceVisible ? <FiEyeOff /> : <FiEye />}
+                  </button>
+                </div>
+                <div className={styles.mobileAccountStrip}>
+                  <span>Your Account Number</span>
+                  <strong>{maskAccountNumber(accountNumber)}</strong>
+                </div>
+              </>
             )}
-          </section>
-
-          <section className={styles.mobileQuickActions} aria-label="Quick actions">
-            {[
-              [<FiPlus />, "Add Money"],
-              [<FiSend />, "Send"],
-              [<FiRepeat />, "Convert"],
-            ].map(([icon, label]) => (
-              <button
-                className={styles.mobileQuickAction}
-                type="button"
-                key={label}
-                onClick={() => {
-                  if (label === "Add Money") navigate("/funding");
-                  if (label === "Send") navigate("/transactions");
-                  if (label === "Convert") navigate("/convert");
-                }}
-              >
-                <span>{icon}</span>
-                <strong>{label}</strong>
-              </button>
-            ))}
           </section>
 
           <section className={styles.mobileAccountsWrap}>
@@ -467,6 +525,26 @@ export default function Dashboard() {
                 </div>
               </>
             )}
+          </section>
+
+          <section className={styles.actionPanel} aria-label="Quick actions">
+            <div className={styles.actionPanelHeader}>
+              <h2>What would you like to do today?</h2>
+              <p>Choose from your popular actions below</p>
+            </div>
+            <div className={styles.mobileQuickActions}>
+              {quickActions.map((item) => (
+                <button
+                  className={`${styles.mobileQuickAction} ${styles[`quickAction${item.tone}`]}`}
+                  type="button"
+                  key={item.label}
+                  onClick={() => navigate(item.path)}
+                >
+                  <span>{item.icon}</span>
+                  <strong>{item.shortLabel}</strong>
+                </button>
+              ))}
+            </div>
           </section>
 
           <section className={styles.mobileSection}>
@@ -546,11 +624,18 @@ export default function Dashboard() {
             </button>
             <div>
               <p className={styles.pageEyebrow}>Overview</p>
-              <h1 className={styles.pageTitle}>Welcome back, {displayName}</h1>
+              <h1 className={styles.pageTitle}>{greeting}, {displayName}</h1>
             </div>
           </div>
 
           <div className={styles.topbarActions}>
+            <div className={styles.liveClock}>
+              <FiClock />
+              <div>
+                <strong>{formattedClock}</strong>
+                <span>{formattedDate}</span>
+              </div>
+            </div>
             <button
               className={styles.iconAction}
               type="button"
@@ -571,17 +656,27 @@ export default function Dashboard() {
               {theme === "dark" ? <FiEye /> : <FiEyeOff />}
               <span>Theme</span>
             </button>
-            <button className={styles.topActionGhost}>Request</button>
-            <button className={styles.topActionGhost}>Topup</button>
-            <button className={styles.topActionPrimary}>Move Money</button>
+            <button className={styles.topActionGhost} onClick={() => navigate("/transaction-history")}>History</button>
+            <button className={styles.topActionGhost} onClick={() => navigate("/funding")}>Top up</button>
+            <button className={styles.topActionPrimary} onClick={() => navigate("/transactions")}>Move Money</button>
           </div>
         </header>
 
         <section className={styles.heroGrid}>
           <div className={styles.balancePanel}>
+            <div className={styles.balanceGreeting}>
+              <div>
+                <span>{greeting}</span>
+                <strong>{displayName}</strong>
+              </div>
+              <div>
+                <strong>{formattedClock}</strong>
+                <span>{userTimeZone}</span>
+              </div>
+            </div>
             <div className={styles.desktopBalanceHeader}>
               <div>
-                <p className={styles.panelLabel}>Total Balance</p>
+                <p className={styles.panelLabel}>Available Balance</p>
                 <h2 className={styles.balanceAmount}>
                   {displayMoney(totalBalance)}
                 </h2>
@@ -596,10 +691,10 @@ export default function Dashboard() {
               </button>
             </div>
 
-            <div className={styles.balanceActions}>
-              <button className={styles.smallActionPrimary} onClick={() => navigate("/transactions")}>Send</button>
-              <button className={styles.smallAction} onClick={() => navigate("/funding")}>Add Money</button>
-              <button className={styles.smallAction} onClick={() => navigate("/convert")}>Convert</button>
+            <div className={styles.desktopAccountStrip}>
+              <span>Your Account Number</span>
+              <strong>{maskAccountNumber(accountNumber)}</strong>
+              <small>{bankName}</small>
             </div>
           </div>
 
@@ -631,6 +726,26 @@ export default function Dashboard() {
                 </button>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section className={styles.actionPanel} aria-label="Quick actions">
+          <div className={styles.actionPanelHeader}>
+            <h2>What would you like to do today?</h2>
+            <p>Choose from your popular actions below</p>
+          </div>
+          <div className={styles.desktopQuickActions}>
+            {quickActions.map((item) => (
+              <button
+                className={`${styles.desktopQuickAction} ${styles[`quickAction${item.tone}`]}`}
+                type="button"
+                key={item.label}
+                onClick={() => navigate(item.path)}
+              >
+                <span>{item.icon}</span>
+                <strong>{item.label}</strong>
+              </button>
+            ))}
           </div>
         </section>
 

@@ -8,7 +8,7 @@ import styles from "./UserPage.module.css";
 const tabs = [
   { key: "self", label: "Self" },
   { key: "local", label: "Local" },
-  { key: "wire", label: "Wire" },
+  { key: "wire", label: "International" },
 ];
 
 export default function TransactionHistoryPage() {

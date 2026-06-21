@@ -1,10 +1,10 @@
 :root {
-  --bg: #fff8f8;
+  --bg: #f8fbff;
   --card-bg: #ffffff;
   --text: #111827;
   --text-soft: #6b7280;
-  --primary: #e11d48;
-  --accent: #fb7185;
+  --primary: #1A2C79;
+  --accent: #007cc5;
   --border: #e5e7eb;
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
@@ -38,9 +38,9 @@ body {
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(circle at top left, rgba(225, 29, 72, 0.14), transparent 28%),
-    radial-gradient(circle at bottom right, rgba(251, 113, 133, 0.14), transparent 30%),
-    linear-gradient(135deg, #fff8f8 0%, #fff1f3 45%, #fdf2f8 100%);
+    radial-gradient(circle at top left, rgba(26, 44, 121, 0.14), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(0, 124, 197, 0.14), transparent 30%),
+    linear-gradient(135deg, #f8fbff 0%, #eef5ff 45%, #eaf4ff 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -65,7 +65,7 @@ body {
 .backgroundGlowOne {
   width: 260px;
   height: 260px;
-  background: rgba(225, 29, 72, 0.18);
+  background: rgba(26, 44, 121, 0.18);
   top: 7%;
   left: 8%;
 }
@@ -73,7 +73,7 @@ body {
 .backgroundGlowTwo {
   width: 320px;
   height: 320px;
-  background: rgba(251, 113, 133, 0.16);
+  background: rgba(0, 124, 197, 0.16);
   bottom: 6%;
   right: 6%;
   animation-delay: 1.5s;
@@ -83,11 +83,22 @@ body {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(136, 19, 55, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(136, 19, 55, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(26, 44, 121, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26, 44, 121, 0.05) 1px, transparent 1px);
   background-size: 34px 34px;
   mask-image: radial-gradient(circle at center, black 45%, transparent 90%);
   pointer-events: none;
+}
+
+.languageSwitcher {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 30;
+}
+
+.languageSwitcher > div {
+  margin: 0;
 }
 
 .loginShell {
@@ -102,7 +113,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.84);
   border-radius: 28px;
   overflow: hidden;
-  box-shadow: 0 30px 70px rgba(136, 19, 55, 0.14);
+  box-shadow: 0 30px 70px rgba(26, 44, 121, 0.14);
   backdrop-filter: blur(14px);
   opacity: 0;
   transform: translateY(26px) scale(0.985);
@@ -119,7 +130,7 @@ body {
 
 .formPanel {
   background: rgba(255, 255, 255, 0.9);
-  border-right: 1px solid rgba(225, 29, 72, 0.08);
+  border-right: 1px solid rgba(26, 44, 121, 0.08);
   padding: 30px 28px;
   display: flex;
   flex-direction: column;
@@ -176,7 +187,7 @@ body {
   gap: 6px;
   padding: 4px;
   border-radius: 12px;
-  background: rgba(225, 29, 72, 0.06);
+  background: rgba(26, 44, 121, 0.06);
   margin-bottom: 22px;
 }
 
@@ -196,8 +207,8 @@ body {
 
 .modeTabs .activeTab {
   background: #ffffff;
-  color: #881337;
-  box-shadow: 0 10px 24px rgba(225, 29, 72, 0.12);
+  color: #0b2f8f;
+  box-shadow: 0 10px 24px rgba(26, 44, 121, 0.12);
 }
 
 .adminBadge {
@@ -207,13 +218,13 @@ body {
   min-height: 38px;
   padding: 8px 12px;
   border-radius: 999px;
-  border: 1px solid rgba(225, 29, 72, 0.14);
-  background: rgba(225, 29, 72, 0.06);
+  border: 1px solid rgba(26, 44, 121, 0.14);
+  background: rgba(26, 44, 121, 0.06);
   margin-bottom: 14px;
 }
 
 .adminBadge span {
-  color: #881337;
+  color: #0b2f8f;
   font-size: 12px;
   font-weight: 800;
   text-transform: uppercase;
@@ -239,7 +250,7 @@ body {
 
 .phaseStep {
   min-height: 62px;
-  border: 1px solid rgba(225, 29, 72, 0.08);
+  border: 1px solid rgba(26, 44, 121, 0.08);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.82);
   color: #6b7280;
@@ -257,8 +268,8 @@ body {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: rgba(225, 29, 72, 0.08);
-  color: #881337;
+  background: rgba(26, 44, 121, 0.08);
+  color: #0b2f8f;
   font-size: 12px;
   font-weight: 800;
   flex: 0 0 auto;
@@ -270,14 +281,14 @@ body {
 }
 
 .activePhaseStep {
-  border-color: rgba(225, 29, 72, 0.34);
-  background: rgba(225, 29, 72, 0.08);
+  border-color: rgba(26, 44, 121, 0.34);
+  background: rgba(26, 44, 121, 0.08);
   color: #111827;
 }
 
 .activePhaseStep span,
 .completedPhaseStep span {
-  background: linear-gradient(135deg, #e11d48, #fb7185);
+  background: linear-gradient(135deg, #1A2C79, #007cc5);
   color: white;
 }
 
@@ -288,7 +299,7 @@ body {
 
 .phasePanel {
   min-height: 330px;
-  border: 1px solid rgba(225, 29, 72, 0.08);
+  border: 1px solid rgba(26, 44, 121, 0.08);
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.72);
   padding: 18px;
@@ -338,9 +349,9 @@ body {
 }
 
 .reviewCard {
-  border: 1px solid rgba(225, 29, 72, 0.18);
+  border: 1px solid rgba(26, 44, 121, 0.18);
   border-radius: 14px;
-  background: rgba(225, 29, 72, 0.06);
+  background: rgba(26, 44, 121, 0.06);
   padding: 14px;
 }
 
@@ -353,7 +364,7 @@ body {
 
 .uploadTile {
   min-height: 230px;
-  border: 1px dashed rgba(225, 29, 72, 0.18);
+  border: 1px dashed rgba(26, 44, 121, 0.18);
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.82);
   display: flex;
@@ -367,15 +378,15 @@ body {
 }
 
 .uploadTile:hover {
-  border-color: rgba(225, 29, 72, 0.4);
-  background: rgba(225, 29, 72, 0.05);
+  border-color: rgba(26, 44, 121, 0.4);
+  background: rgba(26, 44, 121, 0.05);
 }
 
 .activeUploadTile {
   border-style: solid;
-  border-color: rgba(225, 29, 72, 0.42);
-  background: rgba(225, 29, 72, 0.08);
-  box-shadow: 0 16px 34px rgba(136, 19, 55, 0.1);
+  border-color: rgba(26, 44, 121, 0.42);
+  background: rgba(26, 44, 121, 0.08);
+  box-shadow: 0 16px 34px rgba(26, 44, 121, 0.1);
 }
 
 .uploadTile span {
@@ -389,7 +400,7 @@ body {
   width: 100%;
   aspect-ratio: 4 / 3;
   border-radius: 12px;
-  border: 1px solid rgba(225, 29, 72, 0.08);
+  border: 1px solid rgba(26, 44, 121, 0.08);
   background: rgba(253, 242, 248, 0.8);
 }
 
@@ -412,7 +423,7 @@ body {
   border: 0;
   border-radius: 10px;
   padding: 0 12px;
-  background: rgba(225, 29, 72, 0.1);
+  background: rgba(26, 44, 121, 0.1);
   color: #be123c;
   font-size: 13px;
   font-weight: 800;
@@ -446,7 +457,7 @@ body {
   object-fit: cover;
   border-radius: 12px;
   background: #000000;
-  border: 1px solid rgba(225, 29, 72, 0.08);
+  border: 1px solid rgba(26, 44, 121, 0.08);
 }
 
 .cameraError {
@@ -485,7 +496,7 @@ body {
   width: 100%;
   height: 50px;
   border-radius: 14px;
-  border: 1px solid rgba(225, 29, 72, 0.1);
+  border: 1px solid rgba(26, 44, 121, 0.1);
   background: rgba(255, 255, 255, 0.85);
   outline: none;
   padding: 0 14px;
@@ -502,15 +513,15 @@ body {
   gap: 10px;
   height: 50px;
   border-radius: 14px;
-  border: 1px solid rgba(225, 29, 72, 0.1);
+  border: 1px solid rgba(26, 44, 121, 0.1);
   background: rgba(255, 255, 255, 0.85);
   padding: 0 10px 0 14px;
   transition: 0.25s ease;
 }
 
 .calendarField:focus-within {
-  border-color: rgba(225, 29, 72, 0.5);
-  box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.12);
+  border-color: rgba(26, 44, 121, 0.5);
+  box-shadow: 0 0 0 4px rgba(26, 44, 121, 0.12);
   transform: translateY(-1px);
 }
 
@@ -534,7 +545,7 @@ body {
   display: grid;
   place-items: center;
   padding: 0 10px;
-  background: rgba(225, 29, 72, 0.1);
+  background: rgba(26, 44, 121, 0.1);
   color: #be123c;
   font-size: 12px;
   font-weight: 800;
@@ -556,8 +567,8 @@ body {
 
 .inputGroup input:focus,
 .inputGroup select:focus {
-  border-color: rgba(225, 29, 72, 0.5);
-  box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.12);
+  border-color: rgba(26, 44, 121, 0.5);
+  box-shadow: 0 0 0 4px rgba(26, 44, 121, 0.12);
   transform: translateY(-1px);
 }
 
@@ -579,7 +590,7 @@ body {
 }
 
 .rememberMe input {
-  accent-color: #e11d48;
+  accent-color: #1A2C79;
 }
 
 .linkButton {
@@ -593,7 +604,7 @@ body {
 }
 
 .linkButton:hover {
-  color: #e11d48;
+  color: #1A2C79;
 }
 
 .primaryBtn,
@@ -609,14 +620,14 @@ body {
 
 .primaryBtn {
   border: none;
-  background: linear-gradient(135deg, #e11d48, #fb7185);
+  background: linear-gradient(135deg, #1A2C79, #007cc5);
   color: white;
-  box-shadow: 0 16px 30px rgba(225, 29, 72, 0.22);
+  box-shadow: 0 16px 30px rgba(26, 44, 121, 0.22);
 }
 
 .primaryBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 20px 34px rgba(225, 29, 72, 0.3);
+  box-shadow: 0 20px 34px rgba(26, 44, 121, 0.3);
 }
 
 .primaryBtn:disabled {
@@ -632,13 +643,13 @@ body {
 }
 
 .secondaryBtn {
-  border: 1px solid rgba(225, 29, 72, 0.12);
+  border: 1px solid rgba(26, 44, 121, 0.12);
   background: rgba(255, 255, 255, 0.72);
   color: #4b5563;
 }
 
 .secondaryBtn:hover {
-  background: rgba(225, 29, 72, 0.05);
+  background: rgba(26, 44, 121, 0.05);
   transform: translateY(-1px);
 }
 
@@ -647,7 +658,7 @@ body {
   overflow: hidden;
   background:
     radial-gradient(circle at top right, rgba(255, 255, 255, 0.12), transparent 18%),
-    radial-gradient(circle at 70% 30%, rgba(251, 113, 133, 0.14), transparent 20%),
+    radial-gradient(circle at 70% 30%, rgba(0, 124, 197, 0.14), transparent 20%),
     linear-gradient(135deg, #7f1734 0%, #5b1026 45%, #3b0718 100%);
   display: flex;
   align-items: center;
@@ -674,7 +685,7 @@ body {
 .floatingOrbOne {
   width: 90px;
   height: 90px;
-  background: radial-gradient(circle, rgba(251, 113, 133, 0.56), transparent 68%);
+  background: radial-gradient(circle, rgba(0, 124, 197, 0.56), transparent 68%);
   top: 18%;
   right: 18%;
   animation: orbMove 7s ease-in-out infinite;
@@ -683,7 +694,7 @@ body {
 .floatingOrbTwo {
   width: 120px;
   height: 120px;
-  background: radial-gradient(circle, rgba(225, 29, 72, 0.42), transparent 68%);
+  background: radial-gradient(circle, rgba(26, 44, 121, 0.42), transparent 68%);
   bottom: 18%;
   left: 14%;
   animation: orbMove 9s ease-in-out infinite reverse;
@@ -736,7 +747,7 @@ body {
   place-items: center;
   margin-right: -8px;
   border: 2px solid rgba(20, 28, 46, 0.9);
-  background: linear-gradient(135deg, #e11d48, #fb7185);
+  background: linear-gradient(135deg, #1A2C79, #007cc5);
   color: white;
   font-size: 12px;
   font-weight: 700;
@@ -832,8 +843,8 @@ body {
   width: 180px;
   height: 180px;
   border: 4px solid transparent;
-  border-bottom: 4px solid #e11d48;
-  border-left: 4px solid #fb7185;
+  border-bottom: 4px solid #1A2C79;
+  border-left: 4px solid #007cc5;
   border-radius: 50%;
   left: 36%;
   bottom: 16%;
@@ -1006,8 +1017,15 @@ body {
 
 @media (max-width: 640px) {
   .loginPage {
-    padding: 16px;
+    padding: 78px 16px 16px;
     align-items: stretch;
+  }
+
+  .languageSwitcher {
+    top: 14px;
+    right: 14px;
+    transform: scale(0.92);
+    transform-origin: top right;
   }
 
   .loginShell {

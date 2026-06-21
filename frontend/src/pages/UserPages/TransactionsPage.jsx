@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FiArrowLeft, FiSend, FiSettings } from "react-icons/fi";
 import axiosInstance from "../../api/axios";
 import MobileFooterNav from "../../components/Dashboard/MobileFooterNav";
@@ -13,7 +13,7 @@ const DRAFT_KEY = "userTransferDraft";
 
 const transferTypes = [
   { key: "local", label: "Local" },
-  { key: "wire", label: "Wire" },
+  { key: "wire", label: "International" },
 ];
 
 const accountOptions = [
@@ -38,12 +38,14 @@ const initialForm = {
 
 export default function TransactionsPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { userUser, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [active, setActive] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}")?.active || "local";
+      const queryType = new URLSearchParams(window.location.search).get("type");
+      return queryType === "wire" ? "wire" : JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}")?.active || "local";
     } catch {
       return "local";
     }
@@ -73,6 +75,12 @@ export default function TransactionsPage() {
       .then((res) => setRequirements(res.data?.requirements || requirements))
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    const queryType = new URLSearchParams(location.search).get("type");
+    if (queryType === "wire") setActive("wire");
+    if (queryType === "local") setActive("local");
+  }, [location.search]);
 
   useEffect(() => {
     localStorage.setItem(DRAFT_KEY, JSON.stringify({ active, step, form }));
@@ -187,7 +195,7 @@ export default function TransactionsPage() {
           onTouchEnd={(event) => swipeTab(event.changedTouches[0].clientX)}
         >
           <div className={styles.panelHead}>
-            <h2>{active === "local" ? "Local Transfer" : "Wire Transfer"}</h2>
+            <h2>{active === "local" ? "Local Transfer" : "International Transfer"}</h2>
             <button type="button" onClick={() => navigate("/transaction-history")}>History</button>
           </div>
 
@@ -308,9 +316,9 @@ export default function TransactionsPage() {
             {step === 4 && (
               <section className={styles.transferModule}>
                 <h3>Review transfer</h3>
-                <p>Confirm the details before sending this {active} transfer.</p>
+                <p>Confirm the details before sending this {active === "wire" ? "international" : "local"} transfer.</p>
                 <div className={styles.reviewGrid}>
-                  <div><span>Type</span><strong>{active === "local" ? "Local" : "Wire"}</strong></div>
+                  <div><span>Type</span><strong>{active === "local" ? "Local" : "International"}</strong></div>
                   <div><span>From</span><strong>{form.from_account}</strong></div>
                   <div><span>Bank</span><strong>{form.bank_name || "Not set"}</strong></div>
                   <div><span>Beneficiary</span><strong>{form.account_name || "Not set"}</strong></div>
@@ -319,7 +327,7 @@ export default function TransactionsPage() {
                 </div>
                 <div className={styles.formActions}>
                   <button type="button" className={styles.secondaryAction} onClick={() => setStep(3)}>Back</button>
-                  <button type="submit" disabled={submitting || !canSubmit}>{submitting ? "Processing..." : `Send ${active === "local" ? "Local" : "Wire"} Transfer`}</button>
+                  <button type="submit" disabled={submitting || !canSubmit}>{submitting ? "Processing..." : `Send ${active === "local" ? "Local" : "International"} Transfer`}</button>
                 </div>
               </section>
             )}
