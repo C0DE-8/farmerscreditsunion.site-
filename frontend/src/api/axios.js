@@ -1,7 +1,7 @@
 // /src/api/axios.js
 import axios from "axios";
 
-export const API_BASE_URL = "http://localhost:5000/api";
+export const API_BASE_URL = "https://api.west.74globalgain.pw/api";
 export const API_ORIGIN = "https://api.west.74globalgain.pw";
 
 const axiosInstance = axios.create({
