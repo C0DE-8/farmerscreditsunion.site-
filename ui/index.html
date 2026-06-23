@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smartsupp Demo</title>
+    <style>
+      body {
+        min-height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f6f8fb;
+      }
+
+      .demo-panel {
+        max-width: 680px;
+        margin: 48px auto;
+        padding: 28px;
+        border-radius: 14px;
+        background: #ffffff;
+        box-shadow: 0 18px 50px rgba(15, 23, 42, 0.12);
+      }
+
+      .demo-panel h1 {
+        margin: 0 0 10px;
+        font-size: 24px;
+      }
+
+      .demo-panel p {
+        margin: 0;
+        color: #475569;
+        line-height: 1.5;
+      }
+
+      iframe[src*="smartsupp"],
+      iframe[title*="Smartsupp"],
+      iframe[title*="chat"] {
+        clip-path: inset(0 0 42px 0) !important;
+        bottom: 96px !important;
+        right: 24px !important;
+      }
+
+      .wb-chat-powered-cover {
+        position: fixed;
+        z-index: 2147483647;
+        width: 376px;
+        height: 42px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: #ffffff;
+        color: #111827;
+        font: 600 12px/1.2 Arial, sans-serif;
+        text-decoration: none;
+        box-shadow: 0 -1px 0 rgba(15, 23, 42, 0.08);
+      }
+
+      .wb-chat-drag-handle {
+        position: fixed;
+        z-index: 2147483647;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 72px;
+        height: 28px;
+        border: 0;
+        border-radius: 999px;
+        background: #111827;
+        color: #ffffff;
+        cursor: grab;
+        font: 700 11px/1 Arial, sans-serif;
+        user-select: none;
+        touch-action: none;
+      }
+
+      .wb-chat-drag-handle:active {
+        cursor: grabbing;
+      }
+
+      @media (max-width: 640px) {
+        iframe[src*="smartsupp"],
+        iframe[title*="Smartsupp"],
+        iframe[title*="chat"] {
+          bottom: 132px !important;
+          right: 10px !important;
+        }
+
+        .wb-chat-powered-cover {
+          width: min(376px, calc(100vw - 20px));
+        }
+      }
+    </style>
+</head>
+<body>
+  <main class="demo-panel">
+    <h1>Smartsupp footer demo</h1>
+    <p>Open the chat in the bottom-right corner. This page tests the CSS method for hiding the powered-by strip and replacing the click target with a local # link.</p>
+  </main>
+
+<!-- Live Chat script -->
+<script type="text/javascript">
+var _smartsupp = _smartsupp || {};
+_smartsupp.key = '9b56fa3303342809cc8f392ba7cf0468d0866750';
+window.smartsupp||(function(d) {
+  var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
+  s=d.getElementsByTagName('script')[0];c=d.createElement('script');
+  c.type='text/javascript';c.charset='utf-8';c.async=true;
+  c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
+})(document);
+</script>
+<noscript>Powered by <a href="#" target="_blank">west brige</a></noscript>
+<script>
+(function () {
+  var cover;
+  var handle;
+  var drag = null;
+  var saved = null;
+  var storageKey = "wb_smartsupp_position_demo";
+
+  try {
+    saved = JSON.parse(localStorage.getItem(storageKey) || "null");
+  } catch (error) {
+    saved = null;
+  }
+
+  function getChatFrames() {
+    return Array.prototype.slice.call(document.querySelectorAll('iframe[src*="smartsupp"], iframe[title*="Smartsupp"], iframe[title*="chat"]')).filter(function (frame) {
+      var rect = frame.getBoundingClientRect();
+      var style = window.getComputedStyle(frame);
+      return style.display !== "none" && style.visibility !== "hidden" && rect.width > 40 && rect.height > 40;
+    });
+  }
+
+  function getOpenFrame() {
+    return getChatFrames().filter(function (frame) {
+      var rect = frame.getBoundingClientRect();
+      return rect.width >= 260 && rect.height >= 300;
+    }).sort(function (a, b) {
+      var ar = a.getBoundingClientRect();
+      var br = b.getBoundingClientRect();
+      return br.width * br.height - ar.width * ar.height;
+    })[0] || null;
+  }
+
+  function ensureControls() {
+    if (!cover) {
+      cover = document.createElement("a");
+      cover.className = "wb-chat-powered-cover";
+      cover.href = "#";
+      cover.target = "_blank";
+      cover.textContent = "west brige";
+      cover.addEventListener("click", function (event) {
+        event.preventDefault();
+      });
+      document.body.appendChild(cover);
+    }
+
+    if (!handle) {
+      handle = document.createElement("button");
+      handle.className = "wb-chat-drag-handle";
+      handle.type = "button";
+      handle.textContent = "MOVE";
+      handle.addEventListener("pointerdown", startDrag);
+      document.body.appendChild(handle);
+    }
+  }
+
+  function setFramePosition(frame, left, top) {
+    frame.style.setProperty("left", left + "px", "important");
+    frame.style.setProperty("top", top + "px", "important");
+    frame.style.setProperty("right", "auto", "important");
+    frame.style.setProperty("bottom", "auto", "important");
+    frame.style.setProperty("transform", "none", "important");
+  }
+
+  function clampPosition(left, top, width, height) {
+    return {
+      left: Math.max(8, Math.min(left, window.innerWidth - width - 8)),
+      top: Math.max(8, Math.min(top, window.innerHeight - height - 8)),
+    };
+  }
+
+  function applySavedPosition() {
+    if (!saved) return;
+    getChatFrames().forEach(function (frame) {
+      var rect = frame.getBoundingClientRect();
+      var pos = clampPosition(saved.left, saved.top, rect.width, rect.height);
+      setFramePosition(frame, pos.left, pos.top);
+    });
+  }
+
+  function startDrag(event) {
+    var frame = getOpenFrame();
+    if (!frame) return;
+
+    var rect = frame.getBoundingClientRect();
+    drag = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      left: rect.left,
+      top: rect.top,
+      width: rect.width,
+      height: rect.height,
+    };
+    handle.setPointerCapture(event.pointerId);
+    event.preventDefault();
+  }
+
+  function moveDrag(event) {
+    if (!drag) return;
+
+    var pos = clampPosition(drag.left + event.clientX - drag.startX, drag.top + event.clientY - drag.startY, drag.width, drag.height);
+    saved = pos;
+    localStorage.setItem(storageKey, JSON.stringify(saved));
+    applySavedPosition();
+    syncControls();
+  }
+
+  function stopDrag() {
+    drag = null;
+  }
+
+  function syncControls() {
+    ensureControls();
+    applySavedPosition();
+
+    var frame = getOpenFrame();
+    if (!frame) {
+      cover.style.display = "none";
+      handle.style.display = "none";
+      return;
+    }
+
+    var rect = frame.getBoundingClientRect();
+    var coverHeight = 42;
+    cover.style.display = "flex";
+    cover.style.left = Math.max(0, rect.left) + "px";
+    cover.style.top = Math.max(0, rect.bottom - coverHeight) + "px";
+    cover.style.width = Math.min(rect.width, window.innerWidth - Math.max(0, rect.left)) + "px";
+
+    handle.style.display = "flex";
+    handle.style.left = Math.max(8, Math.min(rect.left + rect.width - 82, window.innerWidth - 82)) + "px";
+    handle.style.top = Math.max(8, rect.top - 34) + "px";
+  }
+
+  window.addEventListener("pointermove", moveDrag);
+  window.addEventListener("pointerup", stopDrag);
+  window.addEventListener("resize", syncControls);
+  setInterval(syncControls, 350);
+})();
+</script>
+</body>
+</html>

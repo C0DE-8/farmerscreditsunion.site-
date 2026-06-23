@@ -561,6 +561,22 @@ body {
   font-size: 12px;
 }
 
+.phoneField {
+  display: grid;
+  grid-template-columns: minmax(132px, 0.92fr) minmax(0, 1.08fr);
+  gap: 8px;
+}
+
+.phoneField input,
+.phoneField select {
+  min-width: 0;
+}
+
+.countryCodeSelect {
+  padding-right: 10px !important;
+  font-size: 13px !important;
+}
+
 .inputGroup input::placeholder {
   color: #9ca3af;
 }
@@ -1078,6 +1094,10 @@ body {
 
   .formGrid,
   .uploadGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .phoneField {
     grid-template-columns: 1fr;
   }
 

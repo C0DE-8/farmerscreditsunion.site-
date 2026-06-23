@@ -18,6 +18,7 @@ const emptyRegistration = {
   date_of_birth: "",
   work_id: "",
   id_type: "passport",
+  phone_country_code: "+1",
   phone: "",
   address: "",
   email: "",
@@ -37,6 +38,38 @@ const emptyPreviews = {
   id_back: "",
   face_photo: "",
 };
+
+const phoneCountryCodes = [
+  { code: "+1", country: "United States" },
+  { code: "+1", country: "Canada" },
+  { code: "+44", country: "United Kingdom" },
+  { code: "+61", country: "Australia" },
+  { code: "+234", country: "Nigeria" },
+  { code: "+233", country: "Ghana" },
+  { code: "+27", country: "South Africa" },
+  { code: "+254", country: "Kenya" },
+  { code: "+91", country: "India" },
+  { code: "+92", country: "Pakistan" },
+  { code: "+880", country: "Bangladesh" },
+  { code: "+971", country: "United Arab Emirates" },
+  { code: "+49", country: "Germany" },
+  { code: "+33", country: "France" },
+  { code: "+39", country: "Italy" },
+  { code: "+34", country: "Spain" },
+  { code: "+31", country: "Netherlands" },
+  { code: "+52", country: "Mexico" },
+  { code: "+55", country: "Brazil" },
+  { code: "+86", country: "China" },
+  { code: "+81", country: "Japan" },
+  { code: "+82", country: "South Korea" },
+];
+
+function formatPhoneForSubmit(countryCode, phone) {
+  const cleanPhone = String(phone || "").trim();
+  if (!cleanPhone) return "";
+  if (cleanPhone.startsWith("+")) return cleanPhone;
+  return `${countryCode || "+1"} ${cleanPhone}`;
+}
 
 const dataUrlToFile = (dataUrl, filename) => {
   const [meta, content] = dataUrl.split(",");
@@ -149,7 +182,9 @@ export default function Login() {
   }, [isAdminAuth, location.search]);
 
   useEffect(() => {
-    const { password, confirm_password, ...safeRegistration } = registration;
+    const safeRegistration = { ...registration };
+    delete safeRegistration.password;
+    delete safeRegistration.confirm_password;
     const documents = {};
 
     Object.entries(filePreviews).forEach(([key, dataUrl]) => {
@@ -372,7 +407,14 @@ export default function Login() {
 
     const payload = new FormData();
     Object.entries(registration).forEach(([key, value]) => {
-      if (key !== "confirm_password" && key !== "date_of_birth") payload.append(key, value);
+      if (key === "phone") {
+        payload.append("phone", formatPhoneForSubmit(registration.phone_country_code, value));
+        return;
+      }
+
+      if (key !== "confirm_password" && key !== "date_of_birth" && key !== "phone_country_code") {
+        payload.append(key, value);
+      }
     });
 
     Object.entries(registrationFiles).forEach(([key, file]) => {
@@ -616,7 +658,29 @@ export default function Login() {
                       </div>
                       <div className={styles.inputGroup}>
                         <label>Phone</label>
-                        <input name="phone" value={registration.phone} onChange={handleRegistrationChange} />
+                        <div className={styles.phoneField}>
+                          <select
+                            className={styles.countryCodeSelect}
+                            name="phone_country_code"
+                            value={registration.phone_country_code}
+                            onChange={handleRegistrationChange}
+                            aria-label="Phone country code"
+                          >
+                            {phoneCountryCodes.map((item) => (
+                              <option key={`${item.country}-${item.code}`} value={item.code}>
+                                {item.country} {item.code}
+                              </option>
+                            ))}
+                          </select>
+                          <input
+                            name="phone"
+                            value={registration.phone}
+                            onChange={handleRegistrationChange}
+                            inputMode="tel"
+                            autoComplete="tel-national"
+                            placeholder="Phone number"
+                          />
+                        </div>
                       </div>
                       <div className={`${styles.inputGroup} ${styles.fullWidth}`}>
                         <label>Residential address</label>

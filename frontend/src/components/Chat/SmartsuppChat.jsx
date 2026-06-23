@@ -15,7 +15,7 @@ function setChatVisibility(visible) {
   document.documentElement.classList.toggle("smartsupp-chat-hidden", !visible);
 }
 
-function ensureChatOffsetStyles() {
+function ensureChatStyles() {
   if (document.getElementById("smartsupp-chat-offset-styles")) return;
 
   const style = document.createElement("style");
@@ -73,6 +73,7 @@ function ensureChatOffsetStyles() {
       [id*="smartsupp"],
       [class*="smartsupp"] {
         bottom: var(--wb-smartsupp-mobile-bottom) !important;
+        right: 10px !important;
       }
     }
   `;
@@ -87,21 +88,21 @@ function isLikelyChatWidget(element) {
 
   const style = window.getComputedStyle(element);
   const rect = element.getBoundingClientRect();
-  const fixedNearMobileFooter =
+  return (
     style.position === "fixed" &&
     Number.parseInt(style.zIndex || "0", 10) > 1000 &&
-    rect.width <= 420 &&
-    rect.height <= 720 &&
-    rect.right > window.innerWidth - 180 &&
-    rect.bottom > window.innerHeight - 180;
-
-  return fixedNearMobileFooter;
+    rect.width <= 460 &&
+    rect.height <= 760 &&
+    rect.right > window.innerWidth - 220 &&
+    rect.bottom > window.innerHeight - 240
+  );
 }
 
 function applyChatMobilePosition() {
   if (window.innerWidth > 980) return;
 
   const bottom = window.innerWidth <= 420 ? "204px" : "190px";
+  const right = window.innerWidth <= 420 ? "10px" : "14px";
   const selectors = [
     'iframe[src*="smartsupp"]',
     'iframe[title*="Smartsupp"]',
@@ -120,17 +121,34 @@ function applyChatMobilePosition() {
     if (!isLikelyChatWidget(element)) return;
 
     element.style.setProperty("bottom", bottom, "important");
-    element.style.setProperty("right", "14px", "important");
+    element.style.setProperty("right", right, "important");
     element.style.setProperty("margin-bottom", "0", "important");
     element.style.setProperty("transform", "none", "important");
-
-    if (element.parentElement && isLikelyChatWidget(element.parentElement)) {
-      element.parentElement.style.setProperty("bottom", bottom, "important");
-      element.parentElement.style.setProperty("right", "14px", "important");
-      element.parentElement.style.setProperty("margin-bottom", "0", "important");
-      element.parentElement.style.setProperty("transform", "none", "important");
-    }
   });
+}
+
+function isSmartsuppLink(anchor) {
+  const href = anchor.getAttribute("href") || "";
+  const label = `${anchor.textContent || ""} ${anchor.getAttribute("aria-label") || ""} ${anchor.getAttribute("title") || ""}`;
+
+  return /smartsupp|smartsuppchat/i.test(`${href} ${label}`);
+}
+
+function sanitizeSmartsuppLinks(root = document) {
+  root.querySelectorAll?.('a[href*="smartsupp" i], a[href*="smartsuppchat" i]').forEach((anchor) => {
+    anchor.setAttribute("href", "#");
+    anchor.removeAttribute("target");
+    anchor.removeAttribute("rel");
+  });
+}
+
+function blockSmartsuppLinkClick(event) {
+  const anchor = event.target instanceof Element ? event.target.closest("a[href]") : null;
+  if (!anchor || !isSmartsuppLink(anchor)) return;
+
+  anchor.setAttribute("href", "#");
+  event.preventDefault();
+  event.stopPropagation();
 }
 
 export default function SmartsuppChat() {
@@ -139,9 +157,11 @@ export default function SmartsuppChat() {
   useEffect(() => {
     const allowed = routeAllowsChat(location.pathname);
     setChatVisibility(allowed);
-    ensureChatOffsetStyles();
+    ensureChatStyles();
 
-    if (!allowed) return undefined;
+    if (!allowed) {
+      return undefined;
+    }
 
     window._smartsupp = window._smartsupp || {};
     window._smartsupp.key = SMARTSUPP_CONFIG.key;
@@ -168,21 +188,28 @@ export default function SmartsuppChat() {
       window.smartsupp("chat:show");
     }
 
-    applyChatMobilePosition();
-    const interval = window.setInterval(applyChatMobilePosition, 700);
-    const observer = new MutationObserver(applyChatMobilePosition);
+    const syncChatWidget = () => {
+      applyChatMobilePosition();
+      sanitizeSmartsuppLinks();
+    };
+
+    syncChatWidget();
+    const interval = window.setInterval(syncChatWidget, 700);
+    const observer = new MutationObserver(syncChatWidget);
     observer.observe(document.body, {
       childList: true,
       subtree: true,
       attributes: true,
-      attributeFilter: ["style", "class", "id"],
+      attributeFilter: ["style", "class", "id", "src", "title"],
     });
-    window.addEventListener("resize", applyChatMobilePosition);
+    window.addEventListener("resize", syncChatWidget);
+    document.addEventListener("click", blockSmartsuppLinkClick, true);
 
     return () => {
       window.clearInterval(interval);
       observer.disconnect();
-      window.removeEventListener("resize", applyChatMobilePosition);
+      window.removeEventListener("resize", syncChatWidget);
+      document.removeEventListener("click", blockSmartsuppLinkClick, true);
     };
   }, [location.pathname]);
 
