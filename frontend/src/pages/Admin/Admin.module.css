@@ -476,7 +476,8 @@
 }
 
 .field input,
-.field select {
+.field select,
+.field textarea {
   width: 100%;
   min-height: 46px;
   border-radius: 14px;
@@ -490,10 +491,18 @@
 }
 
 .field input:focus,
-.field select:focus {
+.field select:focus,
+.field textarea:focus {
   border-color: rgba(185, 28, 28, 0.38);
   box-shadow: 0 0 0 4px rgba(185, 28, 28, 0.08);
   transform: translateY(-1px);
+}
+
+.field textarea {
+  min-height: 220px;
+  resize: vertical;
+  padding: 14px;
+  line-height: 1.6;
 }
 
 .fieldFull {
@@ -511,6 +520,24 @@
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+
+.mailerStatus {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card-bg) 86%, transparent);
+  margin-bottom: 16px;
+}
+
+.mailerStatus strong {
+  color: var(--text-soft);
+  font-size: 13px;
+  overflow-wrap: anywhere;
 }
 
 .transferControlGrid {

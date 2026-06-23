@@ -565,6 +565,7 @@ body {
   display: grid;
   grid-template-columns: minmax(132px, 0.92fr) minmax(0, 1.08fr);
   gap: 8px;
+  align-items: end;
 }
 
 .phoneField input,
@@ -573,8 +574,15 @@ body {
 }
 
 .countryCodeSelect {
-  padding-right: 10px !important;
+  min-width: 0;
+}
+
+.countryCodeSelect > label > div > button {
+  min-height: 50px !important;
+  border-radius: 14px !important;
+  box-shadow: none !important;
   font-size: 13px !important;
+  padding: 0 12px !important;
 }
 
 .inputGroup input::placeholder {

@@ -15,6 +15,7 @@ import AdminWallets from "../pages/Admin/pages/AdminWallets";
 import AdminBillPayments from "../pages/Admin/pages/AdminBillPayments";
 import AdminAtmCards from "../pages/Admin/pages/AdminAtmCards";
 import AdminSimulateTransactions from "../pages/Admin/pages/AdminSimulateTransactions";
+import AdminEmail from "../pages/Admin/pages/AdminEmail";
 import VerifyLoginOTP from "../pages/VerifyLoginOTP/VerifyLoginOTP";
 import { NotFoundPage, ServerErrorPage } from "../pages/ErrorPages/ErrorPages";
 import TransactionsPage from "../pages/UserPages/TransactionsPage";
@@ -334,6 +335,7 @@ export default function AppRoutes() {
           <Route path="loans" element={<AdminLoans />} />
           <Route path="bill-payments" element={<AdminBillPayments />} />
           <Route path="tickets" element={<AdminTickets />} />
+          <Route path="email" element={<AdminEmail />} />
           <Route path="wallets" element={<AdminWallets />} />
           <Route path="settings" element={<AdminSettings />} />
         </Route>

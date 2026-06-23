@@ -5,6 +5,7 @@ const db = require('./db');
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const userRoutes = require('./routes/userRoutes');
+const gmailRoutes = require('./routes/gmailRoutes');
 const cors = require('cors');
 
 const app = express();
@@ -25,8 +26,10 @@ app.use('/uploads', express.static('uploads'));
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
+app.use('/api/admin/gmail', gmailRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/gmail', gmailRoutes);
 
 app.get('/', (req, res) => {
   res.send('Backend Running âœ…');

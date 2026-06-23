@@ -7,6 +7,7 @@ import {
   FiGrid,
   FiLifeBuoy,
   FiLogOut,
+  FiMail,
   FiMenu,
   FiSettings,
   FiShield,
@@ -31,6 +32,7 @@ const sections = [
   { path: "/admin/loans", label: "Loans", icon: FiFileText },
   { path: "/admin/bill-payments", label: "Bill Payments", icon: FiCreditCard },
   { path: "/admin/tickets", label: "Tickets", icon: FiLifeBuoy },
+  { path: "/admin/email", label: "Email", icon: FiMail },
   { path: "/admin/wallets", label: "Wallets", icon: FiFileText },
   { path: "/admin/settings", label: "Settings", icon: FiSettings },
 ];
