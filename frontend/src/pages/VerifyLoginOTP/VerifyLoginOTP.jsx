@@ -5,7 +5,7 @@ import LanguageSwitcher from "../../components/ui/LanguageSwitcher";
 import LogoPreloader from "../../components/ui/LogoPreloader";
 import styles from "./VerifyLoginOTP.module.css";
 
-const BRAND_LOGO = "/westbridge-assets/images/westbridge.png";
+const BRAND_LOGO = "/style-two/temp/custom/img/logo.png";
 
 export default function VerifyLoginOTP() {
   const navigate = useNavigate();

@@ -19,7 +19,7 @@ import GlassToast, { useGlassToast } from "../../components/Toast/GlassToast";
 import { useAuth } from "../../context/AuthContext";
 import styles from "./Admin.module.css";
 
-const BRAND_LOGO = "/westbridge-assets/images/favicon-wg.png";
+const BRAND_LOGO = "/style-two/temp/custom/img/logo.png";
 
 const sections = [
   { path: "/admin", label: "Overview", end: true, icon: FiGrid },

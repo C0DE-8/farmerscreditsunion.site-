@@ -874,7 +874,7 @@
   inset: 8px;
   border-radius: inherit;
   background:
-    url("/westbridge-assets/images/favicon-wg.png") center / 52px 52px no-repeat,
+    url("/style-two/temp/custom/img/logo.png") center / 52px 52px no-repeat,
     rgba(255, 255, 255, 0.96);
   animation: logoPulseSoft 1.28s ease-in-out infinite;
 }

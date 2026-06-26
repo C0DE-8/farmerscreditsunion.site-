@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { FiAlertTriangle, FiArrowLeft, FiHome, FiShield } from "react-icons/fi";
 import styles from "./ErrorPages.module.css";
 
-const BRAND_LOGO = "/westbridge-assets/images/westbridge.png";
+const BRAND_LOGO = "/style-two/temp/custom/img/logo.png";
 
 function ErrorLayout({ code, title, description, tone = "warn" }) {
   return (

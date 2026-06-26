@@ -9,7 +9,7 @@ import LogoPreloader from "../../components/ui/LogoPreloader";
 import styles from "./Login.module.css";
 
 const ONBOARDING_DRAFT_KEY = "stercxa_onboarding_draft";
-const BRAND_LOGO = "/westbridge-assets/images/westbridge.png";
+const BRAND_LOGO = "/style-two/temp/custom/img/logo.png";
 
 const emptyRegistration = {
   first_name: "",

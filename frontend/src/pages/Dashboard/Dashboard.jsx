@@ -28,7 +28,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { resolveAsset } from "../../utils/assets";
 
-const BRAND_LOGO = "/westbridge-assets/images/favicon-wg.png";
+const BRAND_LOGO = "/style-two/temp/custom/img/logo.png";
 const DEFAULT_BANK_NAME = "West Bridge Vault Reserve";
 
 export default function Dashboard() {
@@ -74,7 +74,7 @@ export default function Dashboard() {
 
   const formatMoney = (value) =>
     `${currencySign}${Number(value || 0).toLocaleString(undefined, {
-      minimumFractionDigits: 0,
+      minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })}`;
   const displayMoney = (value) => (balanceVisible ? formatMoney(value) : "******");
