@@ -219,8 +219,8 @@ li{
 }
 
 :root {
-  --main-color-one: #f12711;
-  --main-color-two: #015eea;
+  --main-color-one: #d9911f;
+  --main-color-two: #0f7f4f;
 }
 
 /* Spacing */
@@ -2106,7 +2106,7 @@ table tr td, th{
 }
 
 .service-item h5 a:hover{
-	color: var(--main-color-one);	
+	color: var(--main-color-one);
 }
 
 .service-right i{
@@ -2769,7 +2769,7 @@ table tr td, th{
 }
 
 .download-info a:hover{
-	background: var(--main-color-one);	
+	background: var(--main-color-one);
 }
 
 .download-info a i, .download-info a span{

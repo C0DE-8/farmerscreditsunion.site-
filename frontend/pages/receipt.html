@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Transfer Receipt - bencbonki bank</title>
+  <title>Transfer Receipt - Farmers Credits Union</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="../api.js"></script>
@@ -12,9 +12,9 @@
       theme: {
         extend: {
           colors: {
-            primary: "#1e3a8a",
-            secondary: "#3b82f6",
-            accent: "#60a5fa",
+            primary: "#14532d",
+            secondary: "#16a34a",
+            accent: "#f4c542",
             dark: "#0f172a",
             light: "#f8fafc",
           },
@@ -100,12 +100,12 @@
   </style>
 </head>
 
-<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+<body class="bg-gradient-to-br from-slate-50 to-green-50 min-h-screen">
   <nav class="bg-white/80 backdrop-blur-md border-b border-gray-200 print-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center">
-          <h1 class="text-xl md:text-2xl font-bold text-primary">bencbonki bank</h1>
+          <h1 class="text-xl md:text-2xl font-bold text-primary">Farmers Credits Union</h1>
         </div>
         <div class="flex items-center space-x-4">
           <img id="userAvatar" src="/placeholder.svg" alt="User" class="w-8 h-8 rounded-full border-2 border-primary hidden" />
@@ -120,17 +120,17 @@
 
   <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12">
     <div class="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100 relative paper-bg">
-      <div class="wm">bencbonki bank</div>
+      <div class="wm">Farmers Credits Union</div>
 
       <!-- HEADER -->
-      <div class="bg-gradient-to-r from-primary via-blue-700 to-secondary p-6 md:p-8 print:bg-primary relative">
+      <div class="bg-gradient-to-r from-primary via-green-800 to-secondary p-6 md:p-8 print:bg-primary relative">
         <div class="flex items-center justify-between mb-6">
           <div>
-            <h1 class="text-2xl md:text-3xl font-bold text-white mb-1">bencbonki bank</h1>
-            <p class="text-blue-100 text-sm">Official Wire Transfer Receipt</p>
+            <h1 class="text-2xl md:text-3xl font-bold text-white mb-1">Farmers Credits Union</h1>
+            <p class="text-green-100 text-sm">Official Wire Transfer Receipt</p>
           </div>
           <div class="text-right">
-            <div class="text-blue-100 text-xs mb-1">Receipt No.</div>
+            <div class="text-green-100 text-xs mb-1">Receipt No.</div>
             <div id="receiptNumber" class="text-white font-mono font-bold text-sm md:text-base">-</div>
           </div>
         </div>
@@ -144,7 +144,7 @@
             </div>
             <div>
               <h2 id="headlineText" class="text-xl md:text-2xl font-bold text-white">Transfer Submitted</h2>
-              <p id="headlineSub" class="text-blue-100 text-sm">Your wire transfer has been submitted successfully</p>
+              <p id="headlineSub" class="text-green-100 text-sm">Your wire transfer has been submitted successfully</p>
 
               <div class="mt-3">
                 <div id="statusBadge" class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold">
@@ -168,7 +168,7 @@
       <!-- BODY -->
       <div class="p-6 md:p-8 relative">
         <!-- Profile/Holder -->
-        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 md:p-6 mb-6 border border-blue-100 print-break-avoid">
+        <div class="bg-gradient-to-br from-green-50 to-green-50 rounded-xl p-4 md:p-6 mb-6 border border-green-100 print-break-avoid">
           <div class="flex items-center space-x-4">
             <img id="profileImage" src="/placeholder.svg" alt="Profile" class="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-white shadow-lg hidden" />
             <div class="flex-1">
@@ -176,14 +176,14 @@
               <div id="accountHolder" class="text-lg md:text-xl font-bold text-gray-900 mb-1">-</div>
               <div class="flex flex-wrap gap-3 text-xs md:text-sm text-gray-600">
                 <div class="flex items-center">
-                  <svg class="w-4 h-4 mr-1 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-4 h-4 mr-1 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                   </svg>
                   <span id="userAccountNumber">-</span>
                 </div>
                 <div class="flex items-center">
-                  <svg class="w-4 h-4 mr-1 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-4 h-4 mr-1 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                   </svg>
@@ -319,13 +319,13 @@
         </div>
 
         <!-- Status info box -->
-        <div id="statusInfoBox" class="mt-6 bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4 print-break-avoid">
+        <div id="statusInfoBox" class="mt-6 bg-green-50 border-l-4 border-green-600 rounded-lg p-4 print-break-avoid">
           <div class="flex items-start">
-            <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 text-green-700 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <div class="text-sm text-blue-900">
+            <div class="text-sm text-green-950">
               <p class="font-semibold mb-1">Processing Status</p>
               <p id="statusMessage">Your transfer is being processed. Please check back later for updates.</p>
             </div>
@@ -335,9 +335,9 @@
         <!-- Footer -->
         <div class="border-t-2 border-dashed border-gray-300 pt-4 mt-6">
           <div class="text-center text-xs text-gray-500 space-y-1">
-            <p class="font-semibold text-gray-700">bencbonki bank - Trusted Banking Since 1995</p>
-            <p>This is an official receipt from bencbonki bank</p>
-            <p>For inquiries, bencbonki bank support@bencbonkibank.com</p>
+            <p class="font-semibold text-gray-700">Farmers Credits Union - Trusted Banking Since 1995</p>
+            <p>This is an official receipt from Farmers Credits Union</p>
+            <p>For inquiries, Farmers Credits Union support@farmerscreditsunion.com</p>
             <p class="text-xs text-gray-400 mt-2">All transactions are secured with 256-bit encryption</p>
           </div>
         </div>
@@ -360,11 +360,11 @@
             Print Receipt
           </button>
 
-          <a href="transactions-history.html" class="flex-1 bg-secondary text-white py-3 px-4 rounded-lg hover:bg-blue-600 transition-colors font-semibold text-center shadow-md">
+          <a href="transactions-history.html" class="flex-1 bg-secondary text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors font-semibold text-center shadow-md">
             View Transactions
           </a>
 
-          <a href="dashboard.html" class="flex-1 bg-primary text-white py-3 px-4 rounded-lg hover:bg-blue-900 transition-colors font-semibold text-center shadow-md">
+          <a href="dashboard.html" class="flex-1 bg-primary text-white py-3 px-4 rounded-lg hover:bg-green-900 transition-colors font-semibold text-center shadow-md">
             Dashboard
           </a>
         </div>
@@ -497,15 +497,15 @@
         statusIconPath.setAttribute("d", "M6 18L18 6M6 6l12 12");
 
       } else {
-        statusBadge.classList.add("bg-blue-100", "text-blue-800");
-        statusDot.classList.add("bg-blue-500");
+        statusBadge.classList.add("bg-green-100", "text-green-900");
+        statusDot.classList.add("bg-green-600");
         statusText.textContent = "Pending";
-        statusDetail.innerHTML = '<span class="text-blue-700 font-semibold">Pending</span>';
+        statusDetail.innerHTML = '<span class="text-green-800 font-semibold">Pending</span>';
 
         headlineText.textContent = "Transfer Submitted";
         headlineSub.textContent = "Your transfer is being processed.";
 
-        statusInfoBox.classList.add("bg-blue-50", "border-blue-500");
+        statusInfoBox.classList.add("bg-green-50", "border-green-600");
         statusMessage.textContent =
           "Your transfer is being processed. Please check back later for updates.";
       }

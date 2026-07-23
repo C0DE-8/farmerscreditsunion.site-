@@ -14,12 +14,12 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center space-x-8">
-                    <h1 class="text-2xl font-bold text-blue-600 dark:text-blue-400">SecureBank Admin</h1>
+                    <h1 class="text-2xl font-bold text-green-700 dark:text-green-400">Farmers Credits Union Admin</h1>
                     <div class="hidden md:flex space-x-1">
                         <a href="admin-dashboard.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">Dashboard</a>
                         <a href="user-management.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">Users</a>
                         <a href="transfer-management.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">Transfers</a>
-                        <a href="atm-management.html" class="px-4 py-2 text-white bg-blue-600 dark:bg-blue-500 rounded-lg font-medium transition-colors">ATM</a>
+                        <a href="atm-management.html" class="px-4 py-2 text-white bg-green-700 dark:bg-green-600 rounded-lg font-medium transition-colors">ATM</a>
                         <a href="simulate-transactions.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">Simulate</a>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                 <a href="admin-dashboard.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">Dashboard</a>
                 <a href="user-management.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">Users</a>
                 <a href="transfer-management.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">Transfers</a>
-                <a href="atm-management.html" class="block px-4 py-2 text-white bg-blue-600 dark:bg-blue-500 rounded-lg">ATM</a>
+                <a href="atm-management.html" class="block px-4 py-2 text-white bg-green-700 dark:bg-green-600 rounded-lg">ATM</a>
                 <a href="simulate-transactions.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">Simulate</a>
                 <button id="mobileLogoutBtn" class="w-full text-left px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg">Logout</button>
             </div>
@@ -65,14 +65,14 @@
             <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">ATM Card Fee Management</h2>
             
             <!-- Display current fees -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-900">
                 <div>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Current Account Card Fee</p>
-                    <p class="text-2xl font-bold text-blue-600 dark:text-blue-400" id="currentFeeDisplay">Loading...</p>
+                    <p class="text-2xl font-bold text-green-700 dark:text-green-400" id="currentFeeDisplay">Loading...</p>
                 </div>
                 <div>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Savings Account Card Fee</p>
-                    <p class="text-2xl font-bold text-blue-600 dark:text-blue-400" id="savingsFeeDisplay">Loading...</p>
+                    <p class="text-2xl font-bold text-green-700 dark:text-green-400" id="savingsFeeDisplay">Loading...</p>
                 </div>
             </div>
             
@@ -81,8 +81,8 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Current Account Card Fee</label>
                         <div class="flex gap-2">
-                            <input type="number" id="currentFee" step="0.01" placeholder="0.00" class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
-                            <button onclick="setCardFee('current')" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+                            <input type="number" id="currentFee" step="0.01" placeholder="0.00" class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-600 dark:bg-gray-700 dark:text-white">
+                            <button onclick="setCardFee('current')" class="px-6 py-2 bg-green-700 hover:bg-green-800 text-white rounded-lg font-medium transition-colors">
                                 Set Fee
                             </button>
                         </div>
@@ -93,8 +93,8 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Savings Account Card Fee</label>
                         <div class="flex gap-2">
-                            <input type="number" id="savingsFee" step="0.01" placeholder="0.00" class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
-                            <button onclick="setCardFee('savings')" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+                            <input type="number" id="savingsFee" step="0.01" placeholder="0.00" class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-600 dark:bg-gray-700 dark:text-white">
+                            <button onclick="setCardFee('savings')" class="px-6 py-2 bg-green-700 hover:bg-green-800 text-white rounded-lg font-medium transition-colors">
                                 Set Fee
                             </button>
                         </div>
@@ -109,12 +109,12 @@
                 <h2 class="text-xl font-bold text-gray-900 dark:text-white">ATM Card Requests</h2>
                 
                 <div class="flex gap-2">
-                    <select id="statusFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                    <select id="statusFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-600 dark:bg-gray-700 dark:text-white">
                         <option value="">All Status</option>
                         <option value="pending">Pending</option>
                         <option value="approved">Approved</option>
                     </select>
-                    <button onclick="loadATMCards()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+                    <button onclick="loadATMCards()" class="px-4 py-2 bg-green-700 hover:bg-green-800 text-white rounded-lg font-medium transition-colors">
                         Refresh
                     </button>
                 </div>
@@ -187,7 +187,7 @@
             const colors = {
                 success: 'bg-green-500',
                 error: 'bg-red-500',
-                info: 'bg-blue-500',
+                info: 'bg-green-600',
                 warning: 'bg-yellow-500'
             };
             

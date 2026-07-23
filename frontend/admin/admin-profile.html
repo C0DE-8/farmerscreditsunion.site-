@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Profile - SecureBank</title>
+  <title>Admin Profile - Farmers Credits Union</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -16,9 +16,9 @@
       theme: {
         extend: {
           colors: {
-            primary: "#1e3a8a",
-            secondary: "#3b82f6",
-            accent: "#60a5fa",
+            primary: "#14532d",
+            secondary: "#16a34a",
+            accent: "#f4c542",
             dark: "#0f172a",
             light: "#f8fafc",
           },
@@ -34,7 +34,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center space-x-8">
-          <h1 class="text-xl sm:text-2xl font-bold text-primary dark:text-blue-400">SecureBank Admin</h1>
+          <h1 class="text-xl sm:text-2xl font-bold text-primary dark:text-green-400">Farmers Credits Union Admin</h1>
 
           <div class="hidden md:flex space-x-1">
             <a href="admin-dashboard.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">Dashboard</a>
@@ -47,7 +47,7 @@
             <a href="admin-deposits.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">Deposits</a>
 
             <!-- current page highlight -->
-            <a href="admin-profile.html" class="px-4 py-2 text-white bg-primary dark:bg-blue-600 rounded-lg font-medium transition-colors">Profile</a>
+            <a href="admin-profile.html" class="px-4 py-2 text-white bg-primary dark:bg-green-700 rounded-lg font-medium transition-colors">Profile</a>
           </div>
         </div>
 
@@ -94,7 +94,7 @@
         <a href="admin-wallets.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium">Wallets</a>
         <a href="admin-tickets.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium">Tickets</a>
         <a href="admin-deposits.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium">Deposits</a>
-        <a href="admin-profile.html" class="block px-4 py-2 text-white bg-primary dark:bg-blue-600 rounded-lg font-medium">Profile</a>
+        <a href="admin-profile.html" class="block px-4 py-2 text-white bg-primary dark:bg-green-700 rounded-lg font-medium">Profile</a>
 
         <div class="pt-2 border-t border-gray-200 dark:border-gray-700">
           <p class="px-4 py-1 text-sm font-medium text-gray-900 dark:text-gray-100" id="adminNameMobile">Admin User</p>
@@ -137,7 +137,7 @@
             <div class="mt-2 flex flex-wrap gap-2">
               <span id="badgeStatus" class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">status: —</span>
               <span id="badgeVerified" class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">email: —</span>
-              <span class="px-2 py-1 text-xs rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">admin</span>
+              <span class="px-2 py-1 text-xs rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">admin</span>
             </div>
           </div>
         </div>
@@ -234,7 +234,7 @@
             </div>
 
             <div class="md:col-span-2 flex flex-wrap gap-3 pt-2">
-              <button type="submit" id="saveProfileBtn" class="px-5 py-2 rounded-lg bg-primary dark:bg-blue-600 text-white font-medium hover:opacity-90">
+              <button type="submit" id="saveProfileBtn" class="px-5 py-2 rounded-lg bg-primary dark:bg-green-700 text-white font-medium hover:opacity-90">
                 Save Changes
               </button>
               <button type="button" id="resetFormBtn" class="px-5 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-medium hover:opacity-90">

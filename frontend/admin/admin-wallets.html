@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wallet Management - SecureBank Admin</title>
+    <title>Wallet Management - Farmers Credits Union Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="../api.js"></script>
@@ -13,9 +13,9 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#1e3a8a',
-                        secondary: '#3b82f6',
-                        accent: '#60a5fa',
+                        primary: '#14532d',
+                        secondary: '#16a34a',
+                        accent: '#f4c542',
                         dark: '#0f172a',
                         light: '#f8fafc',
                     }
@@ -34,10 +34,10 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center space-x-8">
-                    <h1 class="text-xl sm:text-2xl font-bold text-primary dark:text-blue-400">SecureBank Admin</h1>
+                    <h1 class="text-xl sm:text-2xl font-bold text-primary dark:text-green-400">Farmers Credits Union Admin</h1>
                     <div class="hidden md:flex space-x-1">
                         <a href="admin-dashboard.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">Dashboard</a>
-                        <a href="admin-wallets.html" class="px-4 py-2 text-white bg-primary dark:bg-blue-600 rounded-lg font-medium transition-colors">Wallets</a>
+                        <a href="admin-wallets.html" class="px-4 py-2 text-white bg-primary dark:bg-green-700 rounded-lg font-medium transition-colors">Wallets</a>
                         <a href="admin-tickets.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">Tickets</a>
                         <a href="admin-deposits.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">Deposits</a>
                     </div>
@@ -68,7 +68,7 @@
         <div id="mobileMenu" class="hidden md:hidden border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
             <div class="px-4 py-3 space-y-2">
                 <a href="admin-dashboard.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium">Dashboard</a>
-                <a href="admin-wallets.html" class="block px-4 py-2 text-white bg-primary dark:bg-blue-600 rounded-lg font-medium">Wallets</a>
+                <a href="admin-wallets.html" class="block px-4 py-2 text-white bg-primary dark:bg-green-700 rounded-lg font-medium">Wallets</a>
                 <a href="admin-tickets.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium">Tickets</a>
                 <a href="admin-deposits.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium">Deposits</a>
                 <div class="pt-2 border-t border-gray-200 dark:border-gray-700">
@@ -96,18 +96,18 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Wallet Name</label>
-                        <input type="text" id="walletName" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., Bitcoin Wallet">
+                        <input type="text" id="walletName" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-600 focus:border-transparent" placeholder="e.g., Bitcoin Wallet">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Wallet Address</label>
-                        <input type="text" id="walletAddress" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter wallet address">
+                        <input type="text" id="walletAddress" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-600 focus:border-transparent" placeholder="Enter wallet address">
                     </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">QR Code Image</label>
-                    <input type="file" id="qrcodeFile" accept="image/*" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <input type="file" id="qrcodeFile" accept="image/*" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-600 focus:border-transparent">
                 </div>
-                <button type="submit" id="addWalletBtn" class="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
+                <button type="submit" id="addWalletBtn" class="w-full md:w-auto px-6 py-2 bg-green-700 hover:bg-green-800 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
                     <span>Add Wallet</span>
                     <svg class="w-5 h-5 hidden animate-spin" id="addWalletSpinner" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -124,7 +124,7 @@
             </div>
             <div id="walletsContainer" class="p-6">
                 <div class="flex justify-center py-8">
-                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-700"></div>
                 </div>
             </div>
         </div>
@@ -146,18 +146,18 @@
                 <input type="hidden" id="editWalletId">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Wallet Name</label>
-                    <input type="text" id="editWalletName" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <input type="text" id="editWalletName" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-600 focus:border-transparent">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Wallet Address</label>
-                    <input type="text" id="editWalletAddress" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <input type="text" id="editWalletAddress" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-600 focus:border-transparent">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">QR Code Image (optional - leave empty to keep current)</label>
-                    <input type="file" id="editQrcodeFile" accept="image/*" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <input type="file" id="editQrcodeFile" accept="image/*" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-600 focus:border-transparent">
                 </div>
                 <div class="flex gap-3 pt-4">
-                    <button type="submit" id="updateWalletBtn" class="flex-1 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
+                    <button type="submit" id="updateWalletBtn" class="flex-1 px-6 py-2 bg-green-700 hover:bg-green-800 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
                         <span>Update Wallet</span>
                         <svg class="w-5 h-5 hidden animate-spin" id="updateWalletSpinner" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -263,7 +263,7 @@
                                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-1 break-all">${wallet.wallet_address}</p>
                                 <p class="text-xs text-gray-500 dark:text-gray-500 mb-4">${new Date(wallet.created_at).toLocaleDateString()}</p>
                                 <div class="flex gap-2">
-                                    <button onclick="openEditModal(${wallet.id}, '${wallet.wallet_name}', '${wallet.wallet_address}')" class="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
+                                    <button onclick="openEditModal(${wallet.id}, '${wallet.wallet_name}', '${wallet.wallet_address}')" class="flex-1 px-4 py-2 bg-green-700 hover:bg-green-800 text-white rounded-lg text-sm font-medium transition-colors">
                                         Edit
                                     </button>
                                     <button onclick="deleteWallet(${wallet.id})" class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors">

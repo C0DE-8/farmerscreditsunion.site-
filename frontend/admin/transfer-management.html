@@ -13,7 +13,7 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#1e3a8a',
+                        primary: '#14532d',
                     },
                     keyframes: {
                         shimmer: {
@@ -47,11 +47,11 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center space-x-8">
-                    <h1 class="text-2xl font-bold text-primary dark:text-blue-400">SecureBank Admin</h1>
+                    <h1 class="text-2xl font-bold text-primary dark:text-green-400">Farmers Credits Union Admin</h1>
                     <div class="hidden md:flex space-x-1">
                         <a href="admin-dashboard.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">Dashboard</a>
                         <a href="user-management.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">Users</a>
-                        <a href="transfer-management.html" class="px-4 py-2 text-white bg-primary dark:bg-blue-600 rounded-lg font-medium transition-colors">Transfers</a>
+                        <a href="transfer-management.html" class="px-4 py-2 text-white bg-primary dark:bg-green-700 rounded-lg font-medium transition-colors">Transfers</a>
                         <a href="atm-management.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">ATM</a>
                         <a href="simulate-transactions.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">Simulate</a>
                     </div>
@@ -84,7 +84,7 @@
             <div class="px-4 py-3 space-y-2">
                 <a href="admin-dashboard.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">Dashboard</a>
                 <a href="user-management.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">Users</a>
-                <a href="transfer-management.html" class="block px-4 py-2 text-white bg-primary dark:bg-blue-600 rounded-lg">Transfers</a>
+                <a href="transfer-management.html" class="block px-4 py-2 text-white bg-primary dark:bg-green-700 rounded-lg">Transfers</a>
                 <a href="atm-management.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">ATM</a>
                 <a href="simulate-transactions.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">Simulate</a>
                 <button id="mobileLogoutBtn" class="w-full text-left px-4 py-2 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">Logout</button>
@@ -110,7 +110,7 @@
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" id="toggleAllCodes" class="sr-only peer" onchange="toggleAllSecurityCodes()">
-                        <div class="w-14 h-7 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                        <div class="w-14 h-7 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-green-700"></div>
                     </label>
                 </div>
 
@@ -124,7 +124,7 @@
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" id="requireImf" class="sr-only peer" onchange="toggleIndividualCode('imf')">
-                            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-700"></div>
                         </label>
                     </div>
 
@@ -136,7 +136,7 @@
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" id="requireCot" class="sr-only peer" onchange="toggleIndividualCode('cot')">
-                            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-700"></div>
                         </label>
                     </div>
 
@@ -148,7 +148,7 @@
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" id="requireTax" class="sr-only peer" onchange="toggleIndividualCode('tax')">
-                            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-700"></div>
                         </label>
                     </div>
                 </div>
@@ -163,14 +163,14 @@
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Local Transfer Fee</h3>
                     <!-- Added current fee display -->
                     <div class="mb-3">
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Current Fee: <span id="currentLocalFee" class="font-semibold text-blue-600 dark:text-blue-400">Loading...</span></p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Current Fee: <span id="currentLocalFee" class="font-semibold text-green-700 dark:text-green-400">Loading...</span></p>
                     </div>
                     <div class="flex items-end space-x-4">
                         <div class="flex-1">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fee Amount ($)</label>
-                            <input type="number" id="localFee" step="0.01" min="0" placeholder="0.00" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <input type="number" id="localFee" step="0.01" min="0" placeholder="0.00" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-green-600">
                         </div>
-                        <button onclick="setTransferFee('local')" class="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                        <button onclick="setTransferFee('local')" class="px-6 py-2 bg-green-700 text-white rounded-lg font-semibold hover:bg-green-800 transition-colors">
                             Set Fee
                         </button>
                     </div>
@@ -180,14 +180,14 @@
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Wire Transfer Fee</h3>
                     <!-- Added current fee display -->
                     <div class="mb-3">
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Current Fee: <span id="currentWireFee" class="font-semibold text-blue-600 dark:text-blue-400">Loading...</span></p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Current Fee: <span id="currentWireFee" class="font-semibold text-green-700 dark:text-green-400">Loading...</span></p>
                     </div>
                     <div class="flex items-end space-x-4">
                         <div class="flex-1">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fee Amount ($)</label>
-                            <input type="number" id="wireFee" step="0.01" min="0" placeholder="0.00" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <input type="number" id="wireFee" step="0.01" min="0" placeholder="0.00" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-green-600">
                         </div>
-                        <button onclick="setTransferFee('wire')" class="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                        <button onclick="setTransferFee('wire')" class="px-6 py-2 bg-green-700 text-white rounded-lg font-semibold hover:bg-green-800 transition-colors">
                             Set Fee
                         </button>
                     </div>
@@ -200,27 +200,27 @@
                 <h2 class="text-xl font-bold text-gray-900 dark:text-white">All Transfers</h2>
                 
                 <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
-                    <select id="statusFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <select id="statusFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-green-600">
                         <option value="">All Status</option>
                         <option value="processing">Processing</option>
                         <option value="completed">Completed</option>
                         <option value="failed">Failed</option>
                     </select>
                     
-                    <select id="typeFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <select id="typeFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-green-600">
                         <option value="">All Types</option>
                         <option value="local">Local</option>
                         <option value="wire">Wire</option>
                     </select>
                     
                     <!-- Added age filter for new/old transfers -->
-                    <select id="ageFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <select id="ageFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-green-600">
                         <option value="">All Transfers</option>
                         <option value="new">New (24h)</option>
                         <option value="old">Older</option>
                     </select>
                     
-                    <button onclick="loadTransfers()" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                    <button onclick="loadTransfers()" class="px-4 py-2 bg-green-700 text-white rounded-lg font-semibold hover:bg-green-800 transition-colors">
                         Refresh
                     </button>
                 </div>
@@ -233,7 +233,7 @@
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Bank</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Farmers Credits Union</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Fee</th>
                             <!-- Added Age column -->
@@ -304,7 +304,7 @@
 
             <div class="mb-6">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">New Status</label>
-                <select id="newStatus" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500">
+                <select id="newStatus" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-green-600">
                     <option value="processing">Processing</option>
                     <option value="completed">Completed</option>
                     <option value="failed">Failed</option>
@@ -315,7 +315,7 @@
                 <button onclick="closeStatusModal()" class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                     Cancel
                 </button>
-                <button onclick="updateTransferStatus()" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                <button onclick="updateTransferStatus()" class="flex-1 px-4 py-2 bg-green-700 text-white rounded-lg font-semibold hover:bg-green-800 transition-colors">
                     Update Status
                 </button>
             </div>
@@ -368,7 +368,7 @@
             const colors = {
                 success: 'bg-green-500',
                 error: 'bg-red-500',
-                info: 'bg-blue-500',
+                info: 'bg-green-600',
                 warning: 'bg-yellow-500'
             };
             
@@ -540,7 +540,7 @@
 
                 const isNew = isNewTransfer(t.date);
                 const ageLabel = isNew ? 'NEW' : 'OLD';
-                const ageBadgeColor = isNew ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+                const ageBadgeColor = isNew ? 'bg-green-100 text-green-900 dark:bg-green-900 dark:text-green-200' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
 
                 const formattedAmount = formatNumber(t.amount.replace('$', ''));
                 const formattedFee = formatNumber(t.fee.replace('$', ''));
@@ -553,7 +553,7 @@
                             <div class="text-gray-500 dark:text-gray-400 text-xs">${t.email}</div>
                         </td>
                         <td class="px-4 py-3 text-sm">
-                            <span class="px-2 py-1 text-xs font-semibold rounded-full ${t.type === 'wire' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'}">
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full ${t.type === 'wire' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' : 'bg-green-100 text-green-900 dark:bg-green-900 dark:text-green-200'}">
                                 ${t.type.toUpperCase()}
                             </span>
                         </td>
@@ -575,7 +575,7 @@
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">${t.date}</td>
                         <td class="px-4 py-3 text-sm">
-                            <button onclick="openStatusModal(${t.id}, '${t.status}')" class="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors">
+                            <button onclick="openStatusModal(${t.id}, '${t.status}')" class="px-3 py-1 bg-green-700 text-white text-xs rounded hover:bg-green-800 transition-colors">
                                 Update
                             </button>
                         </td>
@@ -616,7 +616,7 @@
                 pagesHTML += `
                     <button 
                         onclick="goToPage(${i})" 
-                        class="px-4 py-2 border ${i === currentPage ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'} rounded-lg transition-colors"
+                        class="px-4 py-2 border ${i === currentPage ? 'bg-green-700 text-white border-green-700' : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'} rounded-lg transition-colors"
                     >
                         ${i}
                     </button>

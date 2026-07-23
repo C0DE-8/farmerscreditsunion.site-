@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Local Transfer - bencbonki bank</title>
+  <title>Local Transfer - Farmers Credits Union</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="../api.js"></script>
@@ -12,9 +12,9 @@
       theme: {
         extend: {
           colors: {
-            primary: "#1e3a8a",
-            secondary: "#3b82f6",
-            accent: "#60a5fa",
+            primary: "#14532d",
+            secondary: "#16a34a",
+            accent: "#f4c542",
             dark: "#0f172a",
             light: "#f8fafc",
           },
@@ -36,7 +36,7 @@
       border: 1px solid rgba(30, 58, 138, 0.2);
     }
     .loader-overlay {
-      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+      background: linear-gradient(135deg, #14532d 0%, #16a34a 100%);
     }
     .progress-bar { transition: width 0.3s ease-out; }
     @keyframes pulse-glow {
@@ -54,12 +54,12 @@
   </style>
 </head>
 
-<body class="bg-gradient-to-br from-blue-50 via-white to-blue-50 min-h-screen">
+<body class="bg-gradient-to-br from-green-50 via-white to-green-50 min-h-screen">
   <nav class="glass sticky top-0 z-50 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center">
-          <h1 class="text-2xl font-bold text-primary">bencbonki bank</h1>
+          <h1 class="text-2xl font-bold text-primary">Farmers Credits Union</h1>
           <div class="hidden md:block ml-10">
             <div class="flex items-baseline space-x-6">
               <a href="dashboard.html" class="text-gray-700 hover:text-primary transition-colors">Dashboard</a>
@@ -86,7 +86,7 @@
         </div>
         <div class="flex space-x-3">
           <a href="dashboard.html" class="glass px-4 md:px-6 py-2 rounded-lg hover:bg-white/80 transition-all font-medium text-sm md:text-base text-gray-700">Back</a>
-          <a href="transactions-history.html" class="bg-secondary text-white px-4 md:px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors font-medium text-sm md:text-base shadow-lg">View History</a>
+          <a href="transactions-history.html" class="bg-secondary text-white px-4 md:px-6 py-2 rounded-lg hover:bg-green-700 transition-colors font-medium text-sm md:text-base shadow-lg">View History</a>
         </div>
       </div>
     </div>
@@ -185,7 +185,7 @@
         </div>
 
         <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
-          <button type="submit" class="flex-1 bg-primary text-white py-3 rounded-lg hover:bg-blue-900 transition-colors font-medium shadow-lg">
+          <button type="submit" class="flex-1 bg-primary text-white py-3 rounded-lg hover:bg-green-900 transition-colors font-medium shadow-lg">
             Continue
           </button>
           <a href="dashboard.html" class="flex-1 glass py-3 rounded-lg hover:bg-white/80 transition-all font-medium text-center text-gray-700">
@@ -224,7 +224,7 @@
       </div>
 
       <div class="mt-5 flex gap-3">
-        <button id="mmPrimaryBtn" class="flex-1 bg-primary text-white py-3 rounded-lg hover:bg-blue-900 transition-colors font-medium shadow-lg">
+        <button id="mmPrimaryBtn" class="flex-1 bg-primary text-white py-3 rounded-lg hover:bg-green-900 transition-colors font-medium shadow-lg">
           Okay
         </button>
         <button id="mmSecondaryBtn" class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-lg hover:bg-gray-200 transition-colors font-medium hidden">
@@ -247,13 +247,13 @@
       </div>
 
       <div class="space-y-4">
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
           <div class="flex items-start">
-            <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 text-green-700 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
             </svg>
-            <div class="text-sm text-blue-800">
+            <div class="text-sm text-green-900">
               <p class="font-medium">Enter your 6-digit transaction PIN to continue.</p>
             </div>
           </div>
@@ -267,7 +267,7 @@
         </div>
 
         <div class="flex space-x-3 pt-4">
-          <button id="confirmPinBtn" class="flex-1 bg-primary text-white py-3 rounded-lg hover:bg-blue-900 transition-colors font-medium shadow-lg">
+          <button id="confirmPinBtn" class="flex-1 bg-primary text-white py-3 rounded-lg hover:bg-green-900 transition-colors font-medium shadow-lg">
             Confirm
           </button>
           <button id="cancelPinModal" class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-lg hover:bg-gray-200 transition-colors font-medium">
@@ -290,7 +290,7 @@
         </button>
       </div>
 
-      <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-4">
+      <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
         <p class="text-sm text-indigo-900 font-medium">We sent a verification code to your email. Enter it to confirm this transfer.</p>
         <p class="text-xs text-indigo-700 mt-1" id="otpMetaText">Transfer ID: —</p>
       </div>
@@ -305,7 +305,7 @@
         </div>
 
         <div class="flex space-x-3">
-          <button id="verifyOtpBtn" class="flex-1 bg-primary text-white py-3 rounded-lg hover:bg-blue-900 transition-colors font-medium shadow-lg">
+          <button id="verifyOtpBtn" class="flex-1 bg-primary text-white py-3 rounded-lg hover:bg-green-900 transition-colors font-medium shadow-lg">
             Verify
           </button>
           <button id="resendOtpBtn" class="flex-1 bg-gray-100 text-gray-800 py-3 rounded-lg hover:bg-gray-200 transition-colors font-medium">
@@ -331,7 +331,7 @@
       </div>
 
       <h3 class="text-2xl font-bold text-white mb-2">Processing Transfer</h3>
-      <p id="loaderStatus" class="text-blue-100 mb-8">Initializing secure connection...</p>
+      <p id="loaderStatus" class="text-green-100 mb-8">Initializing secure connection...</p>
 
       <div class="bg-white/20 rounded-full h-3 overflow-hidden backdrop-blur-sm mb-3">
         <div id="progressBar" class="progress-bar bg-white h-full rounded-full shadow-lg" style="width: 0%"></div>
@@ -421,8 +421,8 @@
         mmIcon.className = "w-5 h-5 text-green-600";
         mmIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>';
       } else if (type === "info") {
-        mmIconWrap.className = "w-10 h-10 rounded-full flex items-center justify-center bg-blue-50 border border-blue-200";
-        mmIcon.className = "w-5 h-5 text-blue-600";
+        mmIconWrap.className = "w-10 h-10 rounded-full flex items-center justify-center bg-green-50 border border-green-200";
+        mmIcon.className = "w-5 h-5 text-green-700";
         mmIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>';
       } else {
         mmIconWrap.className = "w-10 h-10 rounded-full flex items-center justify-center bg-red-50 border border-red-200";

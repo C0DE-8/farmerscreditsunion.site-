@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deposit Management - SecureBank Admin</title>
+    <title>Deposit Management - Farmers Credits Union Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="../api.js"></script>
@@ -13,9 +13,9 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#1e3a8a',
-                        secondary: '#3b82f6',
-                        accent: '#60a5fa',
+                        primary: '#14532d',
+                        secondary: '#16a34a',
+                        accent: '#f4c542',
                         dark: '#0f172a',
                         light: '#f8fafc',
                     }
@@ -33,12 +33,12 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center space-x-8">
-                    <h1 class="text-xl sm:text-2xl font-bold text-primary dark:text-blue-400">SecureBank Admin</h1>
+                    <h1 class="text-xl sm:text-2xl font-bold text-primary dark:text-green-400">Farmers Credits Union Admin</h1>
                     <div class="hidden md:flex space-x-1">
                         <a href="admin-dashboard.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">Dashboard</a>
                         <a href="admin-wallets.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">Wallets</a>
                         <a href="admin-tickets.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">Tickets</a>
-                        <a href="admin-deposits.html" class="px-4 py-2 text-white bg-primary dark:bg-blue-600 rounded-lg font-medium transition-colors">Deposits</a>
+                        <a href="admin-deposits.html" class="px-4 py-2 text-white bg-primary dark:bg-green-700 rounded-lg font-medium transition-colors">Deposits</a>
                     </div>
                 </div>
                 <div class="flex items-center space-x-2 sm:space-x-4">
@@ -69,7 +69,7 @@
                 <a href="admin-dashboard.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium">Dashboard</a>
                 <a href="admin-wallets.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium">Wallets</a>
                 <a href="admin-tickets.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium">Tickets</a>
-                <a href="admin-deposits.html" class="block px-4 py-2 text-white bg-primary dark:bg-blue-600 rounded-lg font-medium">Deposits</a>
+                <a href="admin-deposits.html" class="block px-4 py-2 text-white bg-primary dark:bg-green-700 rounded-lg font-medium">Deposits</a>
                 <div class="pt-2 border-t border-gray-200 dark:border-gray-700">
                     <button id="logoutButtonMobile" class="w-full px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg font-medium transition-colors text-sm">
                         Logout
@@ -90,7 +90,7 @@
 
  
         <div class="mb-6 flex gap-2 flex-wrap">
-            <button onclick="filterDeposits('all')" class="filter-btn px-4 py-2 rounded-lg font-medium transition-colors bg-blue-600 text-white" data-filter="all">
+            <button onclick="filterDeposits('all')" class="filter-btn px-4 py-2 rounded-lg font-medium transition-colors bg-green-700 text-white" data-filter="all">
                 All Deposits
             </button>
             <button onclick="filterDeposits('pending')" class="filter-btn px-4 py-2 rounded-lg font-medium transition-colors bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300" data-filter="pending">
@@ -108,7 +108,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
             <div id="depositsContainer" class="p-6">
                 <div class="flex justify-center py-8">
-                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-700"></div>
                 </div>
             </div>
         </div>
@@ -222,7 +222,7 @@
             
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 if (btn.dataset.filter === filter) {
-                    btn.className = 'filter-btn px-4 py-2 rounded-lg font-medium transition-colors bg-blue-600 text-white';
+                    btn.className = 'filter-btn px-4 py-2 rounded-lg font-medium transition-colors bg-green-700 text-white';
                 } else {
                     btn.className = 'filter-btn px-4 py-2 rounded-lg font-medium transition-colors bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300';
                 }

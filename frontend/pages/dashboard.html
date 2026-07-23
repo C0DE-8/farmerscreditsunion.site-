@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - bencbonki bank</title>
+    <title>Dashboard - Farmers Credits Union</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="../api.js"></script>
@@ -12,9 +12,9 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#1e3a8a',
-                        secondary: '#3b82f6',
-                        accent: '#60a5fa',
+                        primary: '#14532d',
+                        secondary: '#16a34a',
+                        accent: '#f4c542',
                         dark: '#0f172a',
                         light: '#f8fafc',
                     }
@@ -60,7 +60,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
-                    <h1 class="text-2xl font-bold text-primary">bencbonki bank</h1>
+                    <h1 class="text-2xl font-bold text-primary">Farmers Credits Union</h1>
                     <div class="hidden lg:block ml-10">
                         <div class="flex items-baseline space-x-4">
                             <a href="dashboard.html" class="text-primary font-medium border-b-2 border-primary pb-1 px-3 py-2">Dashboard</a>
@@ -122,7 +122,7 @@
         </div>
         <div id="mobileMenu" class="hidden lg:hidden border-t border-gray-200 bg-white">
             <div class="px-4 py-3 space-y-2">
-                <a href="dashboard.html" class="block text-primary font-medium px-3 py-2 rounded-md bg-blue-50">Dashboard</a>
+                <a href="dashboard.html" class="block text-primary font-medium px-3 py-2 rounded-md bg-green-50">Dashboard</a>
                 <a href="wire-transfer.html" class="block text-gray-700 hover:bg-gray-50 px-3 py-2 rounded-md">Wire Transfer</a>
                 <a href="local-transfer.html" class="block text-gray-700 hover:bg-gray-50 px-3 py-2 rounded-md">Local Transfer</a>
                 <a href="self-transfer.html" class="block text-gray-700 hover:bg-gray-50 px-3 py-2 rounded-md">Self Transfer</a>
@@ -139,7 +139,7 @@
         </div>
 
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <div class="relative bg-gradient-to-br from-primary via-blue-800 to-blue-900 rounded-2xl p-6 text-white shadow-2xl overflow-hidden backdrop-blur-xl cursor-pointer" id="totalBalanceCard">
+            <div class="relative bg-gradient-to-br from-primary via-green-900 to-green-950 rounded-2xl p-6 text-white shadow-2xl overflow-hidden backdrop-blur-xl cursor-pointer" id="totalBalanceCard">
                 <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
                 <div class="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-20 -mt-20"></div>
                 <div class="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full -ml-16 -mb-16"></div>
@@ -147,8 +147,8 @@
                 <div class="relative z-10">
                     <div class="flex justify-between items-start mb-6">
                         <div>
-                            <p class="text-blue-100 text-sm mb-1 font-medium">Total Balance</p>
-                            <p class="text-xs text-blue-200">All Accounts • Click to toggle</p>
+                            <p class="text-green-100 text-sm mb-1 font-medium">Total Balance</p>
+                            <p class="text-xs text-green-200">All Accounts • Click to toggle</p>
                         </div>
                         <svg class="w-10 h-10 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -160,14 +160,14 @@
                         </p>
                         <div class="flex items-center space-x-4 mt-4 text-sm">
                             <div>
-                                <p class="text-blue-200 text-xs">Checking</p>
+                                <p class="text-green-200 text-xs">Checking</p>
                                 <p class="font-semibold" id="currentBalance">
                                     <span class="skeleton-loader" style="width: 100px; height: 20px;"></span>
                                 </p>
                             </div>
                             <div class="h-8 w-px bg-white/30"></div>
                             <div>
-                                <p class="text-blue-200 text-xs">Savings</p>
+                                <p class="text-green-200 text-xs">Savings</p>
                                 <p class="font-semibold" id="savingsBalance">
                                     <span class="skeleton-loader" style="width: 100px; height: 20px;"></span>
                                 </p>
@@ -233,7 +233,7 @@
                     <a href="deposit.html" class="block w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors font-medium text-sm text-center">
                         Deposit Funds
                     </a>
-                    <a href="wire-transfer.html" class="block w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-900 transition-colors font-medium text-sm text-center">
+                    <a href="wire-transfer.html" class="block w-full bg-primary text-white py-3 rounded-lg hover:bg-green-900 transition-colors font-medium text-sm text-center">
                         Wire Transfer
                     </a>
                     <a href="local-transfer.html" class="block w-full bg-gray-100 text-gray-700 py-3 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm text-center">
@@ -296,11 +296,11 @@
 
         <div class="flex justify-center flex-wrap gap-3">
           <button id="statusSupportBtn"
-                  class="hidden px-4 py-2 rounded-lg bg-secondary text-white text-sm font-medium hover:bg-blue-700 transition-colors">
+                  class="hidden px-4 py-2 rounded-lg bg-secondary text-white text-sm font-medium hover:bg-green-800 transition-colors">
             Contact Support
           </button>
           <button id="statusContinueBtn"
-                  class="hidden px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-blue-900 transition-colors">
+                  class="hidden px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-green-900 transition-colors">
             OK, Continue
           </button>
           <button id="statusLogoutBtn"

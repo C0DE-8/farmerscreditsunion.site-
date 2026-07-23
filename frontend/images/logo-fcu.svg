@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 260" role="img" aria-labelledby="title desc">
+  <title id="title">Farmers Credits Union logo</title>
+  <desc id="desc">A green and gold farm-inspired financial mark beside the Farmers Credits Union name.</desc>
+  <defs>
+    <linearGradient id="leaf" x1="54" y1="38" x2="206" y2="214" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8cc63f"/>
+      <stop offset="1" stop-color="#0f7f4f"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="49" y1="198" x2="219" y2="90" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f4c542"/>
+      <stop offset="1" stop-color="#d9911f"/>
+    </linearGradient>
+  </defs>
+  <rect width="980" height="260" fill="none"/>
+  <g transform="translate(31 26)">
+    <circle cx="104" cy="104" r="102" fill="#f6fbf4"/>
+    <circle cx="104" cy="104" r="94" fill="none" stroke="#0f7f4f" stroke-width="10"/>
+    <path d="M104 31c31 35 48 69 48 101 0 33-19 58-48 58s-48-25-48-58c0-32 17-66 48-101z" fill="url(#leaf)"/>
+    <path d="M35 141c34-16 71-22 111-16 25 4 48 13 69 26-35 8-73 10-111 4-25-4-48-9-69-14z" fill="url(#gold)"/>
+    <path d="M104 65v127" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/>
+    <path d="M72 118c24 4 47 15 69 33" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
+  </g>
+  <g fill="#123b2a" font-family="Montserrat, Arial, sans-serif">
+    <text x="278" y="111" font-size="58" font-weight="800">Farmers</text>
+    <text x="278" y="178" font-size="58" font-weight="800">Credits Union</text>
+    <text x="280" y="219" font-size="24" font-weight="600" fill="#0f7f4f">Member-focused banking</text>
+  </g>
+</svg>

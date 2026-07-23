@@ -124,7 +124,7 @@
         }
         
         .toast-info {
-            background-color: #3b82f6;
+            background-color: #16a34a;
             color: white;
         }
         
@@ -207,10 +207,10 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center space-x-8">
-                    <h1 class="text-xl sm:text-2xl font-bold text-blue-600">SecureBank Admin</h1>
+                    <h1 class="text-xl sm:text-2xl font-bold text-green-700">Farmers Credits Union Admin</h1>
                     <div class="hidden md:flex space-x-1">
                         <a href="admin-dashboard.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">Dashboard</a>
-                        <a href="user-management.html" class="px-4 py-2 text-white bg-blue-600 rounded-lg font-medium">Users</a>
+                        <a href="user-management.html" class="px-4 py-2 text-white bg-green-700 rounded-lg font-medium">Users</a>
                         <a href="transfer-management.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">Transfers</a>
                         <a href="atm-management.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">ATM</a>
                         <a href="simulate-transactions.html" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors">Simulate</a>
@@ -243,7 +243,7 @@
         <div id="mobileMenu" class="md:hidden border-t border-gray-200 dark:border-gray-700">
             <div class="px-4 py-2 space-y-1">
                 <a href="admin-dashboard.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">Dashboard</a>
-                <a href="user-management.html" class="block px-4 py-2 text-white bg-blue-600 rounded-lg">Users</a>
+                <a href="user-management.html" class="block px-4 py-2 text-white bg-green-700 rounded-lg">Users</a>
                 <a href="transfer-management.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">Transfers</a>
                 <a href="atm-management.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">ATM</a>
                 <a href="simulate-transactions.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">Simulate</a>
@@ -274,18 +274,18 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-sm font-medium mb-2">IMF Code</label>
-                        <input type="text" id="imfCode" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="imfCode" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2">COT Code</label>
-                        <input type="text" id="cotCode" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="cotCode" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2">TAX Code</label>
-                        <input type="text" id="taxCode" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="taxCode" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
                     </div>
                 </div>
-                <button id="updateCodesBtn" class="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                <button id="updateCodesBtn" class="mt-4 px-6 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors">
                     Update Security Codes
                 </button>
             </div>
@@ -301,19 +301,19 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                <input type="text" id="searchInput" placeholder="Search users..." class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
-                <select id="statusFilter" class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                <input type="text" id="searchInput" placeholder="Search users..." class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
+                <select id="statusFilter" class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
                     <option value="">All Status</option>
                     <option value="active">Active</option>
                     <option value="hold">Hold</option>
                 </select>
-                <select id="sortBy" class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                <select id="sortBy" class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
                     <option value="id">Sort by ID</option>
                     <option value="full_name">Sort by Name</option>
                     <option value="email">Sort by Email</option>
                     <option value="current_balance">Sort by Balance</option>
                 </select>
-                <select id="sortDir" class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                <select id="sortDir" class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
                     <option value="desc">Descending</option>
                     <option value="asc">Ascending</option>
                 </select>
@@ -383,35 +383,35 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium mb-2">Full Name *</label>
-                        <input type="text" id="createFullName" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" required>
+                        <input type="text" id="createFullName" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600" required>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2">Username *</label>
-                        <input type="text" id="createUsername" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" required>
+                        <input type="text" id="createUsername" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600" required>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2">Email *</label>
-                        <input type="email" id="createEmail" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" required>
+                        <input type="email" id="createEmail" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600" required>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2">Password *</label>
-                        <input type="password" id="createPassword" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" required>
+                        <input type="password" id="createPassword" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600" required>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2">Currency Sign</label>
-                        <input type="text" id="createCurrency" value="$" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="createCurrency" value="$" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
                     </div>
                     <div class="flex items-center space-x-4">
                         <label class="flex items-center space-x-2">
-                            <input type="checkbox" id="createIsAdmin" class="w-4 h-4 text-blue-600 rounded">
+                            <input type="checkbox" id="createIsAdmin" class="w-4 h-4 text-green-700 rounded">
                             <span class="text-sm">Is Admin</span>
                         </label>
                         <label class="flex items-center space-x-2">
-                            <input type="checkbox" id="createEmailVerified" checked class="w-4 h-4 text-blue-600 rounded">
+                            <input type="checkbox" id="createEmailVerified" checked class="w-4 h-4 text-green-700 rounded">
                             <span class="text-sm">Email Verified</span>
                         </label>
                         <label class="flex items-center space-x-2">
-                            <input type="checkbox" id="createSendWelcome" checked class="w-4 h-4 text-blue-600 rounded">
+                            <input type="checkbox" id="createSendWelcome" checked class="w-4 h-4 text-green-700 rounded">
                             <span class="text-sm">Send Welcome Email</span>
                         </label>
                     </div>
@@ -434,7 +434,7 @@
                 <div class="mb-6 flex flex-col items-center">
                     <div class="relative">
                         <img id="editUserImage" src="icons/placeholder.png" alt="User" class="w-24 h-24 rounded-full object-cover border-4 border-gray-200 dark:border-gray-700">
-                        <label for="editImageInput" class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer hover:bg-blue-700 transition-colors">
+                        <label for="editImageInput" class="absolute bottom-0 right-0 bg-green-700 text-white p-2 rounded-full cursor-pointer hover:bg-green-800 transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -448,62 +448,62 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium mb-2">Full Name</label>
-                        <input type="text" id="editFullName" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="editFullName" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2">Username</label>
-                        <input type="text" id="editUsername" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="editUsername" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2">Email</label>
-                        <input type="email" id="editEmail" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="email" id="editEmail" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2">Currency Sign</label>
-                        <input type="text" id="editCurrency" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="editCurrency" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2">Account Status</label>
-                        <select id="editStatus" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <select id="editStatus" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
                             <option value="active">Active</option>
                             <option value="hold">Hold</option>
                         </select>
                     </div>
                     <div class="flex items-center">
                         <label class="flex items-center space-x-2">
-                            <input type="checkbox" id="editEmailVerified" class="w-4 h-4 text-blue-600 rounded">
+                            <input type="checkbox" id="editEmailVerified" class="w-4 h-4 text-green-700 rounded">
                             <span class="text-sm">Email Verified</span>
                         </label>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2">Current Balance</label>
-                        <input type="number" step="0.01" id="editCurrentBalance" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="number" step="0.01" id="editCurrentBalance" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2">Savings Balance</label>
-                        <input type="number" step="0.01" id="editSavingsBalance" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="number" step="0.01" id="editSavingsBalance" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2">Loan Balance</label>
-                        <input type="number" step="0.01" id="editLoanBalance" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="number" step="0.01" id="editLoanBalance" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2">Profile Image URL</label>
-                        <input type="text" id="editProfileImage" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" readonly>
+                        <input type="text" id="editProfileImage" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600" readonly>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2">Current Account Number</label>
-                        <input type="text" id="editCAccount" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="editCAccount" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2">Savings Account Number</label>
-                        <input type="text" id="editSAccount" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="editSAccount" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
                     </div>
                 </div>
             </div>
             <div class="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-end space-x-3">
                 <button id="cancelEditBtn" class="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">Cancel</button>
-                <button id="confirmEditBtn" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Save Changes</button>
+                <button id="confirmEditBtn" class="px-6 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors">Save Changes</button>
             </div>
         </div>
     </div>
@@ -740,7 +740,7 @@
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex flex-wrap gap-2">
-                            <button onclick="viewUser(${user.id})" class="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700">View</button>
+                            <button onclick="viewUser(${user.id})" class="px-3 py-1 text-xs bg-green-700 text-white rounded hover:bg-green-800">View</button>
                             <button onclick="editUser(${user.id})" class="px-3 py-1 text-xs bg-yellow-600 text-white rounded hover:bg-yellow-700">Edit</button>
                             <button onclick="impersonateUser(${user.id})" class="px-3 py-1 text-xs bg-purple-600 text-white rounded hover:bg-purple-700">Impersonate</button>
                             <button onclick="toggleOTP(${user.id})" class="px-3 py-1 text-xs bg-gray-600 text-white rounded hover:bg-gray-700">Toggle OTP</button>
@@ -768,7 +768,7 @@
             }
 
             for (let i = Math.max(1, page - 2); i <= Math.min(pages, page + 2); i++) {
-                buttons.innerHTML += `<button onclick="changePage(${i})" class="px-4 py-2 border ${i === page ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'} rounded-lg">${i}</button>`;
+                buttons.innerHTML += `<button onclick="changePage(${i})" class="px-4 py-2 border ${i === page ? 'bg-green-700 text-white border-green-700' : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'} rounded-lg">${i}</button>`;
             }
 
             if (page < pages) {

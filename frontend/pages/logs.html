@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activity Logs - bencbonki bank</title>
+    <title>Activity Logs - Farmers Credits Union</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="../api.js"></script>
@@ -12,9 +12,9 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#1e3a8a',
-                        secondary: '#3b82f6',
-                        accent: '#60a5fa',
+                        primary: '#14532d',
+                        secondary: '#16a34a',
+                        accent: '#f4c542',
                         dark: '#0f172a',
                         light: '#f8fafc',
                     }
@@ -29,7 +29,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
-                    <h1 class="text-2xl font-bold text-primary">bencbonki bank</h1>
+                    <h1 class="text-2xl font-bold text-primary">Farmers Credits Union</h1>
                     <div class="hidden lg:block ml-10">
                         <div class="flex items-baseline space-x-4">
                             <a href="dashboard.html" class="text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors px-3 py-2 rounded-md">Dashboard</a>
@@ -156,11 +156,11 @@
         function getActivityColor(type) {
             const colors = {
                 login: 'bg-green-500',
-                transfer: 'bg-blue-500',
+                transfer: 'bg-green-600',
                 atm_card_request: 'bg-purple-500',
                 set_pin: 'bg-yellow-500',
                 update_pin: 'bg-yellow-500',
-                profile_update: 'bg-indigo-500',
+                profile_update: 'bg-deep green',
                 default: 'bg-gray-500'
             };
             return colors[type] || colors.default;

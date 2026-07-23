@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Bank — Loading…</title>
-  <meta name="theme-color" content="#0b1220"/>
+  <title>Farmers Credits Union — Loading…</title>
+  <meta name="theme-color" content="#123b2a"/>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root{
       /* use your brand here; matches your gradient + glass preference */
-      --brand-start:#a855f7; /* fuchsia-500 */
-      --brand-end:#6366f1;   /* indigo-500 */
+      --brand-start:#8cc63f; /* leaf green */
+      --brand-end:#0f7f4f;   /* deep green */
     }
     .orb{ filter: blur(80px); opacity:.35; animation: float 18s ease-in-out infinite; }
     .orb:nth-child(2){ animation-delay: -9s; }
@@ -27,7 +27,7 @@
     }
   </style>
 </head>
-<body class="min-h-screen bg-[#0b1220] text-slate-100 relative overflow-hidden">
+<body class="min-h-screen bg-[#123b2a] text-slate-100 relative overflow-hidden">
 
   <!-- dreamy gradient + orbs -->
   <div class="pointer-events-none absolute inset-0">
@@ -35,7 +35,7 @@
     <div class="absolute -bottom-24 -right-24 w-[420px] h-[420px] rounded-full orb" style="background:radial-gradient(closest-side, var(--brand-end), transparent)"></div>
 
     <!-- soft diagonal gradient wash -->
-    <div class="absolute inset-0 bg-gradient-to-br from-[rgba(168,85,247,.08)] via-[rgba(99,102,241,.06)] to-transparent"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-[rgba(140,198,63,.10)] via-[rgba(15,127,79,.08)] to-transparent"></div>
   </div>
 
   <!-- CENTER: glass preloader card -->
@@ -44,9 +44,9 @@
       <!-- brand row -->
       <div class="flex items-center gap-3 mb-6">
         <div class="w-11 h-11 rounded-2xl grid place-items-center text-white font-extrabold"
-             style="background:linear-gradient(135deg,var(--brand-start),var(--brand-end))">B</div>
+             style="background:linear-gradient(135deg,var(--brand-start),var(--brand-end))">F</div>
         <div class="leading-tight">
-          <h1 class="text-xl font-extrabold tracking-tight">Bank</h1>
+          <h1 class="text-xl font-extrabold tracking-tight">Farmers Credits Union</h1>
           <p class="text-xs text-slate-300/90">Secure Access Gateway</p>
         </div>
       </div>
@@ -101,7 +101,7 @@
 
   <!-- subtle footer -->
   <footer class="absolute bottom-0 inset-x-0 p-4 text-center text-[11px] text-slate-400/80">
-    © <span id="y"></span> Bank. All rights reserved.
+    © <span id="y"></span> Farmers Credits Union. All rights reserved.
   </footer>
 
   <script>

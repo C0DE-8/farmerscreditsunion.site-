@@ -54,7 +54,7 @@
     }
     .toast.success { background-color: #10b981; color: white; }
     .toast.error   { background-color: #ef4444; color: white; }
-    .toast.info    { background-color: #3b82f6; color: white; }
+    .toast.info    { background-color: #16a34a; color: white; }
 
     /* =========================================================
        Mobile-friendly history (cards on small screens)
@@ -97,13 +97,13 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center space-x-8">
-          <h1 class="text-2xl font-bold text-blue-600">SecureBank Admin</h1>
+          <h1 class="text-2xl font-bold text-green-700">Farmers Credits Union Admin</h1>
           <div class="hidden md:flex space-x-1">
             <a href="admin-dashboard.html" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg font-medium transition-colors">Dashboard</a>
             <a href="user-management.html" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg font-medium transition-colors">Users</a>
             <a href="transfer-management.html" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg font-medium transition-colors">Transfers</a>
             <a href="atm-management.html" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg font-medium transition-colors">ATM</a>
-            <a href="simulate-transactions.html" class="px-4 py-2 text-white bg-blue-600 rounded-lg font-medium transition-colors">Simulate</a>
+            <a href="simulate-transactions.html" class="px-4 py-2 text-white bg-green-700 rounded-lg font-medium transition-colors">Simulate</a>
           </div>
         </div>
 
@@ -145,7 +145,7 @@
         <a href="user-management.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">Users</a>
         <a href="transfer-management.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">Transfers</a>
         <a href="atm-management.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">ATM</a>
-        <a href="simulate-transactions.html" class="block px-4 py-2 text-white bg-blue-600 rounded-lg">Simulate</a>
+        <a href="simulate-transactions.html" class="block px-4 py-2 text-white bg-green-700 rounded-lg">Simulate</a>
         <button id="mobileLogoutBtn" class="w-full text-left px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg">
           Logout
         </button>
@@ -168,7 +168,7 @@
               <input type="number" id="userId" required readonly
                 class="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed" />
               <button type="button" id="selectUserBtn"
-                class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors whitespace-nowrap">
+                class="px-4 py-2 bg-green-700 text-white rounded-lg font-medium hover:bg-green-800 transition-colors whitespace-nowrap">
                 Select User
               </button>
             </div>
@@ -178,7 +178,7 @@
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Transfer Type *</label>
             <select id="transferType" required
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600">
               <option value="local">Local Transfer</option>
               <option value="wire">Wire Transfer</option>
             </select>
@@ -187,7 +187,7 @@
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Direction *</label>
             <select id="direction" required
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600">
               <option value="credit">Credit (Add Money)</option>
               <option value="debit">Debit (Remove Money)</option>
             </select>
@@ -196,7 +196,7 @@
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">From Account *</label>
             <select id="fromAccount" required
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600">
               <option value="current">Current Account</option>
               <option value="savings">Savings Account</option>
             </select>
@@ -205,25 +205,25 @@
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Total Amount *</label>
             <input type="number" id="amount" step="0.01" required
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Start Date *</label>
             <input type="date" id="startDate" required
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">End Date</label>
             <input type="date" id="endDate"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Mode *</label>
             <select id="mode" required
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600">
               <option value="single">Single Transaction</option>
               <option value="daily">Daily (One per day)</option>
               <option value="count">Count (Spread evenly)</option>
@@ -233,12 +233,12 @@
           <div id="countField" class="hidden">
             <label class="block text-sm font-medium text-gray-700 mb-2">Number of Transactions</label>
             <input type="number" id="count" min="1" max="365"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
           </div>
 
           <div class="flex items-center">
             <input type="checkbox" id="applyToBalance"
-              class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+              class="w-4 h-4 text-green-700 border-gray-300 rounded focus:ring-green-600" />
             <label for="applyToBalance" class="ml-2 text-sm font-medium text-gray-700">Apply to User Balance</label>
           </div>
         </div>
@@ -249,25 +249,25 @@
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Bank Name</label>
               <input type="text" id="bankName"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Account Name</label>
               <input type="text" id="accountName"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Account Number</label>
               <input type="text" id="accountNumber"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Reason</label>
               <input type="text" id="reason"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
             </div>
           </div>
         </div>
@@ -278,37 +278,37 @@
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Bank Country</label>
               <input type="text" id="bankCountry"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Routing Number</label>
               <input type="text" id="routineNumber"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">IMF Code</label>
               <input type="text" id="imfCode"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">COT Code</label>
               <input type="text" id="cotCode"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">TAX Code</label>
               <input type="text" id="taxCode"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
             </div>
           </div>
         </div>
 
         <button type="submit" id="simulateBtn"
-          class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+          class="w-full bg-green-700 text-white py-3 rounded-lg font-semibold hover:bg-green-800 transition-colors">
           Simulate Transactions
         </button>
       </form>
@@ -323,7 +323,7 @@
           <input type="number" id="historyUserId" readonly placeholder="Select User"
             class="px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed" />
           <button id="selectHistoryUserBtn"
-            class="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors whitespace-nowrap">
+            class="px-6 py-2 bg-green-700 text-white rounded-lg font-medium hover:bg-green-800 transition-colors whitespace-nowrap">
             Select User
           </button>
           <button id="loadHistoryBtn"
@@ -335,7 +335,7 @@
 
       <div class="mb-4 flex gap-2">
         <button id="showLocalBtn"
-          class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
+          class="px-4 py-2 bg-green-700 text-white rounded-lg font-medium hover:bg-green-800 transition-colors">
           Local Transfers
         </button>
         <button id="showWireBtn"
@@ -364,7 +364,7 @@
           </button>
         </div>
         <input type="text" id="userSearch" placeholder="Search by name, email, or account number..."
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
       </div>
 
       <div id="userList" class="p-6 overflow-y-auto max-h-[60vh]">
@@ -409,7 +409,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Transfer Type</label>
-              <select id="edit_transfer_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+              <select id="edit_transfer_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600">
                 <option value="local">local</option>
                 <option value="wire">wire</option>
               </select>
@@ -417,7 +417,7 @@
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">From Account</label>
-              <select id="edit_from_account" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+              <select id="edit_from_account" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600">
                 <option value="current">current</option>
                 <option value="savings">savings</option>
               </select>
@@ -425,37 +425,37 @@
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Bank Name</label>
-              <input id="edit_bank_name" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              <input id="edit_bank_name" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Account Name</label>
-              <input id="edit_account_name" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              <input id="edit_account_name" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Account Number</label>
-              <input id="edit_account_number" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              <input id="edit_account_number" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Reason</label>
-              <input id="edit_reason" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              <input id="edit_reason" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Amount</label>
-              <input id="edit_amount" type="number" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              <input id="edit_amount" type="number" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Fee</label>
-              <input id="edit_fee" type="number" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              <input id="edit_fee" type="number" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-              <select id="edit_status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+              <select id="edit_status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600">
                 <option value="pending">pending</option>
                 <option value="processing">processing</option>
                 <option value="completed">completed</option>
@@ -465,12 +465,12 @@
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
-              <input id="edit_date" type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              <input id="edit_date" type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Time</label>
-              <input id="edit_time" type="time" step="60" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              <input id="edit_time" type="time" step="60" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
             </div>
           </div>
 
@@ -479,11 +479,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Bank Country</label>
-                <input id="edit_bank_country" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                <input id="edit_bank_country" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Routine Number</label>
-                <input id="edit_routine_number" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                <input id="edit_routine_number" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600" />
               </div>
             </div>
           </div>
@@ -495,7 +495,7 @@
         <button id="editCancelBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
           Cancel
         </button>
-        <button id="saveEditBtn" class="px-5 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700">
+        <button id="saveEditBtn" class="px-5 py-2 bg-green-700 text-white rounded-lg font-semibold hover:bg-green-800">
           Save Changes
         </button>
       </div>
@@ -691,7 +691,7 @@
                 <tr>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Account</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Bank</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Farmers Credits Union</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Account Name</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fee</th>
@@ -726,7 +726,7 @@
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${t.date}</td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <button class="px-3 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 text-sm font-semibold editTransferBtn"
+                <button class="px-3 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 text-sm font-semibold editTransferBtn"
                         data-transfer="${data}">
                   Edit
                 </button>
@@ -745,13 +745,13 @@
               </div>
 
               <div class="history-row"><div class="history-label">Account</div><div class="history-value">${t.from_account || '-'}</div></div>
-              <div class="history-row"><div class="history-label">Bank</div><div class="history-value">${t.bank_name || '-'}</div></div>
+              <div class="history-row"><div class="history-label">Farmers Credits Union</div><div class="history-value">${t.bank_name || '-'}</div></div>
               <div class="history-row"><div class="history-label">Name</div><div class="history-value">${t.account_name || '-'}</div></div>
               <div class="history-row"><div class="history-label">Amount</div><div class="history-value">${t.amount}</div></div>
               <div class="history-row"><div class="history-label">Fee</div><div class="history-value">${t.fee}</div></div>
               <div class="history-row"><div class="history-label">Date</div><div class="history-value">${t.date}</div></div>
 
-              <button class="edit-btn bg-blue-600 text-white hover:bg-blue-700 editTransferBtn"
+              <button class="edit-btn bg-green-700 text-white hover:bg-green-800 editTransferBtn"
                       data-transfer="${data}">
                 Edit Transfer
               </button>
@@ -790,7 +790,7 @@
     document.getElementById('showLocalBtn').addEventListener('click', () => {
       currentHistoryType = 'local';
       document.getElementById('showLocalBtn').className =
-        'px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors';
+        'px-4 py-2 bg-green-700 text-white rounded-lg font-medium hover:bg-green-800 transition-colors';
       document.getElementById('showWireBtn').className =
         'px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors';
 
@@ -801,7 +801,7 @@
     document.getElementById('showWireBtn').addEventListener('click', () => {
       currentHistoryType = 'wire';
       document.getElementById('showWireBtn').className =
-        'px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors';
+        'px-4 py-2 bg-green-700 text-white rounded-lg font-medium hover:bg-green-800 transition-colors';
       document.getElementById('showLocalBtn').className =
         'px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors';
 
