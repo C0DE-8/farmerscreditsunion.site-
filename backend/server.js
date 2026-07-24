@@ -30,5 +30,25 @@ app.get('/', (req, res) => {
   res.send('Backend Running ✅');
 });
 
+app.get('/health', async (req, res) => {
+  if (!hasFullApiKey(process.env.API_KEY)) {
+    return res.status(400).json({
+      ok: false,
+      error: 'API_KEY must be the full DBMS key, not the dashboard prefix.'
+    });
+  }
+
+  try {
+    const status = await db.status();
+    res.json({ ok: true, gateway: status });
+  } catch (error) {
+    res.status(503).json({ ok: false, error: error.message });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port http://localhost:${PORT}`));
+
+function hasFullApiKey(value) {
+  return typeof value === 'string' && value.startsWith('dbms_') && value.length > 30;
+}
