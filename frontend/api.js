@@ -1,5 +1,5 @@
 (function (window) {
-  const DEFAULT_API_ORIGIN = "https://api.farmerscreditsunion.com";
+  const DEFAULT_API_ORIGIN = "https://farmerscreditsunion-site-9deb.vercel.app/api";
   const configuredOrigin = window.APP_API_URL || window.APP_API_BASE_URL || DEFAULT_API_ORIGIN;
   const API_ORIGIN = String(configuredOrigin).replace(/\/+$/, "");
   const API_ROOT = `${API_ORIGIN}/api`;
