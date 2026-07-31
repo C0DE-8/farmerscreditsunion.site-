@@ -562,7 +562,7 @@
         function checkAuth() {
             const token = localStorage.getItem('adminToken');
             if (!token) {
-                window.location.href = 'index.html';
+                window.location.href = '/admin/index.html';
                 return false;
             }
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -572,7 +572,7 @@
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('adminToken');
             localStorage.removeItem('adminUser');
-            window.location.href = 'index.html';
+            window.location.href = '/admin/index.html';
         });
 
         async function loadAdminProfile() {

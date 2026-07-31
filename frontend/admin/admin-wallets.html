@@ -221,7 +221,7 @@
             const user = JSON.parse(localStorage.getItem('adminUser') || '{}');
             
             if (!token || (!user.role || user.role !== 'admin') && !user.is_admin) {
-                window.location.href = 'index.html';
+                window.location.href = '/admin/index.html';
                 return false;
             }
             return true;
@@ -230,13 +230,13 @@
         document.getElementById('logoutButton').addEventListener('click', () => {
             localStorage.removeItem('adminToken');
             localStorage.removeItem('adminUser');
-            window.location.href = 'index.html';
+            window.location.href = '/admin/index.html';
         });
 
         document.getElementById('logoutButtonMobile').addEventListener('click', () => {
             localStorage.removeItem('adminToken');
             localStorage.removeItem('adminUser');
-            window.location.href = 'index.html';
+            window.location.href = '/admin/index.html';
         });
 
         async function loadWallets() {

@@ -3,6 +3,18 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/admin",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin-dashboard",
+      "destination": "/admin/admin-dashboard.html"
+    },
+    {
+      "source": "/admin/:page",
+      "destination": "/admin/:page.html"
+    },
+    {
       "source": "/",
       "destination": "/index.html"
     }

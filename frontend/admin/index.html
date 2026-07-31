@@ -197,7 +197,7 @@
                     showAlert('Admin login successful! Redirecting...', 'success');
                     
                     setTimeout(() => {
-                        window.location.href = 'admin-dashboard.html';
+                        window.location.href = '/admin/admin-dashboard.html';
                     }, 1500);
                 }
             } catch (error) {
@@ -233,7 +233,7 @@
                 showAlert('Admin login successful! Redirecting...', 'success');
                 
                 setTimeout(() => {
-                    window.location.href = 'admin-dashboard.html';
+                    window.location.href = '/admin/admin-dashboard.html';
                 }, 1500);
             } catch (error) {
                 const errorMsg = error.response?.data?.error || 'Invalid or expired OTP. Please try again.';
