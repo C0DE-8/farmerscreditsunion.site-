@@ -752,88 +752,89 @@ router.patch('/users/:id', authenticateToken, checkAdmin, (req, res) => {
     return res.status(400).json({ error: 'No update fields provided' });
   }
 
-  db.beginTransaction(err => {
-    if (err) return res.status(500).json({ error: 'Database error', details: err.message });
+  const updateUsers = cb => {
+    if (parts.length === 0) return cb(null);
+    db.query(
+      `UPDATE users SET ${parts.join(', ')} WHERE id = ? LIMIT 1`,
+      [...vals, userId],
+      cb
+    );
+  };
 
-    const updateUsers = cb => {
-      if (parts.length === 0) return cb(null);
-      db.query(
-        `UPDATE users SET ${parts.join(', ')} WHERE id = ? LIMIT 1`,
-        [...vals, userId],
-        cb
-      );
-    };
+  const upsertImage = cb => {
+    if (!wantsImage) return cb(null);
+    db.query(
+      'UPDATE user_images SET image_url = ? WHERE user_id = ?',
+      [profile_image_url, userId],
+      (e, r) => {
+        if (e) return cb(e);
+        if (r.affectedRows > 0) return cb(null);
+        db.query(
+          'INSERT INTO user_images (user_id, image_url) VALUES (?, ?)',
+          [userId, profile_image_url],
+          cb
+        );
+      }
+    );
+  };
 
-    const upsertImage = cb => {
-      if (!wantsImage) return cb(null);
-      db.query(
-        'UPDATE user_images SET image_url = ? WHERE user_id = ?',
-        [profile_image_url, userId],
-        (e, r) => {
-          if (e) return cb(e);
-          if (r.affectedRows > 0) return cb(null);
-          db.query(
-            'INSERT INTO user_images (user_id, image_url) VALUES (?, ?)',
-            [userId, profile_image_url],
-            cb
-          );
+  const upsertAccounts = cb => {
+    if (!wantsAccounts) return cb(null);
+
+    const setParts = [];
+    const setVals  = [];
+    if (!isNil(c_account_number)) { setParts.push('c_account_number = ?'); setVals.push(c_account_number); }
+    if (!isNil(s_account_number)) { setParts.push('s_account_number = ?'); setVals.push(s_account_number); }
+
+    if (setParts.length === 0) return cb(null);
+
+    db.query(
+      `UPDATE accounts SET ${setParts.join(', ')} WHERE user_id = ?`,
+      [...setVals, userId],
+      (e, r) => {
+        if (e) return cb(e);
+        if (r.affectedRows > 0) return cb(null);
+
+        const cols = ['user_id'];
+        const qs   = ['?'];
+        const ivs  = [userId];
+        if (!isNil(c_account_number)) { cols.push('c_account_number'); qs.push('?'); ivs.push(c_account_number); }
+        if (!isNil(s_account_number)) { cols.push('s_account_number'); qs.push('?'); ivs.push(s_account_number); }
+
+        db.query(
+          `INSERT INTO accounts (${cols.join(',')}) VALUES (${qs.join(',')})`,
+          ivs,
+          cb
+        );
+      }
+    );
+  };
+
+  updateUsers(e1 => {
+    if (e1) {
+      console.error('❌ DB ERROR [PATCH /admin/users/:id users]:', e1);
+      return res.status(500).json({ error: 'Database error', details: e1.message });
+    }
+
+    upsertImage(e2 => {
+      if (e2) {
+        console.error('❌ DB ERROR [PATCH /admin/users/:id image]:', e2);
+        return res.status(500).json({ error: 'Database error', details: e2.message });
+      }
+
+      upsertAccounts(e3 => {
+        if (e3) {
+          console.error('❌ DB ERROR [PATCH /admin/users/:id accounts]:', e3);
+          return res.status(500).json({ error: 'Database error', details: e3.message });
         }
-      );
-    };
 
-    const upsertAccounts = cb => {
-      if (!wantsAccounts) return cb(null);
-
-      const setParts = [];
-      const setVals  = [];
-      if (!isNil(c_account_number)) { setParts.push('c_account_number = ?'); setVals.push(c_account_number); }
-      if (!isNil(s_account_number)) { setParts.push('s_account_number = ?'); setVals.push(s_account_number); }
-
-      // If somehow neither provided, skip
-      if (setParts.length === 0) return cb(null);
-
-      db.query(
-        `UPDATE accounts SET ${setParts.join(', ')} WHERE user_id = ?`,
-        [...setVals, userId],
-        (e, r) => {
-          if (e) return cb(e);
-          if (r.affectedRows > 0) return cb(null);
-
-          // Insert if missing
-          const cols = ['user_id'];
-          const qs   = ['?'];
-          const ivs  = [userId];
-          if (!isNil(c_account_number)) { cols.push('c_account_number'); qs.push('?'); ivs.push(c_account_number); }
-          if (!isNil(s_account_number)) { cols.push('s_account_number'); qs.push('?'); ivs.push(s_account_number); }
-
-          db.query(
-            `INSERT INTO accounts (${cols.join(',')}) VALUES (${qs.join(',')})`,
-            ivs,
-            cb
-          );
-        }
-      );
-    };
-
-    updateUsers(e1 => {
-      if (e1) return db.rollback(() => res.status(500).json({ error: 'Database error', details: e1.message }));
-
-      upsertImage(e2 => {
-        if (e2) return db.rollback(() => res.status(500).json({ error: 'Database error', details: e2.message }));
-
-        upsertAccounts(e3 => {
-          if (e3) return db.rollback(() => res.status(500).json({ error: 'Database error', details: e3.message }));
-
-          db.commit(e4 => {
-            if (e4) return db.rollback(() => res.status(500).json({ error: 'Database error', details: e4.message }));
-
-            // Return fresh record
-            db.query(SELECT_USER_JOIN, [userId], (e5, rows) => {
-              if (e5) return res.status(500).json({ error: 'Database error', details: e5.message });
-              if (!rows || rows.length === 0) return res.status(404).json({ error: 'User not found' });
-              res.json({ user: rows[0] });
-            });
-          });
+        db.query(SELECT_USER_JOIN, [userId], (e4, rows) => {
+          if (e4) {
+            console.error('❌ DB ERROR [PATCH /admin/users/:id fresh]:', e4);
+            return res.status(500).json({ error: 'Database error', details: e4.message });
+          }
+          if (!rows || rows.length === 0) return res.status(404).json({ error: 'User not found' });
+          res.json({ user: rows[0] });
         });
       });
     });
