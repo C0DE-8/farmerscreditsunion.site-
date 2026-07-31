@@ -875,67 +875,55 @@ router.delete('/users/:id', authenticateToken, checkAdmin, async (req, res) => {
       }
     };
 
-    try {
-      await conn.beginTransaction();
+    await runOptional(
+      'DELETE FROM support_messages WHERE ticket_id IN (SELECT id FROM support_tickets WHERE user_id = ?)',
+      [userId]
+    );
+    await runOptional(
+      'DELETE FROM transfer_otps WHERE user_id = ? OR transfer_id IN (SELECT id FROM transfers WHERE user_id = ?)',
+      [userId, userId]
+    );
 
-      await runOptional(
-        'DELETE FROM support_messages WHERE ticket_id IN (SELECT id FROM support_tickets WHERE user_id = ?)',
-        [userId]
-      );
-      await runOptional(
-        'DELETE FROM transfer_otps WHERE user_id = ? OR transfer_id IN (SELECT id FROM transfers WHERE user_id = ?)',
-        [userId, userId]
-      );
+    const relatedDeletes = [
+      ['DELETE FROM user_images WHERE user_id = ?', [userId]],
+      ['DELETE FROM accounts WHERE user_id = ?', [userId]],
+      ['DELETE FROM activities WHERE user_id = ?', [userId]],
+      ['DELETE FROM otps WHERE user_id = ?', [userId]],
+      ['DELETE FROM login_otps WHERE user_id = ?', [userId]],
+      ['DELETE FROM password_resets WHERE user_id = ?', [userId]],
+      ['DELETE FROM self_transfers WHERE user_id = ?', [userId]],
+      ['DELETE FROM atm_cards WHERE user_id = ?', [userId]],
+      ['DELETE FROM deposits WHERE user_id = ?', [userId]],
+      ['DELETE FROM transfers WHERE user_id = ?', [userId]],
+      ['DELETE FROM support_tickets WHERE user_id = ?', [userId]]
+    ];
 
-      const relatedDeletes = [
-        ['DELETE FROM user_images WHERE user_id = ?', [userId]],
-        ['DELETE FROM accounts WHERE user_id = ?', [userId]],
-        ['DELETE FROM activities WHERE user_id = ?', [userId]],
-        ['DELETE FROM otps WHERE user_id = ?', [userId]],
-        ['DELETE FROM login_otps WHERE user_id = ?', [userId]],
-        ['DELETE FROM password_resets WHERE user_id = ?', [userId]],
-        ['DELETE FROM self_transfers WHERE user_id = ?', [userId]],
-        ['DELETE FROM atm_cards WHERE user_id = ?', [userId]],
-        ['DELETE FROM deposits WHERE user_id = ?', [userId]],
-        ['DELETE FROM transfers WHERE user_id = ?', [userId]],
-        ['DELETE FROM support_tickets WHERE user_id = ?', [userId]]
-      ];
-
-      for (const [sql, params] of relatedDeletes) {
-        await runOptional(sql, params);
-      }
-
-      const [result] = await conn.query('DELETE FROM users WHERE id = ? LIMIT 1', [userId]);
-      if (result.affectedRows === 0) {
-        await conn.rollback();
-        return res.status(404).json({ error: 'User not found' });
-      }
-
-      await conn.commit();
-
-      try {
-        await logActivity(
-          req.user.id,
-          'admin_delete_user',
-          `Deleted user #${target.id} (${target.username || target.email})`
-        );
-      } catch (_) {
-        // non-blocking audit failure
-      }
-
-      res.json({
-        message: 'User deleted successfully',
-        deleted_user: {
-          id: target.id,
-          username: target.username,
-          full_name: target.full_name,
-          email: target.email
-        }
-      });
-    } catch (error) {
-      await conn.rollback();
-      throw error;
+    for (const [sql, params] of relatedDeletes) {
+      await runOptional(sql, params);
     }
+
+    const [result] = await conn.query('DELETE FROM users WHERE id = ? LIMIT 1', [userId]);
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'User not found' });
+
+    try {
+      await logActivity(
+        req.user.id,
+        'admin_delete_user',
+        `Deleted user #${target.id} (${target.username || target.email})`
+      );
+    } catch (_) {
+      // non-blocking audit failure
+    }
+
+    res.json({
+      message: 'User deleted successfully',
+      deleted_user: {
+        id: target.id,
+        username: target.username,
+        full_name: target.full_name,
+        email: target.email
+      }
+    });
   } catch (error) {
     console.error('❌ Admin delete user error:', error);
     res.status(500).json({ error: 'Failed to delete user', details: error.message });
@@ -1516,48 +1504,39 @@ router.post('/users/:user_id/simulate/transactions', authenticateToken, checkAdm
 
     const simBatch = (typeof crypto.randomUUID === 'function') ? crypto.randomUUID() : crypto.randomBytes(16).toString('hex');
 
-    // single-connection transaction using your `db` (no pool)
     const conn = db.promise();
-    try {
-      await conn.beginTransaction();
 
-      // optional net balance impact once
-      const net = rows.reduce((sum, r) => sum + (direction === 'credit' ? r.amt : -(r.amt + effectiveFee)), 0);
-      if (apply_to_balance && net !== 0) {
-        const col = from_account === 'savings' ? 'savings_balance' : 'current_balance';
-        const [[bal]] = await conn.query(`SELECT ${col} AS bal FROM users WHERE id = ? FOR UPDATE`, [userId]);
-        const current = parseFloat(bal?.bal || 0);
-        const next = Number((current + net).toFixed(2));
-        await conn.query(`UPDATE users SET ${col} = ? WHERE id = ?`, [next, userId]);
+    // optional net balance impact once
+    const net = rows.reduce((sum, r) => sum + (direction === 'credit' ? r.amt : -(r.amt + effectiveFee)), 0);
+    if (apply_to_balance && net !== 0) {
+      const col = from_account === 'savings' ? 'savings_balance' : 'current_balance';
+      const [[bal]] = await conn.query(`SELECT ${col} AS bal FROM users WHERE id = ?`, [userId]);
+      const current = parseFloat(bal?.bal || 0);
+      const next = Number((current + net).toFixed(2));
+      await conn.query(`UPDATE users SET ${col} = ? WHERE id = ?`, [next, userId]);
+    }
+
+    // inserts
+    for (const r of rows) {
+      if (transfer_type === 'local') {
+        await conn.query(
+          `INSERT INTO transfers
+           (user_id, transfer_type, from_account, bank_name, account_name, account_number, reason,
+            amount, fee, entry_type, status, is_simulated, sim_batch_id, created_at)
+           VALUES (?, 'local', ?, ?, ?, ?, ?, ?, ?, ?, 'completed', 1, ?, ?)`,
+          [userId, from_account, _bank_name, _account_name, _account_number, _reason,
+           r.amt, effectiveFee, direction, simBatch, r.ts]
+        );
+      } else {
+        await conn.query(
+          `INSERT INTO transfers
+           (user_id, transfer_type, from_account, bank_name, account_name, account_number, bank_country, routine_number,
+            reason, imf_code, cot_code, tax_code, amount, fee, entry_type, status, is_simulated, sim_batch_id, created_at)
+           VALUES (?, 'wire', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'completed', 1, ?, ?)`,
+          [userId, from_account, _bank_name, _account_name, _account_number, _bank_country, _routing,
+           _reason, _imf, _cot, _tax, r.amt, effectiveFee, direction, simBatch, r.ts]
+        );
       }
-
-      // inserts
-      for (const r of rows) {
-        if (transfer_type === 'local') {
-          await conn.query(
-            `INSERT INTO transfers
-             (user_id, transfer_type, from_account, bank_name, account_name, account_number, reason,
-              amount, fee, entry_type, status, is_simulated, sim_batch_id, created_at)
-             VALUES (?, 'local', ?, ?, ?, ?, ?, ?, ?, ?, 'completed', 1, ?, ?)`,
-            [userId, from_account, _bank_name, _account_name, _account_number, _reason,
-             r.amt, effectiveFee, direction, simBatch, r.ts]
-          );
-        } else {
-          await conn.query(
-            `INSERT INTO transfers
-             (user_id, transfer_type, from_account, bank_name, account_name, account_number, bank_country, routine_number,
-              reason, imf_code, cot_code, tax_code, amount, fee, entry_type, status, is_simulated, sim_batch_id, created_at)
-             VALUES (?, 'wire', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'completed', 1, ?, ?)`,
-            [userId, from_account, _bank_name, _account_name, _account_number, _bank_country, _routing,
-             _reason, _imf, _cot, _tax, r.amt, effectiveFee, direction, simBatch, r.ts]
-          );
-        }
-      }
-
-      await conn.commit();
-    } catch (e) {
-      await conn.rollback();
-      throw e;
     }
 
     res.json({
@@ -1733,8 +1712,6 @@ router.post('/users/:user_id/transactions/sim-refresh',
     const conn = db.promise();
 
     try {
-      await conn.beginTransaction();
-
       // A) Get all banks for this user that meet threshold
       const [banks] = await conn.query(
         `SELECT bank_name, COUNT(*) AS cnt
@@ -1747,7 +1724,6 @@ router.post('/users/:user_id/transactions/sim-refresh',
 
       // If nothing to do, exit early
       if (!banks.length) {
-        await conn.rollback();
         return res.json({ ok: true, user_id: userId, total_banks: 0, rows_updated: 0, samples: [], dry_run: !!dry_run });
       }
 
@@ -1815,14 +1791,18 @@ router.post('/users/:user_id/transactions/sim-refresh',
 
           // F) Update by ID chunks (safer & faster)
           for (const chunk of chunkIds(ids)) {
-            const [u] = await conn.query(
-              `UPDATE transfers
-               SET account_name = ?, account_number = ?, bank_name = ?
-                   ${extraSql}
-               WHERE user_id = ? AND id IN (${chunk.map(()=>' ?').join(',')})`,
-              [...updates, userId, ...chunk]
-            );
-            totalRowsUpdated += (u.changedRows ?? u.affectedRows ?? 0);
+            if (dry_run) {
+              totalRowsUpdated += chunk.length;
+            } else {
+              const [u] = await conn.query(
+                `UPDATE transfers
+                 SET account_name = ?, account_number = ?, bank_name = ?
+                     ${extraSql}
+                 WHERE user_id = ? AND id IN (${chunk.map(()=>' ?').join(',')})`,
+                [...updates, userId, ...chunk]
+              );
+              totalRowsUpdated += (u.changedRows ?? u.affectedRows ?? 0);
+            }
           }
 
           if (samples.length < 20) {
@@ -1836,9 +1816,6 @@ router.post('/users/:user_id/transactions/sim-refresh',
           }
         }
       }
-
-      if (dry_run) await conn.rollback();
-      else await conn.commit();
 
       res.json({
         ok: true,
@@ -1854,7 +1831,6 @@ router.post('/users/:user_id/transactions/sim-refresh',
         dry_run: !!dry_run
       });
     } catch (e) {
-      try { await conn.rollback(); } catch {}
       console.error('sim-refresh error:', e);
       res.status(500).json({ error: 'sim_refresh_failed', detail: String(e.message || e) });
     }
