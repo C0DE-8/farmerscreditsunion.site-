@@ -560,9 +560,9 @@
         });
 
         function checkAuth() {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('adminToken');
             if (!token) {
-                window.location.href = '../auth/login.html';
+                window.location.href = 'index.html';
                 return false;
             }
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -570,8 +570,9 @@
         }
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.clear();
-            window.location.href = '../auth/login.html';
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+            window.location.href = 'index.html';
         });
 
         async function loadAdminProfile() {
@@ -977,6 +978,7 @@
                 
                 // Store the user's token and redirect to user dashboard
                 localStorage.setItem('token', response.data.token);
+                localStorage.setItem('user', JSON.stringify(response.data.user));
                 showToast('Impersonation successful! Redirecting to user dashboard...', 'success');
                 
                 setTimeout(() => {
@@ -1064,5 +1066,7 @@
             loadUsers();
         }
     </script>
+<script src="../js/live-chat.js"></script>
+<noscript>Powered by <a href="https://www.smartsupp.com" target="_blank" rel="noopener">Smartsupp</a></noscript>
 </body>
 </html>

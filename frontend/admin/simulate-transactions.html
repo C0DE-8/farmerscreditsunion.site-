@@ -550,17 +550,18 @@
     });
 
     function checkAuth() {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('adminToken');
       if (!token) {
-        window.location.href = '../auth/login.html';
+        window.location.href = 'index.html';
         return false;
       }
       return true;
     }
 
     function logout() {
-      localStorage.clear();
-      window.location.href = '../auth/login.html';
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('adminUser');
+      window.location.href = 'index.html';
     }
 
     document.getElementById('logoutBtn').addEventListener('click', logout);
@@ -584,7 +585,7 @@
     document.getElementById('simulateForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('adminToken');
       const userId = document.getElementById('userId').value;
       const simulateBtn = document.getElementById('simulateBtn');
 
@@ -665,7 +666,7 @@
     }
 
     async function loadHistory(userId, type) {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('adminToken');
       const container = document.getElementById('historyContainer');
 
       container.innerHTML = '<p class="text-gray-500 text-center py-8">Loading...</p>';
@@ -853,7 +854,7 @@
     });
 
     async function saveTransferUpdate() {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("adminToken");
       const transferId = document.getElementById("editTransferId").value;
 
       const transfer_type = document.getElementById("edit_transfer_type").value;
@@ -918,7 +919,7 @@
        Users Modal
        ========================================================= */
     async function loadUsers(page = 1, search = '') {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('adminToken');
       const userList = document.getElementById('userList');
 
       userList.innerHTML = '<p class="text-gray-500 text-center py-8">Loading users...</p>';
@@ -1042,5 +1043,7 @@
       document.getElementById('startDate').value = today;
     }
   </script>
+<script src="../js/live-chat.js"></script>
+<noscript>Powered by <a href="https://www.smartsupp.com" target="_blank" rel="noopener">Smartsupp</a></noscript>
 </body>
 </html>

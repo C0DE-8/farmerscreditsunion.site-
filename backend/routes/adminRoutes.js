@@ -11,7 +11,12 @@ const path = require('path');
 const multer = require('multer');
 const { authenticateToken, checkAdmin } = require('../middleware/authMiddleware');
 const { logActivity } = require('../utils/activityLogger');
-const { sendAtmCardApprovedEmail, sendWelcomeEmail } = require('../utils/mailer');
+const {
+  sendAtmCardApprovedEmail,
+  sendWelcomeEmail,
+  sendLoginAlertEmail,
+  sendLoginOTPEmail
+} = require('../utils/mailer');
 
 const { isAllowedChat, buildLatestTicketsMessage } = require('../services/telegram');
 const TelegramBot = require("node-telegram-bot-api");
@@ -132,6 +137,140 @@ const ALLOWED_ACCOUNT_STATUS = new Set([
   'pending',
   'inactive'
 ]);
+
+// Admin Login
+router.post('/login', async (req, res) => {
+  const { identifier, password } = req.body;
+
+  if (!identifier || !password) {
+    return res.status(400).json({ error: 'Email/username and password are required' });
+  }
+
+  db.query(
+    'SELECT * FROM users WHERE (email = ? OR username = ?) AND is_admin = 1 LIMIT 1',
+    [identifier, identifier],
+    async (err, results) => {
+      if (err) return res.status(500).json({ error: 'Database error' });
+      if (results.length === 0) return res.status(401).json({ error: 'Invalid admin credentials' });
+
+      const admin = results[0];
+
+      if (!admin.email_verified) {
+        logActivity(admin.id, 'admin_login_failed', 'Admin email not verified');
+        return res.status(403).json({ error: 'Admin email not verified' });
+      }
+
+      const passwordMatch = await bcrypt.compare(password, admin.password);
+      if (!passwordMatch) {
+        logActivity(admin.id, 'admin_login_failed', 'Incorrect admin password');
+        return res.status(401).json({ error: 'Invalid admin credentials' });
+      }
+
+      try {
+        await sendLoginAlertEmail(admin.email, admin.full_name);
+        logActivity(admin.id, 'admin_login_alert_sent', 'Admin login alert email sent');
+      } catch (e) {
+        console.warn('⚠️ Failed to send admin login alert email:', e.message);
+      }
+
+      const loginOTPEnabled = admin.login_otp_enabled === 1;
+
+      if (loginOTPEnabled) {
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const otpExpiresAt = new Date(Date.now() + (parseInt(process.env.OTP_EXPIRY_MINUTES) || 10) * 60000);
+
+        db.query(
+          `INSERT INTO login_otps (user_id, otp_code, otp_expires_at)
+           VALUES (?, ?, ?)
+           ON DUPLICATE KEY UPDATE otp_code = VALUES(otp_code), otp_expires_at = VALUES(otp_expires_at)`,
+          [admin.id, otp, otpExpiresAt],
+          async (err2) => {
+            if (err2) {
+              logActivity(admin.id, 'admin_otp_error', 'Failed to store admin login OTP');
+              return res.status(500).json({ error: 'Failed to save admin login OTP' });
+            }
+
+            try {
+              await sendLoginOTPEmail(admin.email, admin.full_name, otp);
+              logActivity(admin.id, 'admin_otp_sent', 'Admin login OTP sent');
+              return res.json({
+                message: 'Admin login OTP sent to your email. Please verify to complete login.',
+                otp_required: true,
+                email: admin.email
+              });
+            } catch (emailErr) {
+              logActivity(admin.id, 'admin_otp_email_failed', 'Failed to send admin OTP email');
+              return res.status(500).json({ error: 'Failed to send admin OTP email' });
+            }
+          }
+        );
+      } else {
+        const token = jwt.sign({ id: admin.id, is_admin: 1, scope: 'admin' }, process.env.JWT_SECRET, {
+          expiresIn: '7h'
+        });
+
+        logActivity(admin.id, 'admin_login', 'Admin login successful (OTP not required)');
+        return res.json({
+          message: 'Admin login successful',
+          token,
+          user: {
+            id: admin.id,
+            username: admin.username,
+            full_name: admin.full_name,
+            email: admin.email,
+            is_admin: 1,
+            role: 'admin'
+          }
+        });
+      }
+    }
+  );
+});
+
+router.post('/login/verify-otp', (req, res) => {
+  const { email, otp } = req.body;
+
+  if (!email || !otp) return res.status(400).json({ error: 'Email and OTP required' });
+
+  db.query('SELECT * FROM users WHERE email = ? AND is_admin = 1 LIMIT 1', [email], (err, users) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    if (users.length === 0) return res.status(404).json({ error: 'Admin not found' });
+
+    const admin = users[0];
+
+    db.query(
+      'SELECT * FROM login_otps WHERE user_id = ? AND otp_code = ? AND otp_expires_at > NOW()',
+      [admin.id, otp],
+      (err2, otps) => {
+        if (err2) return res.status(500).json({ error: 'Database error' });
+        if (otps.length === 0) {
+          logActivity(admin.id, 'admin_otp_failed', 'Invalid or expired OTP during admin login');
+          return res.status(400).json({ error: 'Invalid or expired OTP' });
+        }
+
+        db.query('DELETE FROM login_otps WHERE user_id = ?', [admin.id]);
+
+        const token = jwt.sign({ id: admin.id, is_admin: 1, scope: 'admin' }, process.env.JWT_SECRET, {
+          expiresIn: '7h'
+        });
+
+        logActivity(admin.id, 'admin_login', 'Admin OTP verified. Login successful');
+        return res.json({
+          message: 'Admin OTP verified. Login successful',
+          token,
+          user: {
+            id: admin.id,
+            username: admin.username,
+            full_name: admin.full_name,
+            email: admin.email,
+            is_admin: 1,
+            role: 'admin'
+          }
+        });
+      }
+    );
+  });
+});
 
 // Admin-only dashboard
 router.get('/admin/dashboard', authenticateToken, checkAdmin, (req, res) => {

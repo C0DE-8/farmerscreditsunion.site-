@@ -242,11 +242,11 @@
     // AUTH
     // =========================
     function checkAuth() {
-      const token = localStorage.getItem("token");
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      const token = localStorage.getItem("adminToken");
+      const user = JSON.parse(localStorage.getItem("adminUser") || "{}");
 
       if (!token || (((!user.role || user.role !== "admin") && !user.is_admin))) {
-        window.location.href = "../auth/login.html";
+        window.location.href = "index.html";
         return false;
       }
 
@@ -257,9 +257,9 @@
     }
 
     function handleLogout() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.href = "../auth/login.html";
+      localStorage.removeItem("adminToken");
+      localStorage.removeItem("adminUser");
+      window.location.href = "index.html";
     }
 
     // =========================
@@ -511,5 +511,7 @@
       refreshAll();
     }
   </script>
+<script src="../js/live-chat.js"></script>
+<noscript>Powered by <a href="https://www.smartsupp.com" target="_blank" rel="noopener">Smartsupp</a></noscript>
 </body>
 </html>

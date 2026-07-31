@@ -180,30 +180,30 @@
         });
 
         function checkAuth() {
-            const token = localStorage.getItem('token');
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const token = localStorage.getItem('adminToken');
+            const user = JSON.parse(localStorage.getItem('adminUser') || '{}');
             
             if (!token || (!user.role || user.role !== 'admin') && !user.is_admin) {
-                window.location.href = '../auth/login.html';
+                window.location.href = 'index.html';
                 return false;
             }
             return true;
         }
 
         document.getElementById('logoutButton').addEventListener('click', () => {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.href = '../auth/login.html';
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+            window.location.href = 'index.html';
         });
 
         document.getElementById('logoutButtonMobile').addEventListener('click', () => {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.href = '../auth/login.html';
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+            window.location.href = 'index.html';
         });
 
         async function loadDeposits() {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('adminToken');
             try {
                 const response = await axios.get(`${API_BASE_URL}/deposits`, {
                     headers: { Authorization: `Bearer ${token}` }
@@ -303,7 +303,7 @@
         }
 
         async function confirmDeposit(depositId) {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('adminToken');
             const spinner = document.querySelector(`.confirm-spinner-${depositId}`);
             
             spinner.classList.remove('hidden');
@@ -327,7 +327,7 @@
                 return;
             }
 
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('adminToken');
             const spinner = document.querySelector(`.reject-spinner-${depositId}`);
             
             spinner.classList.remove('hidden');
@@ -351,5 +351,7 @@
             loadDeposits();
         }
     </script>
+<script src="../js/live-chat.js"></script>
+<noscript>Powered by <a href="https://www.smartsupp.com" target="_blank" rel="noopener">Smartsupp</a></noscript>
 </body>
 </html>

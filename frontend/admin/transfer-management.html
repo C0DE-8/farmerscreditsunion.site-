@@ -394,17 +394,18 @@
         }
 
         function checkAuth() {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('adminToken');
             if (!token) {
-                window.location.href = '../auth/login.html';
+                window.location.href = 'index.html';
                 return false;
             }
             return true;
         }
 
         function logout() {
-            localStorage.clear();
-            window.location.href = '../auth/login.html';
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+            window.location.href = 'index.html';
         }
 
         document.getElementById('logoutBtn').addEventListener('click', logout);
@@ -420,7 +421,7 @@
             }
 
             try {
-                const token = localStorage.getItem('token');
+                const token = localStorage.getItem('adminToken');
                 const response = await axios.post(
                     `${API_BASE_URL}/set-transfer-fee`,
                     { type, fee_amount: feeAmount },
@@ -454,7 +455,7 @@
             showSkeletonLoaders();
             
             try {
-                const token = localStorage.getItem('token');
+                const token = localStorage.getItem('adminToken');
                 const response = await axios.get(`${API_BASE_URL}/all-transfers`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
@@ -658,7 +659,7 @@
             const newStatus = document.getElementById('newStatus').value;
 
             try {
-                const token = localStorage.getItem('token');
+                const token = localStorage.getItem('adminToken');
                 const response = await axios.put(
                     `${API_BASE_URL}/update-transfer-status/${currentTransferId}`,
                     { status: newStatus },
@@ -679,7 +680,7 @@
 
         async function loadTransferFees() {
             try {
-                const token = localStorage.getItem('token');
+                const token = localStorage.getItem('adminToken');
                 const response = await axios.get(`${API_BASE_URL}/transfer-fee`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
@@ -709,7 +710,7 @@
         // Security code settings functions
         async function loadSecurityCodeSettings() {
             try {
-                const token = localStorage.getItem('token');
+                const token = localStorage.getItem('adminToken');
                 const response = await axios.get(`${API_BASE_URL}/security-codes/settings`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
@@ -734,7 +735,7 @@
             const toggleAll = document.getElementById('toggleAllCodes').checked;
             
             try {
-                const token = localStorage.getItem('token');
+                const token = localStorage.getItem('adminToken');
                 const response = await axios.post(
                     `${API_BASE_URL}/security-codes/settings`,
                     { require_codes: toggleAll },
@@ -759,7 +760,7 @@
             const isEnabled = checkbox.checked;
             
             try {
-                const token = localStorage.getItem('token');
+                const token = localStorage.getItem('adminToken');
                 const payload = {};
                 payload[`require_${codeType}`] = isEnabled;
                 
@@ -790,5 +791,7 @@
             loadTransfers();
         }
     </script>
+<script src="../js/live-chat.js"></script>
+<noscript>Powered by <a href="https://www.smartsupp.com" target="_blank" rel="noopener">Smartsupp</a></noscript>
 </body>
 </html>

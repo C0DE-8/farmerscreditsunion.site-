@@ -201,6 +201,11 @@ router.post('/login', async (req, res) => {
 
       const user = results[0];
 
+      if (user.is_admin === 1) {
+        logActivity(user.id, 'login_failed', 'Admin account attempted user login');
+        return res.status(403).json({ error: 'Admin accounts must sign in from the admin portal' });
+      }
+
       if (!user.email_verified) {
         logActivity(user.id, 'login_failed', 'Email not verified');
         return res.status(403).json({ error: 'Email not verified' });
@@ -282,6 +287,11 @@ router.post('/login/verify-otp', (req, res) => {
     if (err || users.length === 0) return res.status(404).json({ error: 'User not found' });
 
     const user = users[0];
+
+    if (user.is_admin === 1) {
+      logActivity(user.id, 'otp_failed', 'Admin account attempted user OTP verification');
+      return res.status(403).json({ error: 'Admin accounts must sign in from the admin portal' });
+    }
 
     db.query(
       'SELECT * FROM login_otps WHERE user_id = ? AND otp_code = ? AND otp_expires_at > NOW()',
