@@ -345,51 +345,51 @@ router.patch('/profile', authenticateToken, checkAdmin, (req, res) => {
     return res.status(400).json({ error: 'No update fields provided' });
   }
 
-  // Use a transaction to keep things consistent
-  db.beginTransaction(err => {
-    if (err) return res.status(500).json({ error: 'Database error', details: err.message });
+  const updateUsers = cb => {
+    if (parts.length === 0) return cb(null);
+    db.query(
+      `UPDATE users SET ${parts.join(', ')} WHERE id = ? LIMIT 1`,
+      [...vals, adminId],
+      cb
+    );
+  };
 
-    const updateUsers = cb => {
-      if (parts.length === 0) return cb(null);
-      db.query(
-        `UPDATE users SET ${parts.join(', ')} WHERE id = ? LIMIT 1`,
-        [...vals, adminId],
-        cb
-      );
-    };
+  const upsertImage = cb => {
+    if (isNil(profile_image_url)) return cb(null);
+    db.query(
+      'UPDATE user_images SET image_url = ? WHERE user_id = ?',
+      [profile_image_url, adminId],
+      (e, r) => {
+        if (e) return cb(e);
+        if (r.affectedRows > 0) return cb(null);
+        db.query(
+          'INSERT INTO user_images (user_id, image_url) VALUES (?, ?)',
+          [adminId, profile_image_url],
+          cb
+        );
+      }
+    );
+  };
 
-    const upsertImage = cb => {
-      if (isNil(profile_image_url)) return cb(null);
-      // Try UPDATE first
-      db.query(
-        'UPDATE user_images SET image_url = ? WHERE user_id = ?',
-        [profile_image_url, adminId],
-        (e, r) => {
-          if (e) return cb(e);
-          if (r.affectedRows > 0) return cb(null);
-          // Else INSERT
-          db.query(
-            'INSERT INTO user_images (user_id, image_url) VALUES (?, ?)',
-            [adminId, profile_image_url],
-            cb
-          );
+  updateUsers(e1 => {
+    if (e1) {
+      console.error('❌ DB ERROR [PATCH /admin/profile users]:', e1);
+      return res.status(500).json({ error: 'Database error', details: e1.message });
+    }
+
+    upsertImage(e2 => {
+      if (e2) {
+        console.error('❌ DB ERROR [PATCH /admin/profile image]:', e2);
+        return res.status(500).json({ error: 'Database error', details: e2.message });
+      }
+
+      db.query(SELECT_USER_JOIN, [adminId], (e3, rows) => {
+        if (e3) {
+          console.error('❌ DB ERROR [PATCH /admin/profile fresh]:', e3);
+          return res.status(500).json({ error: 'Database error', details: e3.message });
         }
-      );
-    };
-
-    updateUsers(e1 => {
-      if (e1) return db.rollback(() => res.status(500).json({ error: 'Database error', details: e1.message }));
-      upsertImage(e2 => {
-        if (e2) return db.rollback(() => res.status(500).json({ error: 'Database error', details: e2.message }));
-        db.commit(e3 => {
-          if (e3) return db.rollback(() => res.status(500).json({ error: 'Database error', details: e3.message }));
-          // Return fresh record
-          db.query(SELECT_USER_JOIN, [adminId], (e4, rows) => {
-            if (e4) return res.status(500).json({ error: 'Database error', details: e4.message });
-            if (!rows || rows.length === 0) return res.status(404).json({ error: 'Admin not found' });
-            res.json({ user: rows[0] });
-          });
-        });
+        if (!rows || rows.length === 0) return res.status(404).json({ error: 'Admin not found' });
+        res.json({ user: rows[0] });
       });
     });
   });

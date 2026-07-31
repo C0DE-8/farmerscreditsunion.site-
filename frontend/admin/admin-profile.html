@@ -443,10 +443,15 @@
       fallback.textContent = letter;
 
       if (img) {
-        avatarImg.src = img;
+        avatarImg.onerror = () => {
+          avatarImg.classList.add("hidden");
+          fallback.classList.remove("hidden");
+        };
+        avatarImg.src = window.getApiAssetUrl(img);
         avatarImg.classList.remove("hidden");
         fallback.classList.add("hidden");
       } else {
+        avatarImg.removeAttribute("src");
         avatarImg.classList.add("hidden");
         fallback.classList.remove("hidden");
       }
