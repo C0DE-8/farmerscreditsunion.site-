@@ -71,10 +71,13 @@ frontend/js/live-chat.js
 Current Smartsupp key:
 
 ```text
-87ca2f4eb4e00b4aee98fc2aebf3c5883c64df4c
+8a588c36a5ba722ccdd8f477f01c4b285e3e748a
 ```
 
 Every non-font frontend HTML page includes this script before `</body>`.
+
+The shared script also adds a floating WhatsApp click-to-chat button for
+`+1 971 438 7002`. It opens the real WhatsApp conversation at `wa.me`.
 
 ## Support Email
 
